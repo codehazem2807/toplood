@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d5b8e">
+<meta name="description" content="تتبع حالة جهازك - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>تتبع جهازك | TopLoad</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #1d5b8e; --tech-blue-dark: #154668; --tech-blue-light: #2d7ab8;
+    --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
+    --purple: #8b5cf6;
+    --whatsapp: #25d366;
+    --bg-primary: #E0F7FA; --bg-card: #ffffff; --bg-hover: #f1f5f9;
+    --text-primary: #0a1f33; --text-secondary: #475569; --text-muted: #94a3b8;
+    --border-color: #e1e8f0;
+    --shadow-sm: 0 1px 3px rgba(10,31,51,0.06);
+    --shadow-md: 0 4px 12px rgba(10,31,51,0.08);
+    --shadow-lg: 0 12px 32px rgba(10,31,51,0.12);
+    --shadow-xl: 0 24px 48px rgba(10,31,51,0.16);
+    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px; --radius-full: 9999px;
+    --transition-fast: 0.15s ease; --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    --safe-top: env(safe-area-inset-top,0); --safe-bottom: env(safe-area-inset-bottom,0);
+    --safe-left: env(safe-area-inset-left,0); --safe-right: env(safe-area-inset-right,0);
+}
+[data-theme="dark"] {
+    --bg-primary: #0a1628; --bg-card: #142f4a; --bg-hover: #1a3a5c;
+    --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b;
+    --border-color: #1e3a5f;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    --shadow-xl: 0 24px 48px rgba(0,0,0,0.6);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: var(--bg-primary); color: var(--text-primary);
+    min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+.reading-progress {
+    position: fixed; top: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-blue-light), var(--success));
+    width: 0%; z-index: 10000; transition: width 0.1s linear;
+    box-shadow: 0 0 10px rgba(29,91,142,0.6);
+}
+
+/* Navbar */
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 64px; background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000; display: flex; align-items: center;
+    padding: 0 1rem;
+    padding-top: var(--safe-top);
+    gap: 1rem; box-shadow: var(--shadow-sm);
+}
+.navbar-brand { display: flex; align-items: center; gap: 0.75rem; flex: 1; }
+.navbar-logo {
+    width: 40px; height: 40px; object-fit: contain;
+    border-radius: var(--radius-md); background: var(--bg-primary);
+    padding: 4px; border: 1px solid var(--border-color);
+}
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-brand-text strong { font-size: 1rem; font-weight: 800; }
+.navbar-brand-text span { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; }
+.navbar-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1rem;
+    transition: all var(--transition);
+}
+.navbar-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+
+/* Main */
+.main-content {
+    margin-top: 64px;
+    padding: 2rem 1rem 4rem;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.container {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* Hero Section */
+.track-hero {
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-bottom: 1.5rem;
+}
+.track-hero-icon {
+    width: 90px; height: 90px;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.25rem;
+    box-shadow: 0 12px 32px rgba(29,91,142,0.4);
+    animation: floatIcon 3s ease-in-out infinite;
+}
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+.track-hero h1 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+.track-hero p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+/* Search Box */
+.track-search-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.75rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.5s ease;
+}
+.track-search-box h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-align: center;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.5rem;
+}
+.track-search-box h2 i { color: var(--tech-blue); }
+
+.track-input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+.track-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 1rem 1.15rem;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--transition);
+    text-align: center;
+    direction: ltr;
+    letter-spacing: 1px;
+}
+.track-input:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29,91,142,0.15);
+}
+.track-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0;
+}
+.track-search-btn {
+    padding: 1rem 1.75rem;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition);
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+    white-space: nowrap;
+}
+.track-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(29,91,142,0.4);
+}
+.track-search-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.track-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+.track-hint i { color: var(--info); }
+
+/* Error Box */
+.error-box {
+    background: rgba(239,68,68,0.08);
+    border: 1.5px solid rgba(239,68,68,0.3);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.15rem;
+    color: var(--danger);
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 1rem;
+    animation: shake 0.4s ease;
+}
+.error-box.show { display: flex; }
+.error-box i { font-size: 1.15rem; flex-shrink: 0; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+/* Loading */
+.track-loading {
+    display: none;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+.track-loading.show { display: block; }
+.track-loading-spinner {
+    width: 48px; height: 48px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--tech-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.track-loading p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Result Container */
+.result-container {
+    display: none;
+    animation: fadeInUp 0.5s ease;
+}
+.result-container.show { display: block; }
+
+/* Status Card - Header */
+.result-header {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    border-radius: var(--radius-xl);
+    padding: 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(29,91,142,0.3);
+    margin-bottom: 1.25rem;
+}
+.result-header::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 50%);
+    pointer-events: none;
+}
+.result-header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.result-header-icon {
+    width: 72px; height: 72px;
+    border-radius: var(--radius-lg);
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+.result-header-info { flex: 1; min-width: 0; }
+.result-header-info h2 {
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+    line-height: 1.3;
+}
+.result-header-info p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+.result-header-status {
+    padding: 0.5rem 1.15rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(8px);
+    flex-shrink: 0;
+}
+
+/* Current Status Big Badge */
+.current-status {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+.current-status-icon {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    color: white;
+    margin: 0 auto 1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+.current-status-icon.received { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.current-status-icon.repairing { background: linear-gradient(135deg, #f59e0b, #d97706); animation: pulseStatus 2s infinite; }
+.current-status-icon.ready { background: linear-gradient(135deg, #10b981, #059669); animation: pulseStatus 2s infinite; }
+.current-status-icon.delivered { background: linear-gradient(135deg, #64748b, #475569); }
+.current-status-icon.cancelled { background: linear-gradient(135deg, #ef4444, #dc2626); }
+@keyframes pulseStatus {
+    0%, 100% { transform: scale(1); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    50% { transform: scale(1.05); box-shadow: 0 12px 32px rgba(0,0,0,0.25); }
+}
+.current-status-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.current-status-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+}
+.current-status-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+.info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    transition: all var(--transition);
+}
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--tech-blue);
+}
+.info-card-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(29,91,142,0.1), rgba(45,122,184,0.05));
+    color: var(--tech-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    margin-bottom: 0.65rem;
+}
+.info-card-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.35rem;
+}
+.info-card-value {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+.info-card-value.cost {
+    font-size: 1.15rem;
+    color: var(--tech-blue);
+    font-family: 'Courier New', monospace;
+}
+
+/* Cost Highlight */
+.cost-highlight {
+    background: linear-gradient(135deg, rgba(29,91,142,0.08), rgba(45,122,184,0.04));
+    border: 2px solid var(--tech-blue);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.cost-highlight-icon {
+    width: 56px; height: 56px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px rgba(29,91,142,0.3);
+}
+.cost-highlight-content { flex: 1; min-width: 0; }
+.cost-highlight-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+.cost-highlight-value {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--tech-blue);
+    font-family: 'Courier New', monospace;
+    line-height: 1.1;
+}
+
+/* Timeline */
+.timeline-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+.timeline-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.timeline-section-header i {
+    color: var(--tech-blue);
+    font-size: 1.1rem;
+}
+.timeline-section-header h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+.timeline-section-header .count {
+    margin-right: auto;
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-full);
+    background: var(--bg-primary);
+    color: var(--tech-blue);
+    font-size: 0.75rem;
+    font-weight: 800;
+    border: 1px solid var(--border-color);
+}
+
+.timeline {
+    position: relative;
+    padding-right: 2rem;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    right: 12px;
+    width: 2px;
+    background: var(--border-color);
+}
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+    padding-right: 1rem;
+    animation: fadeInRight 0.5s ease backwards;
+}
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+.timeline-item:nth-child(4) { animation-delay: 0.4s; }
+.timeline-item:nth-child(5) { animation-delay: 0.5s; }
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    right: -1rem;
+    top: 6px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--tech-blue);
+    border: 3px solid var(--bg-card);
+    box-shadow: 0 0 0 2px var(--tech-blue);
+    z-index: 1;
+}
+.timeline-item.current::before {
+    background: var(--success);
+    box-shadow: 0 0 0 2px var(--success), 0 0 0 6px rgba(16,185,129,0.2);
+    animation: pulseTimeline 2s infinite;
+}
+@keyframes pulseTimeline {
+    0% { box-shadow: 0 0 0 2px var(--success), 0 0 0 0 rgba(16,185,129,0.4); }
+    70% { box-shadow: 0 0 0 2px var(--success), 0 0 0 12px rgba(16,185,129,0); }
+    100% { box-shadow: 0 0 0 2px var(--success), 0 0 0 0 rgba(16,185,129,0); }
+}
+.timeline-status {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.timeline-status i {
+    font-size: 0.85rem;
+}
+.timeline-note {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.35rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    border-right: 3px solid var(--tech-blue);
+}
+.timeline-time {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+
+/* Contact Section */
+.contact-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+.contact-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+.contact-section-header i {
+    color: var(--tech-blue);
+    font-size: 1.1rem;
+}
+.contact-section-header h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+.contact-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.65rem;
+}
+.contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all var(--transition);
+    text-decoration: none;
+    border: 2px solid transparent;
+}
+.contact-btn:hover { transform: translateY(-2px); }
+.contact-btn.whatsapp {
+    background: linear-gradient(135deg, var(--whatsapp), #128c7e);
+    color: white;
+    box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+}
+.contact-btn.whatsapp:hover { box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
+.contact-btn.phone {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.contact-btn.phone:hover { box-shadow: 0 6px 20px rgba(29,91,142,0.4); }
+.contact-btn.share {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+.contact-btn.share:hover {
+    border-color: var(--tech-blue);
+    color: var(--tech-blue);
+}
+
+/* Rate CTA */
+.rate-cta {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 12px 32px rgba(16,185,129,0.3);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease;
+}
+.rate-cta::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 50%);
+    pointer-events: none;
+}
+.rate-cta-icon {
+    width: 56px; height: 56px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+.rate-cta-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+.rate-cta h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+.rate-cta p {
+    font-size: 0.85rem;
+    opacity: 0.95;
+    margin-bottom: 0.65rem;
+}
+.rate-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.15rem;
+    background: white;
+    color: var(--success);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 800;
+    transition: all var(--transition);
+}
+.rate-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Footer */
+.footer-note {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 1rem 0;
+    line-height: 1.7;
+}
+
+/* Action Buttons */
+.actions-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+.actions-row .btn {
+    flex: 1;
+    min-width: 140px;
+}
+.btn {
+    padding: 0.85rem 1.15rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    white-space: nowrap;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,91,142,0.4); }
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--tech-blue);
+    color: var(--tech-blue);
+}
+
+/* Toast */
+.toast-container {
+    position: fixed; top: 80px;
+    left: 50%; transform: translateX(-50%);
+    z-index: 3000; display: flex; flex-direction: column;
+    gap: 0.75rem; pointer-events: none;
+    max-width: 90vw; width: 400px;
+}
+.toast {
+    background: var(--bg-card); color: var(--text-primary);
+    padding: 1rem 1.25rem; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.9rem; font-weight: 500;
+    pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    border-right: 4px solid var(--info);
+}
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast i { font-size: 1.2rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+.toast.hide { animation: toastOut 0.3s ease forwards; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut { to { opacity: 0; transform: translateY(-20px) scale(0.95); } }
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .main-content { padding: 1.5rem 0.85rem 3rem; }
+    .track-hero { padding: 1rem 0.5rem; }
+    .track-hero-icon { width: 72px; height: 72px; font-size: 1.75rem; }
+    .track-hero h1 { font-size: 1.4rem; }
+    .track-hero p { font-size: 0.9rem; }
+    .track-search-box { padding: 1.25rem 1rem; }
+    .track-input-group { flex-direction: column; }
+    .track-search-btn { width: 100%; justify-content: center; }
+    .result-header { padding: 1.5rem 1rem; }
+    .result-header-icon { width: 56px; height: 56px; font-size: 1.5rem; }
+    .result-header-info h2 { font-size: 1.15rem; }
+    .current-status { padding: 1.25rem 1rem; }
+    .current-status-icon { width: 64px; height: 64px; font-size: 1.5rem; }
+    .current-status-title { font-size: 1.25rem; }
+    .cost-highlight { padding: 1rem; }
+    .cost-highlight-icon { width: 48px; height: 48px; font-size: 1.25rem; }
+    .cost-highlight-value { font-size: 1.4rem; }
+    .contact-buttons { grid-template-columns: 1fr; }
+    .rate-cta { flex-direction: column; text-align: center; }
+    .rate-cta-icon { margin: 0 auto; }
+    .timeline-section, .contact-section { padding: 1.25rem 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الأجهزة الإلكترونية</span>
+        </div>
+    </a>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container">
+        
+        <!-- Hero -->
+        <div class="track-hero" id="heroSection">
+            <div class="track-hero-icon">
+                <i class="fas fa-satellite-dish"></i>
+            </div>
+            <h1>تتبع حالة جهازك</h1>
+            <p>أدخل رقم التتبع الخاص بك لمعرفة حالة جهازك في أي وقت</p>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="track-search-box" id="searchSection">
+            <h2>
+                <i class="fas fa-barcode"></i>
+                أدخل رقم التتبع
+            </h2>
+            <form id="trackForm">
+                <div class="track-input-group">
+                    <input 
+                        type="text" 
+                        class="track-input" 
+                        id="trackingInput" 
+                        placeholder="REP-2026-0001"
+                        autocomplete="off"
+                        spellcheck="false"
+                        maxlength="50"
+                    >
+                    <button type="submit" class="track-search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                        ابحث
+                    </button>
+                </div>
+                <div class="track-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <span>رقم التتبع موجود في إيصال الاستلام</span>
+                </div>
+            </form>
+            <div class="error-box" id="errorBox">
+                <i class="fas fa-circle-exclamation"></i>
+                <span id="errorMessage">لم نجد جهازاً بهذا الرقم</span>
+            </div>
+        </div>
+        
+        <!-- Loading -->
+        <div class="track-loading" id="loadingSection">
+            <div class="track-loading-spinner"></div>
+            <p>جاري البحث عن جهازك...</p>
+        </div>
+        
+        <!-- Result -->
+        <div class="result-container" id="resultSection"></div>
+        
+        <!-- Footer -->
+        <div class="footer-note">
+            <p>© <span id="currentYear"></span> TopLoad - لصيانة الأجهزة الإلكترونية</p>
+            <p style="margin-top: 0.35rem;">جميع الحقوق محفوظة</p>
+        </div>
+        
+    </div>
+</main>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+var DB_NAME = 'electronic_db';
+var DB_VERSION = 5;
+
+// ═══════════════════════════════════════════════════════════════
+// 🏢 Center Info (لو عندك settings في الـ DB، نجيبها)
+// ═══════════════════════════════════════════════════════════════
+var centerInfo = {
+    name: 'TopLoad - لصيانة الأجهزة الإلكترونية',
+    phone: '',
+    whatsapp: '',
+    address: ''
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 📚 Status Mapping
+// ═══════════════════════════════════════════════════════════════
+var STATUS_MAP = {
+    'received': {
+        text: 'تم الاستلام',
+        shortText: 'تم استلام الجهاز',
+        icon: 'fa-inbox',
+        color: '#3b82f6',
+        gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+        description: 'جهازك وصل للمركز وسيتم البدء في الفحص'
+    },
+    'repairing': {
+        text: 'قيد الإصلاح',
+        shortText: 'جاري الإصلاح',
+        icon: 'fa-wrench',
+        color: '#f59e0b',
+        gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
+        description: 'الفني يعمل على إصلاح جهازك حالياً'
+    },
+    'ready': {
+        text: 'جاهز للاستلام',
+        shortText: 'جاهز',
+        icon: 'fa-circle-check',
+        color: '#10b981',
+        gradient: 'linear-gradient(135deg, #10b981, #059669)',
+        description: 'جهازك جاهز! يمكنك الحضور لاستلامه'
+    },
+    'delivered': {
+        text: 'تم التسليم',
+        shortText: 'تم التسليم',
+        icon: 'fa-truck',
+        color: '#64748b',
+        gradient: 'linear-gradient(135deg, #64748b, #475569)',
+        description: 'تم تسليم الجهاز بنجاح. شكراً لثقتك بنا'
+    },
+    'cancelled': {
+        text: 'ملغي',
+        shortText: 'ملغي',
+        icon: 'fa-ban',
+        color: '#ef4444',
+        gradient: 'linear-gradient(135deg, #ef4444, #dc2626)',
+        description: 'تم إلغاء أمر الصيانة. للاستفسار تواصل معنا'
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 🗄️ Supabase
+// ═══════════════════════════════════════════════════════════════
+var supabaseClient = null;
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+function sanitizePhone(phone) {
+    if (!phone) return '';
+    return String(phone).replace(/[^\d+]/g, '');
+}
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م'; }
+    catch (e) { return num.toFixed(0) + ' ج.م'; }
+}
+function formatDateTime(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', { 
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    } catch (e) { return '—'; }
+}
+function formatDate(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', { 
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+    } catch (e) { return '—'; }
+}
+function formatTimeAgo(date) {
+    if (!date) return '';
+    try {
+        var seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        if (seconds < 60) return 'الآن';
+        if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+        if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+        if (seconds < 604800) return 'منذ ' + Math.floor(seconds / 86400) + ' يوم';
+        return formatDate(date);
+    } catch (e) { return ''; }
+}
+function getStatusInfo(status) {
+    return STATUS_MAP[status] || {
+        text: status || 'غير معروف',
+        shortText: status || 'غير معروف',
+        icon: 'fa-circle',
+        color: '#64748b',
+        gradient: 'linear-gradient(135deg, #64748b, #475569)',
+        description: ''
+    };
+}
+function getDeviceIcon(deviceType) {
+    var map = {
+        'موبايل': 'fa-mobile-screen',
+        'تابلت': 'fa-tablet-screen-button',
+        'لابتوب': 'fa-laptop',
+        'شاشة': 'fa-tv',
+        'كمبيوتر': 'fa-desktop',
+        'طابعة': 'fa-print',
+        'سماعات': 'fa-headphones',
+        'شاحن': 'fa-plug',
+        'باور بانك': 'fa-battery-full',
+        'ماوس': 'fa-mouse',
+        'كيبورد': 'fa-keyboard',
+        'راوتر': 'fa-wifi',
+        'أخرى': 'fa-microchip'
+    };
+    return map[deviceType] || 'fa-microchip';
+}
+function getUrlParam(name) {
+    try { return new URLSearchParams(window.location.search).get(name); }
+    catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check', error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation', info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📦 IndexedDB (للـ Offline)
+// ═══════════════════════════════════════════════════════════════
+var dbInstance = null;
+var dbPromise = null;
+var dbFailed = false;
+function openDB() {
+    if (dbFailed) return Promise.resolve(null);
+    if (dbInstance) return Promise.resolve(dbInstance);
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise(function(resolve) {
+        try {
+            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                var stores = ['accounts', 'cache', 'settings', 'products', 'categories',
+                              'customers', 'invoices', 'repairs', 'suppliers',
+                              'stock_movements', 'notifications', 'payments', 
+                              'invoice_items', 'shifts', 'favorites', 'repair_timeline'];
+                stores.forEach(function(name) {
+                    if (!db.objectStoreNames.contains(name)) {
+                        db.createObjectStore(name, { keyPath: 'id' });
+                    }
+                });
+            };
+            req.onsuccess = function() {
+                dbInstance = req.result;
+                dbInstance.onversionchange = function() {
+                    try { dbInstance.close(); } catch(e) {}
+                    dbInstance = null; dbPromise = null;
+                };
+                resolve(dbInstance);
+            };
+            req.onerror = function() { dbFailed = true; dbPromise = null; resolve(null); };
+            req.onblocked = function() { setTimeout(function() { dbFailed = true; dbPromise = null; resolve(null); }, 500); };
+        } catch (e) { dbFailed = true; resolve(null); }
+    });
+    return dbPromise;
+}
+function dbGet(store, key) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readonly');
+                var r = tx.objectStore(store).get(key);
+                r.onsuccess = function() { resolve(r.result || null); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+function dbGetAll(store) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return [];
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readonly');
+                var r = tx.objectStore(store).getAll();
+                r.onsuccess = function() { resolve(r.result || []); };
+                r.onerror = function() { resolve([]); };
+            } catch (e) { resolve([]); }
+        });
+    });
+}
+function dbPut(store, data) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).put(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔍 Search Repair Order
+// ═══════════════════════════════════════════════════════════════
+function searchByTrackingCode(code) {
+    return new Promise(function(resolve, reject) {
+        var sb = getSupabaseClient();
+        
+        if (!sb) {
+            // Try offline
+            return searchOffline(code).then(resolve).catch(reject);
+        }
+        
+        if (!navigator.onLine) {
+            return searchOffline(code).then(resolve).catch(reject);
+        }
+        
+        // Query Supabase
+        sb.from('repair_orders')
+            .select('*, customer:customers(id, name, phone), timeline:repair_timeline(*)')
+            .eq('tracking_code', code.toUpperCase().trim())
+            .maybeSingle()
+            .then(function(result) {
+                if (result.error) {
+                    console.warn('Query error:', result.error);
+                    return searchOffline(code).then(resolve).catch(reject);
+                }
+                if (!result.data) {
+                    resolve(null);
+                    return;
+                }
+                
+                // Sort timeline
+                var data = result.data;
+                if (data.timeline && data.timeline.length) {
+                    data.timeline.sort(function(a, b) {
+                        return new Date(a.created_at) - new Date(b.created_at);
+                    });
+                } else {
+                    data.timeline = [];
+                }
+                
+                // Cache locally
+                dbPut('repairs', data);
+                
+                resolve(data);
+            })
+            .catch(function(err) {
+                console.warn('Search error:', err);
+                searchOffline(code).then(resolve).catch(reject);
+            });
+    });
+}
+
+function searchOffline(code) {
+    return dbGetAll('repairs').then(function(repairs) {
+        var found = null;
+        for (var i = 0; i < repairs.length; i++) {
+            if (repairs[i].tracking_code && 
+                repairs[i].tracking_code.toUpperCase() === code.toUpperCase().trim()) {
+                found = repairs[i];
+                break;
+            }
+        }
+        return found;
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render Result
+// ═══════════════════════════════════════════════════════════════
+function renderResult(repair) {
+    var container = document.getElementById('resultSection');
+    if (!container) return;
+    
+    var statusInfo = getStatusInfo(repair.status);
+    var customer = repair.customer || {};
+    var deviceIcon = getDeviceIcon(repair.device_type);
+    var deviceName = (repair.device_type || '') + (repair.device_model ? ' - ' + repair.device_model : '');
+    
+    var laborCost = parseFloat(repair.labor_cost) || 0;
+    var timeline = repair.timeline || [];
+    
+    // Timeline HTML
+    var timelineHtml = '';
+    if (timeline.length) {
+        timelineHtml = '<div class="timeline">' + 
+            timeline.map(function(t, idx) {
+                var isLast = idx === timeline.length - 1;
+                var tStatus = getStatusInfo(t.status);
+                return '<div class="timeline-item ' + (isLast ? 'current' : '') + '">' +
+                    '<div class="timeline-status" style="color: ' + tStatus.color + ';">' +
+                        '<i class="fas ' + tStatus.icon + '"></i>' +
+                        tStatus.text +
+                    '</div>' +
+                    (t.note ? '<div class="timeline-note">' + escapeHtml(t.note) + '</div>' : '') +
+                    '<div class="timeline-time">' +
+                        '<i class="fas fa-clock"></i>' +
+                        formatDateTime(t.created_at) +
+                        ' • ' + formatTimeAgo(t.created_at) +
+                    '</div>' +
+                '</div>';
+            }).join('') +
+        '</div>';
+    } else {
+        timelineHtml = '<div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted);">' +
+            '<i class="fas fa-clock-rotate-left" style="font-size: 2.5rem; opacity: 0.3; display: block; margin-bottom: 0.75rem;"></i>' +
+            '<p style="font-size: 0.85rem; font-weight: 600;">لا يوجد سجل تغييرات بعد</p>' +
+        '</div>';
+    }
+    
+    // Rate CTA
+    var rateCta = '';
+    if (repair.status === 'delivered') {
+        rateCta = '<div class="rate-cta">' +
+            '<div class="rate-cta-icon"><i class="fas fa-star"></i></div>' +
+            '<div class="rate-cta-content">' +
+                '<h3>قيّم خدمتنا</h3>' +
+                '<p>رأيك يهمنا! ساعدنا في تحسين خدمتنا</p>' +
+                '<a href="rate.html?code=' + encodeURIComponent(repair.tracking_code) + '" class="rate-cta-btn">' +
+                    '<i class="fas fa-star"></i> قيّم الآن' +
+                '</a>' +
+            '</div>' +
+        '</div>';
+    }
+    
+    // Contact buttons
+    var contactButtons = '';
+    if (centerInfo.phone || centerInfo.whatsapp) {
+        var cleanPhone = sanitizePhone(centerInfo.phone || centerInfo.whatsapp);
+        var waPhone = sanitizePhone(centerInfo.whatsapp || centerInfo.phone).replace(/^0/, '20');
+        
+        contactButtons = '<div class="contact-buttons">' +
+            (centerInfo.whatsapp || centerInfo.phone ? 
+                '<a href="https://wa.me/' + waPhone + '?text=' + encodeURIComponent('استفسار عن جهاز برقم: ' + repair.tracking_code) + '" target="_blank" class="contact-btn whatsapp">' +
+                    '<i class="fab fa-whatsapp"></i> واتساب' +
+                '</a>'
+                : '') +
+            (centerInfo.phone ?
+                '<a href="tel:' + cleanPhone + '" class="contact-btn phone">' +
+                    '<i class="fas fa-phone"></i> اتصال' +
+                '</a>'
+                : '') +
+            '<button type="button" class="contact-btn share" id="shareBtn">' +
+                '<i class="fas fa-share-nodes"></i> مشاركة' +
+            '</button>' +
+        '</div>';
+    }
+    
+    var html = 
+        // Header
+        '<div class="result-header">' +
+            '<div class="result-header-content">' +
+                '<div class="result-header-icon">' +
+                    '<i class="fas ' + deviceIcon + '"></i>' +
+                '</div>' +
+                '<div class="result-header-info">' +
+                    '<h2>' + escapeHtml(deviceName || 'جهازك') + '</h2>' +
+                    '<p><i class="fas fa-barcode"></i> ' + escapeHtml(repair.tracking_code || '') + '</p>' +
+                '</div>' +
+                '<span class="result-header-status">' +
+                    '<i class="fas ' + statusInfo.icon + '"></i> ' + statusInfo.text +
+                '</span>' +
+            '</div>' +
+        '</div>' +
+        
+        // Current Status
+        '<div class="current-status">' +
+            '<div class="current-status-icon ' + repair.status + '">' +
+                '<i class="fas ' + statusInfo.icon + '"></i>' +
+            '</div>' +
+            '<div class="current-status-label">الحالة الحالية</div>' +
+            '<div class="current-status-title" style="color: ' + statusInfo.color + ';">' + statusInfo.text + '</div>' +
+            '<div class="current-status-desc">' + statusInfo.description + '</div>' +
+        '</div>' +
+        
+        // Info Grid
+        '<div class="info-grid">' +
+            '<div class="info-card">' +
+                '<div class="info-card-icon"><i class="fas fa-calendar-plus"></i></div>' +
+                '<div class="info-card-label">تاريخ الاستلام</div>' +
+                '<div class="info-card-value">' + formatDate(repair.created_at) + '</div>' +
+            '</div>' +
+            (repair.serial_number ?
+                '<div class="info-card">' +
+                    '<div class="info-card-icon"><i class="fas fa-fingerprint"></i></div>' +
+                    '<div class="info-card-label">الرقم التسلسلي</div>' +
+                    '<div class="info-card-value" style="font-family: monospace; font-size: 0.85rem;">' + escapeHtml(repair.serial_number) + '</div>' +
+                '</div>'
+                : '') +
+            (repair.delivered_at ?
+                '<div class="info-card">' +
+                    '<div class="info-card-icon"><i class="fas fa-check-circle"></i></div>' +
+                    '<div class="info-card-label">تاريخ التسليم</div>' +
+                    '<div class="info-card-value">' + formatDate(repair.delivered_at) + '</div>' +
+                '</div>'
+                : '') +
+        '</div>' +
+        
+        // Problem Box
+        (repair.problem ?
+            '<div class="info-card" style="margin-bottom: 1.25rem;">' +
+                '<div class="info-card-icon" style="background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.08)); color: var(--warning);">' +
+                    '<i class="fas fa-comment-medical"></i>' +
+                '</div>' +
+                '<div class="info-card-label">وصف العطل</div>' +
+                '<div style="font-size: 0.95rem; line-height: 1.7; margin-top: 0.35rem;">' +
+                    escapeHtml(repair.problem) +
+                '</div>' +
+            '</div>'
+            : '') +
+        
+        // Cost Highlight
+        (laborCost > 0 ?
+            '<div class="cost-highlight">' +
+                '<div class="cost-highlight-icon"><i class="fas fa-coins"></i></div>' +
+                '<div class="cost-highlight-content">' +
+                    '<div class="cost-highlight-label">التكلفة المتوقعة</div>' +
+                    '<div class="cost-highlight-value">' + formatCurrency(laborCost) + '</div>' +
+                '</div>' +
+            '</div>'
+            : '') +
+        
+        // Rate CTA
+        rateCta +
+        
+        // Timeline
+        '<div class="timeline-section">' +
+            '<div class="timeline-section-header">' +
+                '<i class="fas fa-clock-rotate-left"></i>' +
+                '<h3>سجل التغييرات</h3>' +
+                '<span class="count">' + timeline.length + '</span>' +
+            '</div>' +
+            timelineHtml +
+        '</div>' +
+        
+        // Contact
+        (contactButtons ? 
+            '<div class="contact-section">' +
+                '<div class="contact-section-header">' +
+                    '<i class="fas fa-headset"></i>' +
+                    '<h3>تواصل معنا</h3>' +
+                '</div>' +
+                contactButtons +
+                (centerInfo.address ? 
+                    '<div style="margin-top: 1rem; padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md); font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem;">' +
+                        '<i class="fas fa-location-dot" style="color: var(--tech-blue);"></i>' +
+                        escapeHtml(centerInfo.address) +
+                    '</div>'
+                    : '') +
+            '</div>'
+            : '') +
+        
+        // Actions
+        '<div class="actions-row">' +
+            '<button type="button" class="btn btn-secondary" id="newSearchBtn">' +
+                '<i class="fas fa-search"></i> بحث جديد' +
+            '</button>' +
+            '<button type="button" class="btn btn-primary" id="refreshBtn">' +
+                '<i class="fas fa-rotate"></i> تحديث الحالة' +
+            '</button>' +
+        '</div>';
+    
+    container.innerHTML = html;
+    container.classList.add('show');
+    
+    // Scroll to result
+    setTimeout(function() {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    
+    // Bind actions
+    bindResultActions(repair);
+}
+
+function bindResultActions(repair) {
+    // Share button
+    var shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+            var url = window.location.origin + window.location.pathname + '?code=' + encodeURIComponent(repair.tracking_code);
+            var shareData = {
+                title: 'تتبع جهازي - ' + repair.tracking_code,
+                text: 'يمكنك تتبع حالة الجهاز برقم: ' + repair.tracking_code,
+                url: url
+            };
+            
+            if (navigator.share) {
+                navigator.share(shareData).catch(function() {});
+            } else {
+                // Copy to clipboard
+                try {
+                    navigator.clipboard.writeText(url).then(function() {
+                        showToast('تم نسخ الرابط', 'success');
+                    });
+                } catch (e) {
+                    showToast('الرابط: ' + url, 'info', 5000);
+                }
+            }
+        });
+    }
+    
+    // New search
+    var newSearchBtn = document.getElementById('newSearchBtn');
+    if (newSearchBtn) {
+        newSearchBtn.addEventListener('click', function() {
+            resetSearch();
+        });
+    }
+    
+    // Refresh
+    var refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            refreshStatus(repair.tracking_code);
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔄 Search Flow
+// ═══════════════════════════════════════════════════════════════
+function performSearch(code) {
+    if (!code || !code.trim()) {
+        showError('الرجاء إدخال رقم التتبع');
+        return;
+    }
+    
+    // Hide previous result
+    document.getElementById('resultSection').classList.remove('show');
+    document.getElementById('resultSection').innerHTML = '';
+    document.getElementById('errorBox').classList.remove('show');
+    
+    // Show loading
+    document.getElementById('loadingSection').classList.add('show');
+    
+    searchByTrackingCode(code).then(function(repair) {
+        document.getElementById('loadingSection').classList.remove('show');
+        
+        if (!repair) {
+            showError('لم نجد جهازاً بهذا الرقم. تأكد من الرقم وحاول مرة أخرى.');
+            return;
+        }
+        
+        // Save to URL
+        try {
+            var url = new URL(window.location.href);
+            url.searchParams.set('code', code);
+            window.history.replaceState({}, '', url.toString());
+        } catch (e) {}
+        
+        renderResult(repair);
+        showToast('تم العثور على جهازك', 'success');
+    }).catch(function(err) {
+        console.error('Search error:', err);
+        document.getElementById('loadingSection').classList.remove('show');
+        showError('حدث خطأ أثناء البحث. حاول مرة أخرى.');
+    });
+}
+
+function refreshStatus(code) {
+    showToast('جاري تحديث الحالة...', 'info', 2000);
+    
+    searchByTrackingCode(code).then(function(repair) {
+        if (!repair) {
+            showError('لم نجد جهازاً بهذا الرقم');
+            return;
+        }
+        renderResult(repair);
+        showToast('تم تحديث الحالة', 'success');
+    }).catch(function(err) {
+        console.error(err);
+        showToast('حدث خطأ أثناء التحديث', 'error');
+    });
+}
+
+function resetSearch() {
+    document.getElementById('resultSection').classList.remove('show');
+    document.getElementById('resultSection').innerHTML = '';
+    document.getElementById('errorBox').classList.remove('show');
+    document.getElementById('trackingInput').value = '';
+    document.getElementById('heroSection').style.display = 'block';
+    document.getElementById('searchSection').style.display = 'block';
+    
+    // Clear URL
+    try {
+        var url = new URL(window.location.href);
+        url.searchParams.delete('code');
+        window.history.replaceState({}, '', url.toString());
+    } catch (e) {}
+    
+    // Focus on input
+    setTimeout(function() {
+        document.getElementById('trackingInput').focus();
+    }, 200);
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showError(message) {
+    var errorBox = document.getElementById('errorBox');
+    var errorMsg = document.getElementById('errorMessage');
+    if (errorMsg) errorMsg.textContent = message;
+    if (errorBox) errorBox.classList.add('show');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🏢 Load Center Info
+// ═══════════════════════════════════════════════════════════════
+function loadCenterInfo() {
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return Promise.resolve();
+    
+    return sb.from('settings').select('*').then(function(result) {
+        if (!result.data) return;
+        var settings = {};
+        result.data.forEach(function(row) { settings[row.key] = row.value; });
+        
+        if (settings.center_name) centerInfo.name = settings.center_name;
+        if (settings.phone) centerInfo.phone = settings.phone;
+        if (settings.whatsapp) centerInfo.whatsapp = settings.whatsapp;
+        if (settings.address) centerInfo.address = settings.address;
+    }).catch(function() {});
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    initTheme();
+    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+    
+    // Set current year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    
+    // Setup form
+    var form = document.getElementById('trackForm');
+    form?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var code = document.getElementById('trackingInput').value.trim();
+        performSearch(code);
+    });
+    
+    // Auto-format input
+    var input = document.getElementById('trackingInput');
+    input?.addEventListener('input', function(e) {
+        // Uppercase
+        var val = e.target.value.toUpperCase();
+        // Remove spaces
+        val = val.replace(/\s/g, '');
+        e.target.value = val;
+    });
+    
+    // Load center info first
+    loadCenterInfo().then(function() {
+        // Check URL for code
+        var code = getUrlParam('code');
+        if (code) {
+            document.getElementById('trackingInput').value = code.toUpperCase();
+            setTimeout(function() {
+                performSearch(code);
+            }, 400);
+        } else {
+            setTimeout(function() {
+                input?.focus();
+            }, 300);
+        }
+    });
+    
+    // Scroll progress
+    var progressBar = document.getElementById('readingProgress');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+    }, { passive: true });
+    
+    // Online/Offline
+    window.addEventListener('online', function() {
+        showToast('تم استعادة الاتصال', 'success');
+    });
+    window.addEventListener('offline', function() {
+        showToast('وضع Offline - البيانات قد تكون قديمة', 'warning');
+    });
+    
+    console.log('%c📡 صفحة تتبع الجهاز جاهزة', 'color: #1d5b8e; font-size: 16px; font-weight: bold;');
+});
+
+})();
+</script>
+
+</body>
+</html>

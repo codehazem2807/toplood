@@ -1,0 +1,3879 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F766E" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+<meta name="description" content="التقارير - TopLoad لصيانة الغسالات">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="TopLoad">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TopLoad">
+<title>التقارير | TopLoad - لصيانة الغسالات</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   🎨 TopLoad Design System - Washing Machine Theme
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+    --primary: #0F766E;
+    --primary-dark: #115E59;
+    --primary-light: #14B8A6;
+    --primary-lighter: #5EEAD4;
+    --primary-glow: rgba(15, 118, 110, 0.25);
+    --primary-soft: rgba(15, 118, 110, 0.08);
+    
+    --accent: #F59E0B;
+    --accent-dark: #D97706;
+    --accent-light: #FBBF24;
+    
+    --success: #10B981;
+    --success-dark: #059669;
+    --success-soft: rgba(16, 185, 129, 0.12);
+    
+    --danger: #EF4444;
+    --danger-dark: #DC2626;
+    --danger-soft: rgba(239, 68, 68, 0.12);
+    
+    --warning: #F59E0B;
+    --warning-dark: #D97706;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+    
+    --info: #3B82F6;
+    --info-soft: rgba(59, 130, 246, 0.12);
+    
+    --purple: #8B5CF6;
+    --purple-dark: #7C3AED;
+    --purple-soft: rgba(139, 92, 246, 0.12);
+    
+    --cyan: #06B6D4;
+    --cyan-soft: rgba(6, 182, 212, 0.12);
+    
+    --gold: #FBBF24;
+    
+    --bg-primary: #E0F7FA;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F0FDFA;
+    --bg-subtle: #F8FAFC;
+    
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    
+    --border-color: #E2E8F0;
+    --border-strong: #CBD5E1;
+    
+    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+    --shadow-primary: 0 8px 24px rgba(15, 118, 110, 0.25);
+    
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    
+    --navbar-height: 68px;
+    --sidebar-width: 268px;
+    
+    --t-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+    --bg-hover: #334155;
+    --bg-subtle: #1A2332;
+    
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+    
+    --border-color: #334155;
+    --border-strong: #475569;
+    
+    --primary: #14B8A6;
+    --primary-dark: #0F766E;
+    --primary-light: #5EEAD4;
+    --primary-glow: rgba(20, 184, 166, 0.3);
+    --primary-soft: rgba(20, 184, 166, 0.12);
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--t), color var(--t);
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+    width: 0%;
+    z-index: 10000;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* ═══ Navbar ═══ */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-height);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar-menu-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    transition: all var(--t);
+    flex-shrink: 0;
+}
+
+.navbar-menu-btn:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+    transform: scale(1.05);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.navbar-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    transition: transform var(--t);
+}
+
+.navbar-brand:hover .navbar-logo { transform: scale(1.05); }
+
+.navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.navbar-brand-text strong {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+.navbar-brand-text span {
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: auto;
+}
+
+.navbar-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--t);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.navbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+    transform: scale(1.05);
+}
+
+.navbar-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg-card);
+    animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.online-dot {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 2px solid var(--bg-card);
+    animation: pulse-online 2s infinite;
+}
+
+.online-dot.offline { background: var(--danger); animation: none; }
+
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--t);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.navbar-user:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.navbar-user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+
+.navbar-user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--primary); font-weight: 700; }
+
+/* ═══ Sidebar ═══ */
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    right: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900;
+    overflow-y: auto;
+    padding: 1.25rem 0.85rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--t);
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+.sidebar-section { margin-bottom: 1.4rem; }
+
+.sidebar-section-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0 0.85rem;
+    margin-bottom: 0.6rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all var(--t-fast);
+    margin-bottom: 0.2rem;
+    position: relative;
+}
+
+.sidebar-link:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+    transform: translateX(-3px);
+}
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    font-weight: 700;
+    box-shadow: var(--shadow-primary);
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    right: -0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: var(--accent);
+    border-radius: 4px;
+}
+
+.sidebar-link i:first-child {
+    width: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 899;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--t);
+    top: var(--navbar-height);
+}
+
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+/* ═══ Main Content ═══ */
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem;
+    min-height: calc(100vh - var(--navbar-height));
+    transition: margin var(--t);
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header-text h1 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: -0.5px;
+}
+
+.page-header-text h1 i {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-primary);
+}
+
+.page-header-text p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.page-header-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.7rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all var(--t);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px var(--primary-glow);
+    filter: brightness(1.05);
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success), var(--success-dark));
+    color: white;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(16, 185, 129, 0.4);
+}
+
+.btn-sm { padding: 0.5rem 0.85rem; font-size: 0.8rem; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* ═══ Period Tabs ═══ */
+.period-tabs {
+    display: flex;
+    gap: 0.35rem;
+    background: var(--bg-card);
+    padding: 0.35rem;
+    border-radius: var(--radius-xl);
+    margin-bottom: 1.25rem;
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.period-tabs::-webkit-scrollbar { display: none; }
+
+.period-tab {
+    flex: 1;
+    min-width: 110px;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.period-tab:hover:not(.active) {
+    background: var(--bg-hover);
+    color: var(--primary);
+}
+
+.period-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+/* ═══ Custom Range ═══ */
+.custom-range {
+    display: none;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.15rem;
+    margin-bottom: 1.25rem;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    box-shadow: var(--shadow-sm);
+}
+
+.custom-range.show { display: flex; }
+
+.range-group { flex: 1; min-width: 160px; }
+
+.range-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.range-group input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    outline: none;
+    color: var(--text-primary);
+    font-weight: 600;
+    transition: all var(--t);
+}
+
+.range-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+/* ═══ Stats Grid ═══ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.35rem;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--t);
+    box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.4s ease backwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-color, var(--primary));
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, var(--accent-color, var(--primary)) 0%, transparent 70%);
+    opacity: 0.1;
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+    pointer-events: none;
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    color: white;
+    background: linear-gradient(135deg, var(--accent-color, var(--primary)), var(--accent-color-dark, var(--primary-dark)));
+    box-shadow: 0 6px 16px var(--accent-shadow, var(--primary-glow));
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 60%);
+    pointer-events: none;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-full);
+    margin-top: 0.4rem;
+}
+
+.stat-trend.up { background: var(--success-soft); color: var(--success-dark); }
+.stat-trend.down { background: var(--danger-soft); color: var(--danger-dark); }
+.stat-trend.neutral { background: var(--bg-hover); color: var(--text-muted); }
+
+/* ═══ KPI Grid ═══ */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: all var(--t);
+    box-shadow: var(--shadow-sm);
+}
+
+.kpi-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.kpi-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.kpi-icon.blue { background: var(--primary-soft); color: var(--primary); }
+.kpi-icon.green { background: var(--success-soft); color: var(--success); }
+.kpi-icon.orange { background: var(--warning-soft); color: var(--warning); }
+.kpi-icon.red { background: var(--danger-soft); color: var(--danger); }
+.kpi-icon.purple { background: var(--purple-soft); color: var(--purple); }
+.kpi-icon.cyan { background: var(--cyan-soft); color: var(--cyan); }
+
+.kpi-body { flex: 1; min-width: 0; }
+
+.kpi-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.kpi-value {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+/* ═══ Report Section ═══ */
+.report-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.report-section-header {
+    padding: 1.15rem 1.35rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    background: var(--bg-subtle);
+}
+
+.report-section-title {
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-primary);
+}
+
+.report-section-title i {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-primary);
+}
+
+.report-section-actions {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.report-section-body { padding: 1.35rem; }
+
+/* ═══ Charts Grid ═══ */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.15rem;
+}
+
+.chart-box {
+    background: var(--bg-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.chart-box-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chart-box-title i {
+    color: var(--primary);
+    font-size: 0.85rem;
+}
+
+.chart-container {
+    position: relative;
+    height: 250px;
+    width: 100%;
+}
+
+.chart-container canvas { max-height: 100%; }
+
+/* ═══ Tables ═══ */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.data-table th {
+    background: var(--bg-subtle);
+    padding: 0.85rem 1rem;
+    text-align: right;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--text-primary);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table tr:hover td {
+    background: var(--bg-hover);
+}
+
+.data-table .rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.data-table .rank.gold {
+    background: linear-gradient(135deg, #FBBF24, #F59E0B);
+    color: white;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
+}
+
+.data-table .rank.silver {
+    background: linear-gradient(135deg, #CBD5E1, #94A3B8);
+    color: white;
+    box-shadow: 0 2px 8px rgba(203, 213, 225, 0.4);
+}
+
+.data-table .rank.bronze {
+    background: linear-gradient(135deg, #D97706, #92400E);
+    color: white;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
+}
+
+.data-table .amount {
+    font-weight: 800;
+    color: var(--primary);
+    font-family: 'Courier New', monospace;
+}
+
+.data-table .profit {
+    font-weight: 800;
+    color: var(--success-dark);
+    font-family: 'Courier New', monospace;
+}
+
+.data-table .loss {
+    font-weight: 800;
+    color: var(--danger-dark);
+    font-family: 'Courier New', monospace;
+}
+
+.data-table .progress-mini {
+    display: inline-block;
+    width: 60px;
+    height: 6px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+.data-table .progress-mini-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+/* ═══ Mini Stats ═══ */
+.mini-stats {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.15rem;
+    padding: 0.85rem 1.15rem;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.mini-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.mini-stat i {
+    color: var(--primary);
+    font-size: 0.8rem;
+}
+
+.mini-stat .val {
+    color: var(--text-primary);
+    font-weight: 800;
+    font-family: 'Courier New', monospace;
+}
+
+/* ═══ Purchases Toolbar ═══ */
+.purchases-toolbar {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0.9rem 1.15rem;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.15rem;
+}
+
+.purchases-toolbar-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.purchases-toolbar-label i { color: var(--primary); }
+
+.period-selector {
+    display: flex;
+    gap: 0.3rem;
+    padding: 0.25rem;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.period-option {
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t);
+    white-space: nowrap;
+}
+
+.period-option:hover:not(.active) {
+    background: var(--bg-hover);
+    color: var(--primary);
+}
+
+.period-option.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+/* ═══ Empty State ═══ */
+.empty-report {
+    padding: 3.5rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.empty-report i {
+    font-size: 3.5rem;
+    opacity: 0.25;
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.empty-report h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.empty-report p { font-size: 0.85rem; font-weight: 600; }
+
+/* ═══ Skeleton ═══ */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ═══ Toast ═══ */
+.toast-container {
+    position: fixed;
+    top: calc(var(--navbar-height) + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 420px;
+}
+
+.toast {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    pointer-events: auto;
+    border-right: 4px solid var(--info);
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+
+.toast i { font-size: 1.25rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ═══ Scroll Top ═══ */
+.scroll-top {
+    position: fixed;
+    bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-primary);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all var(--t);
+    z-index: 1400;
+}
+
+.scroll-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-top:hover { transform: translateY(-4px); }
+
+/* ═══ Notifications & User Dropdown ═══ */
+.notifications-panel, .user-dropdown {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem;
+    width: 400px;
+    max-width: calc(100vw - 2rem);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--t);
+    overflow: hidden;
+    max-height: 520px;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-dropdown {
+    width: 250px;
+    max-height: none;
+    display: block;
+}
+
+.notifications-panel.show, .user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.notifications-header {
+    padding: 1.15rem 1.35rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    background: var(--bg-subtle);
+}
+
+.notifications-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notifications-title i { color: var(--primary); }
+
+.notifications-mark-read {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--t);
+}
+
+.notifications-mark-read:hover { background: var(--primary-soft); }
+
+.notifications-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.9rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--t-fast);
+    cursor: pointer;
+}
+
+.notification-item:hover { background: var(--bg-hover); }
+
+.notification-item-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.notification-item-icon.info { background: var(--info-soft); color: var(--info); }
+.notification-item-icon.warning { background: var(--warning-soft); color: var(--warning); }
+.notification-item-icon.danger { background: var(--danger-soft); color: var(--danger); }
+.notification-item-icon.success { background: var(--success-soft); color: var(--success); }
+
+.notification-item-content { flex: 1; min-width: 0; }
+
+.notification-item-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 0.15rem;
+}
+
+.notification-item-message {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.notification-item-time {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.notifications-empty {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.notifications-empty i {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 0.75rem;
+    display: block;
+    color: var(--primary);
+}
+
+.user-dropdown-header {
+    padding: 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-subtle);
+}
+
+.user-dropdown-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+
+.user-dropdown-info strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-bottom: 0.15rem;
+}
+
+.user-dropdown-info span {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.user-dropdown-menu { padding: 0.5rem; }
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t-fast);
+    width: 100%;
+    text-align: right;
+}
+
+.user-dropdown-item:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.user-dropdown-item.danger:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.user-dropdown-item i {
+    width: 18px;
+    text-align: center;
+}
+
+.user-dropdown-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0.4rem 0.5rem;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+/* ═══ Responsive ═══ */
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); box-shadow: var(--shadow-xl); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+}
+
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .stat-card { padding: 1.05rem; }
+    .stat-value { font-size: 1.35rem; }
+    .stat-icon { width: 42px; height: 42px; font-size: 1.15rem; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .notifications-panel, .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    .data-table { font-size: 0.78rem; }
+    .data-table th, .data-table td { padding: 0.65rem 0.8rem; }
+    .period-option { padding: 0.4rem 0.7rem; font-size: 0.7rem; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .kpi-card { padding: 0.9rem; gap: 0.65rem; }
+    .kpi-icon { width: 38px; height: 38px; font-size: 1rem; }
+    .kpi-value { font-size: 1rem; }
+}
+
+@media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الغسالات</span>
+        </div>
+    </a>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-house"></i><span>لوحة التحكم</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products"><i class="fas fa-boxes-stacked"></i><span>الأصناف</span></a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories"><i class="fas fa-tags"></i><span>الفئات</span></a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in"><i class="fas fa-truck-ramp-box"></i><span>الوارد</span></a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers"><i class="fas fa-handshake"></i><span>الموردين</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers"><i class="fas fa-users"></i><span>العملاء</span></a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts"><i class="fas fa-hand-holding-dollar"></i><span>المديونيات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span></a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link active" data-perm="can_view_reports"><i class="fas fa-chart-pie"></i><span>التقارير</span></a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts"><i class="fas fa-clock"></i><span>الورديات</span></a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log"><i class="fas fa-clipboard-list"></i><span>سجل الحركات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1><i class="fas fa-chart-pie"></i> التقارير</h1>
+            <p id="pageSubtitle">تحليلات شاملة لأداء مركز صيانة الغسالات</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportAllExcelBtn">
+                <i class="fas fa-file-excel"></i> Excel
+            </button>
+            <button class="btn btn-secondary" id="exportAllPdfBtn">
+                <i class="fas fa-file-pdf"></i> PDF
+            </button>
+            <button class="btn btn-primary" id="refreshBtn">
+                <i class="fas fa-rotate"></i> تحديث
+            </button>
+        </div>
+    </div>
+
+    <div class="period-tabs">
+        <button class="period-tab" data-period="today"><i class="fas fa-calendar-day"></i> اليوم</button>
+        <button class="period-tab active" data-period="week"><i class="fas fa-calendar-week"></i> الأسبوع</button>
+        <button class="period-tab" data-period="month"><i class="fas fa-calendar-alt"></i> الشهر</button>
+        <button class="period-tab" data-period="quarter"><i class="fas fa-calendar"></i> 3 شهور</button>
+        <button class="period-tab" data-period="year"><i class="fas fa-calendar-days"></i> السنة</button>
+        <button class="period-tab" data-period="custom"><i class="fas fa-sliders"></i> مخصص</button>
+    </div>
+
+    <div class="custom-range" id="customRange">
+        <div class="range-group">
+            <label>من تاريخ</label>
+            <input type="date" id="fromDate">
+        </div>
+        <div class="range-group">
+            <label>إلى تاريخ</label>
+            <input type="date" id="toDate">
+        </div>
+        <button class="btn btn-primary" id="applyRangeBtn">
+            <i class="fas fa-check"></i> تطبيق
+        </button>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card" style="--accent-color: #10B981; --accent-color-dark: #059669; --accent-shadow: rgba(16,185,129,0.3);">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+            </div>
+            <div class="stat-value" id="statRevenue">0</div>
+            <div class="stat-label">إجمالي المبيعات</div>
+            <div id="statRevenueTrend"></div>
+        </div>
+        <div class="stat-card" style="--accent-color: #0F766E; --accent-color-dark: #115E59; --accent-shadow: rgba(15,118,110,0.3);">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+            </div>
+            <div class="stat-value" id="statProfit">0</div>
+            <div class="stat-label">صافي الربح بعد المصروفات</div>
+            <div id="statProfitTrend"></div>
+        </div>
+        <div class="stat-card" style="--accent-color: #EF4444; --accent-color-dark: #DC2626; --accent-shadow: rgba(239,68,68,0.3);">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+            </div>
+            <div class="stat-value" id="statExpenses">0</div>
+            <div class="stat-label">إجمالي المصروفات</div>
+        </div>
+        <div class="stat-card" style="--accent-color: #8B5CF6; --accent-color-dark: #7C3AED; --accent-shadow: rgba(139,92,246,0.3);">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
+            </div>
+            <div class="stat-value" id="statInvoices">0</div>
+            <div class="stat-label">عدد الفواتير</div>
+            <div id="statInvoicesTrend"></div>
+        </div>
+        <div class="stat-card" style="--accent-color: #F59E0B; --accent-color-dark: #D97706; --accent-shadow: rgba(245,158,11,0.3);">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-screwdriver-wrench"></i></div>
+            </div>
+            <div class="stat-value" id="statRepairs">0</div>
+            <div class="stat-label">أوامر صيانة</div>
+            <div id="statRepairsTrend"></div>
+        </div>
+    </div>
+
+    <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card">
+            <div class="kpi-icon blue"><i class="fas fa-receipt"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">متوسط الفاتورة</div>
+                <div class="kpi-value" id="kpiAOV">0</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon green"><i class="fas fa-percent"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">هامش الربح</div>
+                <div class="kpi-value" id="kpiMargin">0%</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon orange"><i class="fas fa-coins"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">إجمالي المحصّل</div>
+                <div class="kpi-value" id="kpiCollected">0</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon red"><i class="fas fa-hand-holding-dollar"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">إجمالي المديونيات</div>
+                <div class="kpi-value" id="kpiUnpaid">0</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon purple"><i class="fas fa-boxes-stacked"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">القطع المباعة</div>
+                <div class="kpi-value" id="kpiItemsSold">0</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon cyan"><i class="fas fa-users"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">عملاء فريدون</div>
+                <div class="kpi-value" id="kpiUniqueCustomers">0</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon blue"><i class="fas fa-screwdriver-wrench"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">إيرادات المصنعية</div>
+                <div class="kpi-value" id="kpiLaborRevenue">0</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon green"><i class="fas fa-arrow-trend-up"></i></div>
+            <div class="kpi-body">
+                <div class="kpi-label">ربح القطع</div>
+                <div class="kpi-value" id="kpiPartsProfit">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <div class="report-section-header">
+            <h3 class="report-section-title">
+                <i class="fas fa-chart-area"></i>
+                نظرة عامة على الأداء
+            </h3>
+        </div>
+        <div class="report-section-body">
+            <div class="charts-grid">
+                <div class="chart-box">
+                    <div class="chart-box-title">
+                        <i class="fas fa-chart-line"></i>
+                        المبيعات والأرباح اليومية
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-box-title">
+                        <i class="fas fa-chart-pie"></i>
+                        توزيع المبيعات حسب الفئات
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-box-title">
+                        <i class="fas fa-chart-column"></i>
+                        عدد الفواتير اليومية
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="invoicesChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <div class="chart-box-title">
+                        <i class="fas fa-chart-bar"></i>
+                        أفضل 5 عملاء
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="topCustomersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <div class="report-section-header">
+            <h3 class="report-section-title">
+                <i class="fas fa-trophy"></i>
+                أعلى 10 قطع غيار مبيعاً وربحاً
+            </h3>
+            <div class="report-section-actions">
+                <button class="btn btn-secondary btn-sm" data-export="products">
+                    <i class="fas fa-file-excel"></i> Excel
+                </button>
+            </div>
+        </div>
+        <div class="report-section-body" id="topProductsBody">
+            <div style="text-align: center; padding: 2rem;">
+                <div class="skeleton" style="height: 200px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <div class="report-section-header">
+            <h3 class="report-section-title">
+                <i class="fas fa-users"></i>
+                أعلى 10 عملاء
+            </h3>
+            <div class="report-section-actions">
+                <button class="btn btn-secondary btn-sm" data-export="customers">
+                    <i class="fas fa-file-excel"></i> Excel
+                </button>
+            </div>
+        </div>
+        <div class="report-section-body" id="topCustomersBody">
+            <div style="text-align: center; padding: 2rem;">
+                <div class="skeleton" style="height: 200px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <div class="report-section-header">
+            <h3 class="report-section-title">
+                <i class="fas fa-shopping-cart"></i>
+                قطع الغيار المرشحة للشراء
+            </h3>
+            <div class="report-section-actions">
+                <button class="btn btn-secondary btn-sm" data-export="purchases">
+                    <i class="fas fa-file-excel"></i> Excel
+                </button>
+            </div>
+        </div>
+        <div class="report-section-body">
+            <div class="purchases-toolbar">
+                <div class="purchases-toolbar-label">
+                    <i class="fas fa-calendar-check"></i>
+                    احسب معدل البيع خلال:
+                </div>
+                <div class="period-selector" id="purchasePeriodSelector">
+                    <button class="period-option" data-days="7">آخر أسبوع</button>
+                    <button class="period-option active" data-days="30">آخر شهر</button>
+                    <button class="period-option" data-days="60">آخر شهرين</button>
+                    <button class="period-option" data-days="90">آخر 3 شهور</button>
+                    <button class="period-option" data-days="180">آخر 6 شهور</button>
+                    <button class="period-option" data-days="365">آخر سنة</button>
+                </div>
+            </div>
+
+            <div id="purchasesBody">
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="skeleton" style="height: 150px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <div class="report-section-header">
+            <h3 class="report-section-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--warning);"></i>
+                النواقص والأصناف المنخفضة
+            </h3>
+            <div class="report-section-actions">
+                <a href="products.html?filter=low" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> إدارة المخزون
+                </a>
+            </div>
+        </div>
+        <div class="report-section-body" id="shortagesBody">
+            <div style="text-align: center; padding: 2rem;">
+                <div class="skeleton" style="height: 150px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <div class="report-section-header">
+            <h3 class="report-section-title">
+                <i class="fas fa-arrows-rotate"></i>
+                مقارنة بالفترة السابقة
+            </h3>
+        </div>
+        <div class="report-section-body" id="comparisonBody">
+            <div style="text-align: center; padding: 2rem;">
+                <div class="skeleton" style="height: 150px;"></div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title"><i class="fas fa-bell"></i> الإشعارات</h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+</div>
+
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn"><i class="fas fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config - نفس مفاتيح باقي الصفحات
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+
+var supabaseClient = null;
+
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م'; }
+    catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatCurrencyShort(amount) {
+    var num = parseFloat(amount) || 0;
+    if (Math.abs(num) >= 1000000) return (num / 1000000).toFixed(2) + 'M ج.م';
+    if (Math.abs(num) >= 1000) return (num / 1000).toFixed(1) + 'K ج.م';
+    return num.toFixed(0) + ' ج.م';
+}
+
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+
+function formatPercent(num) {
+    var n = parseFloat(num) || 0;
+    return n.toFixed(1) + '%';
+}
+
+function formatDate(date) {
+    if (!date) return '—';
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return '—';
+    try { return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }); }
+    catch (e) { return d.toISOString().split('T')[0]; }
+}
+
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+    setTimeout(function() {
+        refreshAllCharts();
+    }, 100);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', warning: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    if (!dot) return;
+    dot.classList.toggle('offline', !navigator.onLine);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⏱️ Inactivity
+// ═══════════════════════════════════════════════════════════════
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+var inactivityTimer = null;
+
+function resetInactivity() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+
+function startInactivityMonitor() {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    period: 'week',
+    fromDate: null,
+    toDate: null,
+    purchasePeriodDays: 30,
+
+    invoices: [],
+    prevInvoices: [],
+    invoiceItems: [],
+    prevInvoiceItems: [],
+    products: [],
+    categories: [],
+    customers: [],
+    repairs: [],
+    suppliers: [],
+    stockMovements: [],
+    ratings: [],
+    expenses: [],
+    prevExpenses: [],
+
+    charts: {
+        revenue: null, category: null, invoices: null, topCustomers: null
+    },
+    topProducts: [],
+    topCustomers: [],
+    technicians: [],
+    shortages: [],
+    purchases: [],
+
+    stats: {
+        revenue: 0,
+        partsProfit: 0,
+        laborRevenue: 0,
+        totalProfit: 0,
+        invoices: 0,
+        repairs: 0,
+        itemsSold: 0,
+        collected: 0,
+        unpaid: 0,
+        uniqueCustomers: 0,
+        prevRevenue: 0,
+        prevInvoices: 0,
+        prevPartsProfit: 0,
+        prevLaborRevenue: 0,
+        prevTotalProfit: 0,
+        expenses: 0,
+        prevExpenses: 0
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 📅 Period Helpers
+// ═══════════════════════════════════════════════════════════════
+function getPeriodDates(period) {
+    var now = new Date();
+    var start = new Date();
+    var end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    if (period === 'today') {
+        start.setHours(0, 0, 0, 0);
+    } else if (period === 'week') {
+        start.setDate(start.getDate() - 6);
+        start.setHours(0, 0, 0, 0);
+    } else if (period === 'month') {
+        start.setDate(start.getDate() - 29);
+        start.setHours(0, 0, 0, 0);
+    } else if (period === 'quarter') {
+        start.setDate(start.getDate() - 89);
+        start.setHours(0, 0, 0, 0);
+    } else if (period === 'year') {
+        start.setDate(start.getDate() - 364);
+        start.setHours(0, 0, 0, 0);
+    } else if (period === 'custom') {
+        start = state.fromDate ? new Date(state.fromDate) : new Date();
+        start.setHours(0, 0, 0, 0);
+        end = state.toDate ? new Date(state.toDate) : new Date();
+        end.setHours(23, 59, 59, 999);
+    }
+
+    return { start: start, end: end };
+}
+
+function getPreviousPeriodDates(period) {
+    var current = getPeriodDates(period);
+    var duration = current.end.getTime() - current.start.getTime();
+    var prevEnd = new Date(current.start.getTime() - 1);
+    var prevStart = new Date(prevEnd.getTime() - duration);
+    return { start: prevStart, end: prevEnd };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Data
+// ═══════════════════════════════════════════════════════════════
+function loadData() {
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return Promise.reject(new Error('No connection'));
+
+    var dates = getPeriodDates(state.period);
+    var fromISO = dates.start.toISOString();
+    var toISO = dates.end.toISOString();
+
+    var prevDates = getPreviousPeriodDates(state.period);
+    var prevFromISO = prevDates.start.toISOString();
+    var prevToISO = prevDates.end.toISOString();
+
+    return Promise.all([
+        sb.from('invoices')
+            .select('id, invoice_number, customer_id, total, paid_amount, paid, created_at, payment_method, discount, labor_cost, parts_total')
+            .gte('created_at', fromISO)
+            .lte('created_at', toISO)
+            .limit(5000),
+
+        sb.from('invoices')
+            .select('id, total, labor_cost, created_at')
+            .gte('created_at', prevFromISO)
+            .lte('created_at', prevToISO)
+            .limit(5000),
+
+        sb.from('invoice_items')
+            .select('id, invoice_id, product_id, description, quantity, unit_price, total')
+            .limit(20000),
+
+        sb.from('products')
+            .select('id, name, barcode, quantity, min_quantity, cost_price, sell_price, category_id, created_at')
+            .limit(3000),
+
+        sb.from('categories')
+            .select('id, name, icon, color')
+            .limit(500),
+
+        sb.from('customers')
+            .select('id, name, phone, created_at')
+            .limit(3000),
+
+        sb.from('repair_orders')
+            .select('id, tracking_code, customer_id, device_name, status, labor_cost, created_by, created_at, delivered_at')
+            .gte('created_at', fromISO)
+            .lte('created_at', toISO)
+            .limit(3000),
+
+        sb.from('suppliers')
+            .select('id, name, phone, quality_rating, created_at')
+            .limit(500),
+
+        sb.from('stock_movements')
+            .select('id, supplier_id, product_id, quantity, cost_price, created_at, type')
+            .eq('type', 'in')
+            .limit(5000),
+
+        sb.from('service_ratings')
+            .select('id, repair_order_id, customer_id, rating, comment, created_at')
+            .limit(2000),
+
+        sb.from('expenses')
+            .select('id, amount, expense_date')
+            .gte('expense_date', dates.start.toISOString().slice(0, 10))
+            .lte('expense_date', dates.end.toISOString().slice(0, 10))
+            .limit(5000),
+
+        sb.from('expenses')
+            .select('id, amount, expense_date')
+            .gte('expense_date', prevDates.start.toISOString().slice(0, 10))
+            .lte('expense_date', prevDates.end.toISOString().slice(0, 10))
+            .limit(5000)
+    ]).then(function(results) {
+        state.invoices = results[0].data || [];
+        state.prevInvoices = results[1].data || [];
+        var allItems = results[2].data || [];
+        state.products = results[3].data || [];
+        state.categories = results[4].data || [];
+        state.customers = results[5].data || [];
+        state.repairs = results[6].data || [];
+        state.suppliers = results[7].data || [];
+        state.stockMovements = results[8].data || [];
+        state.ratings = results[9].data || [];
+        state.expenses = results[10].data || [];
+        state.prevExpenses = results[11].data || [];
+
+        var currentIds = {};
+        state.invoices.forEach(function(inv) { currentIds[inv.id] = true; });
+
+        var prevIds = {};
+        state.prevInvoices.forEach(function(inv) { prevIds[inv.id] = true; });
+
+        state.invoiceItems = allItems.filter(function(item) {
+            return currentIds[item.invoice_id];
+        });
+
+        state.prevInvoiceItems = allItems.filter(function(item) {
+            return prevIds[item.invoice_id];
+        });
+
+        console.log('✅ Loaded:', {
+            invoices: state.invoices.length,
+            items: state.invoiceItems.length,
+            products: state.products.length,
+            repairs: state.repairs.length
+        });
+
+        return true;
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 Calculate Stats (دقة 100%)
+// ═══════════════════════════════════════════════════════════════
+function calculateStats() {
+    var productCostMap = {};
+    state.products.forEach(function(p) {
+        productCostMap[p.id] = parseFloat(p.cost_price) || 0;
+    });
+
+    var revenue = 0, collected = 0, unpaid = 0, laborRevenue = 0;
+    var uniqueCustomers = {};
+
+    state.invoices.forEach(function(inv) {
+        var total = parseFloat(inv.total) || 0;
+        var paid = parseFloat(inv.paid_amount) || 0;
+        var labor = parseFloat(inv.labor_cost) || 0;
+
+        revenue += total;
+        collected += paid;
+        unpaid += Math.max(0, total - paid);
+        laborRevenue += labor;
+
+        if (inv.customer_id) uniqueCustomers[inv.customer_id] = true;
+    });
+
+    var partsProfit = 0;
+    var itemsSold = 0;
+
+    state.invoiceItems.forEach(function(item) {
+        var unitPrice = parseFloat(item.unit_price) || 0;
+        var qty = parseInt(item.quantity) || 0;
+        var cost = productCostMap[item.product_id] || 0;
+
+        partsProfit += (unitPrice - cost) * qty;
+        itemsSold += qty;
+    });
+
+    var expenses = state.expenses.reduce(function(sum, item) {
+        return sum + (parseFloat(item.amount) || 0);
+    }, 0);
+    var totalProfit = partsProfit + laborRevenue - expenses;
+
+    var prevRevenue = 0;
+    var prevLaborRevenue = 0;
+
+    state.prevInvoices.forEach(function(inv) {
+        prevRevenue += parseFloat(inv.total) || 0;
+        prevLaborRevenue += parseFloat(inv.labor_cost) || 0;
+    });
+
+    var prevPartsProfit = 0;
+    state.prevInvoiceItems.forEach(function(item) {
+        var unitPrice = parseFloat(item.unit_price) || 0;
+        var qty = parseInt(item.quantity) || 0;
+        var cost = productCostMap[item.product_id] || 0;
+        prevPartsProfit += (unitPrice - cost) * qty;
+    });
+
+    var prevExpenses = state.prevExpenses.reduce(function(sum, item) {
+        return sum + (parseFloat(item.amount) || 0);
+    }, 0);
+    var prevTotalProfit = prevPartsProfit + prevLaborRevenue - prevExpenses;
+
+    state.stats.revenue = revenue;
+    state.stats.partsProfit = partsProfit;
+    state.stats.laborRevenue = laborRevenue;
+    state.stats.totalProfit = totalProfit;
+    state.stats.invoices = state.invoices.length;
+    state.stats.repairs = state.repairs.length;
+    state.stats.itemsSold = itemsSold;
+    state.stats.collected = collected;
+    state.stats.unpaid = unpaid;
+    state.stats.uniqueCustomers = Object.keys(uniqueCustomers).length;
+    state.stats.prevRevenue = prevRevenue;
+    state.stats.prevInvoices = state.prevInvoices.length;
+    state.stats.prevPartsProfit = prevPartsProfit;
+    state.stats.prevLaborRevenue = prevLaborRevenue;
+    state.stats.prevTotalProfit = prevTotalProfit;
+    state.stats.expenses = expenses;
+    state.stats.prevExpenses = prevExpenses;
+
+    document.getElementById('statRevenue').textContent = formatCurrencyShort(revenue);
+    document.getElementById('statProfit').textContent = formatCurrencyShort(totalProfit);
+    document.getElementById('statExpenses').textContent = formatCurrencyShort(expenses);
+    document.getElementById('statInvoices').textContent = formatNumber(state.invoices.length);
+    document.getElementById('statRepairs').textContent = formatNumber(state.repairs.length);
+
+    var aov = state.invoices.length > 0 ? revenue / state.invoices.length : 0;
+    var margin = revenue > 0 ? (totalProfit / revenue) * 100 : 0;
+
+    document.getElementById('kpiAOV').textContent = formatCurrencyShort(aov);
+    document.getElementById('kpiMargin').textContent = formatPercent(margin);
+    document.getElementById('kpiCollected').textContent = formatCurrencyShort(collected);
+    document.getElementById('kpiUnpaid').textContent = formatCurrencyShort(unpaid);
+    document.getElementById('kpiItemsSold').textContent = formatNumber(itemsSold);
+    document.getElementById('kpiUniqueCustomers').textContent = formatNumber(state.stats.uniqueCustomers);
+    document.getElementById('kpiLaborRevenue').textContent = formatCurrencyShort(laborRevenue);
+    document.getElementById('kpiPartsProfit').textContent = formatCurrencyShort(partsProfit);
+
+    updateTrend('statRevenueTrend', revenue, prevRevenue);
+    updateTrend('statProfitTrend', totalProfit, prevTotalProfit);
+    updateTrend('statInvoicesTrend', state.invoices.length, state.prevInvoices.length);
+
+    var repairsTrendEl = document.getElementById('statRepairsTrend');
+    if (repairsTrendEl) {
+        repairsTrendEl.innerHTML = '<span class="stat-trend neutral"><i class="fas fa-screwdriver-wrench"></i> ' + state.repairs.length + ' أمر</span>';
+    }
+}
+
+function updateTrend(elementId, current, previous) {
+    var el = document.getElementById(elementId);
+    if (!el) return;
+    if (!previous || previous === 0) {
+        el.innerHTML = '<span class="stat-trend neutral"><i class="fas fa-minus"></i> لا توجد بيانات سابقة</span>';
+        return;
+    }
+    var change = ((current - previous) / previous) * 100;
+    var isUp = change >= 0;
+    var icon = isUp ? 'fa-arrow-up' : 'fa-arrow-down';
+    var cls = isUp ? 'up' : 'down';
+    el.innerHTML = '<span class="stat-trend ' + cls + '"><i class="fas ' + icon + '"></i> ' + Math.abs(change).toFixed(1) + '%</span>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📈 Charts
+// ═══════════════════════════════════════════════════════════════
+function getChartTheme() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+        isDark: isDark,
+        textColor: isDark ? '#CBD5E1' : '#475569',
+        gridColor: isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.8)',
+        tooltipBg: isDark ? '#1E293B' : '#0F172A',
+        borderColor: isDark ? '#1E293B' : '#FFFFFF'
+    };
+}
+
+function renderRevenueChart() {
+    var canvas = document.getElementById('revenueChart');
+    if (!canvas) return;
+
+    var dates = getPeriodDates(state.period);
+    var dailyRevenue = {};
+    var dailyProfit = {};
+
+    var days = Math.ceil((dates.end - dates.start) / (1000 * 60 * 60 * 24)) + 1;
+    if (days > 92) days = 92;
+
+    var dayKeys = [];
+    for (var i = 0; i < days; i++) {
+        var d = new Date(dates.start);
+        d.setDate(d.getDate() + i);
+        if (d > dates.end) break;
+        var key = d.toISOString().split('T')[0];
+        dayKeys.push(key);
+        dailyRevenue[key] = 0;
+        dailyProfit[key] = 0;
+    }
+
+    var invoiceDayMap = {};
+    state.invoices.forEach(function(inv) {
+        var key = new Date(inv.created_at).toISOString().split('T')[0];
+        if (dailyRevenue[key] !== undefined) {
+            dailyRevenue[key] += parseFloat(inv.total) || 0;
+            dailyProfit[key] += parseFloat(inv.labor_cost) || 0;
+        }
+        invoiceDayMap[inv.id] = key;
+    });
+
+    var productCostMap = {};
+    state.products.forEach(function(p) { productCostMap[p.id] = parseFloat(p.cost_price) || 0; });
+
+    state.invoiceItems.forEach(function(item) {
+        var dayKey = invoiceDayMap[item.invoice_id];
+        if (!dayKey || dailyProfit[dayKey] === undefined) return;
+        var unitPrice = parseFloat(item.unit_price) || 0;
+        var qty = parseInt(item.quantity) || 0;
+        var cost = productCostMap[item.product_id] || 0;
+        dailyProfit[dayKey] += (unitPrice - cost) * qty;
+    });
+
+    state.expenses.forEach(function(item) {
+        var dayKey = String(item.expense_date || '').slice(0, 10);
+        if (dailyProfit[dayKey] !== undefined) {
+            dailyProfit[dayKey] -= parseFloat(item.amount) || 0;
+        }
+    });
+
+    var labels = [];
+    var revenueData = [];
+    var profitData = [];
+
+    dayKeys.forEach(function(k) {
+        var d = new Date(k);
+        labels.push(d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' }));
+        revenueData.push(dailyRevenue[k]);
+        profitData.push(dailyProfit[k]);
+    });
+
+    if (state.charts.revenue) {
+        try { state.charts.revenue.destroy(); } catch(e) {}
+        state.charts.revenue = null;
+    }
+
+    var theme = getChartTheme();
+
+    state.charts.revenue = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'المبيعات',
+                    data: revenueData,
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 2.5, fill: true, tension: 0.4,
+                    pointRadius: 3, pointHoverRadius: 6,
+                    pointBackgroundColor: '#10B981',
+                    pointBorderColor: theme.borderColor,
+                    pointBorderWidth: 2
+                },
+                {
+                    label: 'الأرباح',
+                    data: profitData,
+                    borderColor: '#0F766E',
+                    backgroundColor: 'rgba(15, 118, 110, 0.1)',
+                    borderWidth: 2.5, fill: true, tension: 0.4,
+                    pointRadius: 3, pointHoverRadius: 6,
+                    pointBackgroundColor: '#0F766E',
+                    pointBorderColor: theme.borderColor,
+                    pointBorderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 500 },
+            plugins: {
+                legend: {
+                    display: true, position: 'top',
+                    labels: {
+                        color: theme.textColor,
+                        font: { family: 'Cairo', size: 11, weight: '600' },
+                        boxWidth: 12, boxHeight: 12, padding: 12,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    backgroundColor: theme.tooltipBg,
+                    titleColor: '#fff', bodyColor: '#fff',
+                    padding: 12, cornerRadius: 10,
+                    titleFont: { family: 'Cairo', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                    callbacks: {
+                        label: function(ctx) { return ctx.dataset.label + ': ' + formatCurrency(ctx.parsed.y); }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: theme.textColor, font: { family: 'Cairo', size: 10, weight: '600' }, maxRotation: 45 },
+                    grid: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: theme.textColor,
+                        font: { family: 'Cairo', size: 10, weight: '600' },
+                        callback: function(v) {
+                            if (v >= 1000000) return (v/1000000).toFixed(1) + 'M';
+                            if (v >= 1000) return (v/1000).toFixed(0) + 'K';
+                            return v;
+                        }
+                    },
+                    grid: { color: theme.gridColor, drawBorder: false }
+                }
+            }
+        }
+    });
+}
+
+function renderCategoryChart() {
+    var canvas = document.getElementById('categoryChart');
+    if (!canvas) return;
+
+    var productCategory = {};
+    state.products.forEach(function(p) { productCategory[p.id] = p.category_id; });
+
+    var categoryTotals = {};
+    state.invoiceItems.forEach(function(item) {
+        var catId = productCategory[item.product_id] || 'unknown';
+        if (!categoryTotals[catId]) categoryTotals[catId] = 0;
+        categoryTotals[catId] += parseFloat(item.total) || 0;
+    });
+
+    var catNameMap = {};
+    state.categories.forEach(function(c) { catNameMap[c.id] = c.name; });
+
+    var total = 0;
+    Object.keys(categoryTotals).forEach(function(k) { total += categoryTotals[k]; });
+
+    if (state.charts.category) {
+        try { state.charts.category.destroy(); } catch(e) {}
+        state.charts.category = null;
+    }
+
+    var theme = getChartTheme();
+
+    if (total === 0) {
+        state.charts.category = new Chart(canvas.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['لا توجد بيانات'],
+                datasets: [{ data: [1], backgroundColor: ['#E2E8F0'], borderWidth: 0 }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: { color: theme.textColor, font: { family: 'Cairo', size: 11 } }
+                    },
+                    tooltip: { enabled: false }
+                }
+            }
+        });
+        return;
+    }
+
+    var sorted = Object.keys(categoryTotals).map(function(k) {
+        return { id: k, value: categoryTotals[k], name: catNameMap[k] || 'غير محدد' };
+    }).sort(function(a, b) { return b.value - a.value; });
+
+    var top = sorted.slice(0, 9);
+    var others = sorted.slice(9);
+    if (others.length) {
+        var othersVal = others.reduce(function(sum, o) { return sum + o.value; }, 0);
+        top.push({ id: 'others', value: othersVal, name: 'أخرى' });
+    }
+
+    var labels = top.map(function(t) { return t.name; });
+    var data = top.map(function(t) { return t.value; });
+    var colors = ['#0F766E', '#14B8A6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#3B82F6', '#06B6D4', '#84CC16', '#A855F7'];
+
+    state.charts.category = new Chart(canvas.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors.slice(0, labels.length),
+                borderWidth: 2,
+                borderColor: theme.borderColor
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 500 },
+            plugins: {
+                legend: {
+                    display: true, position: 'bottom',
+                    labels: {
+                        color: theme.textColor,
+                        font: { family: 'Cairo', size: 10, weight: '600' },
+                        boxWidth: 10, padding: 8,
+                        usePointStyle: true
+                    }
+                },
+                tooltip: {
+                    backgroundColor: theme.tooltipBg,
+                    padding: 12, cornerRadius: 10,
+                    titleFont: { family: 'Cairo', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                    callbacks: {
+                        label: function(ctx) {
+                            var pct = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                            return ctx.label + ': ' + formatCurrency(ctx.parsed) + ' (' + pct + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderInvoicesChart() {
+    var canvas = document.getElementById('invoicesChart');
+    if (!canvas) return;
+
+    var dates = getPeriodDates(state.period);
+    var dailyCount = {};
+
+    var days = Math.ceil((dates.end - dates.start) / (1000 * 60 * 60 * 24)) + 1;
+    if (days > 92) days = 92;
+
+    var dayKeys = [];
+    for (var i = 0; i < days; i++) {
+        var d = new Date(dates.start);
+        d.setDate(d.getDate() + i);
+        if (d > dates.end) break;
+        var key = d.toISOString().split('T')[0];
+        dayKeys.push(key);
+        dailyCount[key] = 0;
+    }
+
+    state.invoices.forEach(function(inv) {
+        var key = new Date(inv.created_at).toISOString().split('T')[0];
+        if (dailyCount[key] !== undefined) dailyCount[key]++;
+    });
+
+    var labels = [];
+    var data = [];
+
+    dayKeys.forEach(function(k) {
+        var d = new Date(k);
+        labels.push(d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' }));
+        data.push(dailyCount[k]);
+    });
+
+    if (state.charts.invoices) {
+        try { state.charts.invoices.destroy(); } catch(e) {}
+        state.charts.invoices = null;
+    }
+
+    var theme = getChartTheme();
+
+    state.charts.invoices = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'عدد الفواتير',
+                data: data,
+                backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                borderColor: '#8B5CF6',
+                borderWidth: 1,
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 500 },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: theme.tooltipBg,
+                    padding: 12, cornerRadius: 10,
+                    titleFont: { family: 'Cairo', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                    callbacks: {
+                        label: function(ctx) { return 'الفواتير: ' + ctx.parsed.y; }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: theme.textColor, font: { family: 'Cairo', size: 10, weight: '600' }, maxRotation: 45 },
+                    grid: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: theme.textColor,
+                        font: { family: 'Cairo', size: 10, weight: '600' },
+                        precision: 0
+                    },
+                    grid: { color: theme.gridColor, drawBorder: false }
+                }
+            }
+        }
+    });
+}
+
+function renderTopCustomersChart() {
+    var canvas = document.getElementById('topCustomersChart');
+    if (!canvas) return;
+
+    if (state.charts.topCustomers) {
+        try { state.charts.topCustomers.destroy(); } catch(e) {}
+        state.charts.topCustomers = null;
+    }
+
+    if (!state.topCustomers.length) return;
+
+    var top5 = state.topCustomers.slice(0, 5);
+    var labels = top5.map(function(c) {
+        return c.name.length > 15 ? c.name.substring(0, 15) + '...' : c.name;
+    });
+    var data = top5.map(function(c) { return c.revenue; });
+
+    var theme = getChartTheme();
+
+    state.charts.topCustomers = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'إجمالي الشراء',
+                data: data,
+                backgroundColor: [
+                    'rgba(251, 191, 36, 0.8)',
+                    'rgba(203, 213, 225, 0.8)',
+                    'rgba(217, 119, 6, 0.8)',
+                    'rgba(15, 118, 110, 0.7)',
+                    'rgba(15, 118, 110, 0.5)'
+                ],
+                borderColor: ['#FBBF24', '#CBD5E1', '#D97706', '#0F766E', '#0F766E'],
+                borderWidth: 1,
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 500 },
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: theme.tooltipBg,
+                    padding: 12, cornerRadius: 10,
+                    titleFont: { family: 'Cairo', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                    callbacks: {
+                        label: function(ctx) { return formatCurrency(ctx.parsed.x); }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: theme.textColor,
+                        font: { family: 'Cairo', size: 10, weight: '600' },
+                        callback: function(v) { return v >= 1000 ? (v/1000).toFixed(0) + 'K' : v; }
+                    },
+                    grid: { color: theme.gridColor, drawBorder: false }
+                },
+                y: {
+                    ticks: { color: theme.textColor, font: { family: 'Cairo', size: 10, weight: '600' } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+function refreshAllCharts() {
+    try { renderRevenueChart(); } catch(e) { console.error('Revenue:', e); }
+    try { renderCategoryChart(); } catch(e) { console.error('Category:', e); }
+    try { renderInvoicesChart(); } catch(e) { console.error('Invoices:', e); }
+    try { renderTopCustomersChart(); } catch(e) { console.error('TopCustomers:', e); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🏆 Top Products
+// ═══════════════════════════════════════════════════════════════
+function renderTopProducts() {
+    var container = document.getElementById('topProductsBody');
+    if (!container) return;
+
+    var productCostMap = {};
+    var productNameMap = {};
+    state.products.forEach(function(p) {
+        productCostMap[p.id] = parseFloat(p.cost_price) || 0;
+        productNameMap[p.id] = p.name;
+    });
+
+    var productStats = {};
+
+    state.invoiceItems.forEach(function(item) {
+        var pid = item.product_id;
+        if (!pid) return;
+
+        if (!productStats[pid]) {
+            productStats[pid] = {
+                id: pid,
+                name: item.description || productNameMap[pid] || 'منتج',
+                quantity: 0,
+                revenue: 0,
+                cost: 0
+            };
+        }
+        var qty = parseInt(item.quantity) || 0;
+        var unitPrice = parseFloat(item.unit_price) || 0;
+        var cost = productCostMap[pid] || 0;
+
+        productStats[pid].quantity += qty;
+        productStats[pid].revenue += parseFloat(item.total) || 0;
+        productStats[pid].cost += cost * qty;
+    });
+
+    var arr = Object.keys(productStats).map(function(k) { return productStats[k]; });
+    arr.forEach(function(p) {
+        p.profit = p.revenue - p.cost;
+        p.margin = p.revenue > 0 ? (p.profit / p.revenue) * 100 : 0;
+    });
+    arr.sort(function(a, b) { return b.revenue - a.revenue; });
+    arr = arr.slice(0, 10);
+
+    state.topProducts = arr;
+
+    if (!arr.length) {
+        container.innerHTML = '<div class="empty-report"><i class="fas fa-box-open"></i><h3>لا توجد بيانات</h3><p>لا توجد مبيعات في هذه الفترة</p></div>';
+        return;
+    }
+
+    var maxRevenue = arr[0].revenue;
+    var totalQty = arr.reduce(function(s, p) { return s + p.quantity; }, 0);
+    var totalRev = arr.reduce(function(s, p) { return s + p.revenue; }, 0);
+    var totalProfit = arr.reduce(function(s, p) { return s + p.profit; }, 0);
+
+    var html = '<div class="mini-stats">';
+    html += '<div class="mini-stat"><i class="fas fa-boxes-stacked"></i> أصناف: <span class="val">' + arr.length + '</span></div>';
+    html += '<div class="mini-stat"><i class="fas fa-cubes"></i> الكميات: <span class="val">' + formatNumber(totalQty) + '</span></div>';
+    html += '<div class="mini-stat"><i class="fas fa-coins"></i> الإيراد: <span class="val">' + formatCurrencyShort(totalRev) + '</span></div>';
+    html += '<div class="mini-stat"><i class="fas fa-arrow-trend-up"></i> الربح: <span class="val">' + formatCurrencyShort(totalProfit) + '</span></div>';
+    html += '</div>';
+
+    html += '<div class="table-wrapper"><table class="data-table">';
+    html += '<thead><tr>';
+    html += '<th>#</th><th>القطعة</th><th>الكمية</th><th>الإيراد</th><th>الربح</th><th>الهامش</th><th>النسبة</th>';
+    html += '</tr></thead><tbody>';
+
+    arr.forEach(function(p, i) {
+        var rank = i + 1;
+        var rankClass = rank === 1 ? 'gold' : (rank === 2 ? 'silver' : (rank === 3 ? 'bronze' : ''));
+        var pct = maxRevenue > 0 ? (p.revenue / maxRevenue) * 100 : 0;
+        var profitCls = p.profit >= 0 ? 'profit' : 'loss';
+        var marginColor = p.margin >= 20 ? 'var(--success-dark)' : (p.margin >= 0 ? 'var(--warning-dark)' : 'var(--danger-dark)');
+
+        html += '<tr>';
+        html += '<td><span class="rank ' + rankClass + '">' + rank + '</span></td>';
+        html += '<td>' + escapeHtml(p.name) + '</td>';
+        html += '<td>' + formatNumber(p.quantity) + '</td>';
+        html += '<td class="amount">' + formatCurrency(p.revenue) + '</td>';
+        html += '<td class="' + profitCls + '">' + formatCurrency(p.profit) + '</td>';
+        html += '<td style="color: ' + marginColor + '; font-weight: 800;">' + p.margin.toFixed(1) + '%</td>';
+        html += '<td><span class="progress-mini"><span class="progress-mini-fill" style="width: ' + pct.toFixed(1) + '%"></span></span> ' + pct.toFixed(0) + '%</td>';
+        html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👥 Top Customers
+// ═══════════════════════════════════════════════════════════════
+function renderTopCustomers() {
+    var container = document.getElementById('topCustomersBody');
+    if (!container) return;
+
+    var customerMap = {};
+    state.customers.forEach(function(c) { customerMap[c.id] = c; });
+
+    var customerStats = {};
+
+    state.invoices.forEach(function(inv) {
+        var cid = inv.customer_id;
+        if (!cid) return;
+
+        if (!customerStats[cid]) {
+            var c = customerMap[cid] || { name: 'عميل', phone: '' };
+            customerStats[cid] = {
+                id: cid, name: c.name || 'عميل', phone: c.phone || '',
+                invoices: 0, revenue: 0, paid: 0, unpaid: 0
+            };
+        }
+        var total = parseFloat(inv.total) || 0;
+        var paid = parseFloat(inv.paid_amount) || 0;
+        customerStats[cid].invoices += 1;
+        customerStats[cid].revenue += total;
+        customerStats[cid].paid += paid;
+        customerStats[cid].unpaid += Math.max(0, total - paid);
+    });
+
+    var arr = Object.keys(customerStats).map(function(k) { return customerStats[k]; });
+    arr.sort(function(a, b) { return b.revenue - a.revenue; });
+    arr = arr.slice(0, 10);
+
+    state.topCustomers = arr;
+
+    if (!arr.length) {
+        container.innerHTML = '<div class="empty-report"><i class="fas fa-users"></i><h3>لا توجد بيانات</h3><p>لا توجد مبيعات في هذه الفترة</p></div>';
+        return;
+    }
+
+    var maxRevenue = arr[0].revenue;
+    var totalRev = arr.reduce(function(s, c) { return s + c.revenue; }, 0);
+
+    var html = '<div class="mini-stats">';
+    html += '<div class="mini-stat"><i class="fas fa-users"></i> عملاء فريدون: <span class="val">' + state.stats.uniqueCustomers + '</span></div>';
+    html += '<div class="mini-stat"><i class="fas fa-coins"></i> إيراد Top 10: <span class="val">' + formatCurrencyShort(totalRev) + '</span></div>';
+    html += '</div>';
+
+    html += '<div class="table-wrapper"><table class="data-table">';
+    html += '<thead><tr>';
+    html += '<th>#</th><th>العميل</th><th>الموبايل</th><th>الفواتير</th><th>إجمالي الشراء</th><th>المديونية</th><th>النسبة</th>';
+    html += '</tr></thead><tbody>';
+
+    arr.forEach(function(c, i) {
+        var rank = i + 1;
+        var rankClass = rank === 1 ? 'gold' : (rank === 2 ? 'silver' : (rank === 3 ? 'bronze' : ''));
+        var pct = maxRevenue > 0 ? (c.revenue / maxRevenue) * 100 : 0;
+
+        html += '<tr>';
+        html += '<td><span class="rank ' + rankClass + '">' + rank + '</span></td>';
+        html += '<td>' + escapeHtml(c.name) + '</td>';
+        html += '<td style="font-family: monospace; direction: ltr;">' + escapeHtml(c.phone || '—') + '</td>';
+        html += '<td>' + formatNumber(c.invoices) + '</td>';
+        html += '<td class="amount">' + formatCurrency(c.revenue) + '</td>';
+        html += '<td style="color: ' + (c.unpaid > 0 ? 'var(--danger-dark)' : 'var(--success-dark)') + '; font-weight: 800;">' + (c.unpaid > 0 ? formatCurrency(c.unpaid) : 'مسدد') + '</td>';
+        html += '<td><span class="progress-mini"><span class="progress-mini-fill" style="width: ' + pct.toFixed(1) + '%"></span></span> ' + pct.toFixed(0) + '%</td>';
+        html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🛒 Purchases Suggestions
+// ═══════════════════════════════════════════════════════════════
+function renderPurchases() {
+    var container = document.getElementById('purchasesBody');
+    if (!container) return;
+
+    var days = state.purchasePeriodDays;
+
+    var cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    cutoffDate.setHours(0, 0, 0, 0);
+
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        container.innerHTML = '<div class="empty-report"><i class="fas fa-wifi"></i><h3>لا يوجد اتصال</h3><p>تحتاج اتصال بالإنترنت لحساب هذه البيانات</p></div>';
+        return;
+    }
+
+    container.innerHTML = '<div style="text-align: center; padding: 2rem;"><div class="skeleton" style="height: 150px;"></div></div>';
+
+    var cutoffISO = cutoffDate.toISOString();
+
+    Promise.all([
+        sb.from('invoices').select('id, created_at').gte('created_at', cutoffISO).limit(5000),
+        sb.from('invoice_items').select('invoice_id, product_id, quantity, unit_price').limit(20000)
+    ]).then(function(results) {
+        var recentInvoices = results[0].data || [];
+        var allItems = results[1].data || [];
+
+        var invoiceIds = {};
+        recentInvoices.forEach(function(inv) { invoiceIds[inv.id] = true; });
+
+        var productSales = {};
+        allItems.forEach(function(item) {
+            if (!invoiceIds[item.invoice_id]) return;
+            var pid = item.product_id;
+            if (!pid) return;
+            if (!productSales[pid]) productSales[pid] = 0;
+            productSales[pid] += parseInt(item.quantity) || 0;
+        });
+
+        var actualDays = days;
+        if (recentInvoices.length > 0) {
+            var dates = recentInvoices.map(function(inv) { return new Date(inv.created_at).getTime(); });
+            var minDate = Math.min.apply(null, dates);
+            var maxDate = Math.max.apply(null, dates);
+            var actualDaysInData = Math.ceil((maxDate - minDate) / (1000 * 60 * 60 * 24)) + 1;
+            actualDays = Math.max(days, actualDaysInData);
+        }
+
+        var suggestions = [];
+
+        state.products.forEach(function(p) {
+            var qty = parseInt(p.quantity) || 0;
+            var minQty = parseInt(p.min_quantity) || 5;
+            var sold = productSales[p.id] || 0;
+
+            var dailyRate = sold / actualDays;
+            var weeklyRate = dailyRate * 7;
+            var monthlyRate = dailyRate * 30;
+
+            var coverageDays = dailyRate > 0 ? (qty / dailyRate) : 999;
+
+            var needsReorder = false;
+            var urgency = 0;
+
+            if (qty <= 0) {
+                needsReorder = true;
+                urgency = 3;
+            } else if (qty <= minQty) {
+                needsReorder = true;
+                urgency = 2;
+            } else if (dailyRate > 0 && coverageDays < 30) {
+                needsReorder = true;
+                urgency = 1;
+            }
+
+            if (!needsReorder) return;
+
+            var targetStock = Math.ceil(monthlyRate + minQty);
+            var suggested = Math.max(targetStock - qty, 5);
+            var estimatedCost = suggested * (parseFloat(p.cost_price) || 0);
+
+            suggestions.push({
+                id: p.id,
+                name: p.name,
+                barcode: p.barcode || '',
+                current: qty,
+                min: minQty,
+                sold: sold,
+                dailyRate: dailyRate,
+                weeklyRate: weeklyRate,
+                monthlyRate: monthlyRate,
+                coverageDays: coverageDays,
+                suggested: suggested,
+                estimatedCost: estimatedCost,
+                urgency: urgency
+            });
+        });
+
+        suggestions.sort(function(a, b) {
+            if (b.urgency !== a.urgency) return b.urgency - a.urgency;
+            return b.dailyRate - a.dailyRate;
+        });
+
+        suggestions = suggestions.slice(0, 20);
+        state.purchases = suggestions;
+
+        if (!suggestions.length) {
+            container.innerHTML = '<div class="empty-report"><i class="fas fa-circle-check" style="color: var(--success);"></i><h3>المخزون كافٍ</h3><p>لا توجد قطع تحتاج إعادة طلب بناءً على معدل البيع خلال ' + days + ' يوم</p></div>';
+            return;
+        }
+
+        var totalCost = suggestions.reduce(function(s, p) { return s + p.estimatedCost; }, 0);
+        var urgentCount = suggestions.filter(function(p) { return p.urgency === 3; }).length;
+        var importantCount = suggestions.filter(function(p) { return p.urgency === 2; }).length;
+
+        var html = '<div class="mini-stats">';
+        html += '<div class="mini-stat"><i class="fas fa-boxes-stacked"></i> قطع مقترحة: <span class="val">' + suggestions.length + '</span></div>';
+        html += '<div class="mini-stat"><i class="fas fa-circle-xmark"></i> نفذت: <span class="val">' + urgentCount + '</span></div>';
+        html += '<div class="mini-stat"><i class="fas fa-triangle-exclamation"></i> منخفضة: <span class="val">' + importantCount + '</span></div>';
+        html += '<div class="mini-stat"><i class="fas fa-coins"></i> التكلفة التقديرية: <span class="val">' + formatCurrencyShort(totalCost) + '</span></div>';
+        html += '<div class="mini-stat"><i class="fas fa-calendar"></i> فترة الحساب: <span class="val">' + days + ' يوم</span></div>';
+        html += '</div>';
+
+        html += '<div class="table-wrapper"><table class="data-table">';
+        html += '<thead><tr>';
+        html += '<th>الأولوية</th>';
+        html += '<th>القطعة</th>';
+        html += '<th>المخزون</th>';
+        html += '<th>معدل البيع اليومي</th>';
+        html += '<th>المباع خلال الفترة</th>';
+        html += '<th>تغطية المخزون</th>';
+        html += '<th>المقترح</th>';
+        html += '<th>التكلفة التقديرية</th>';
+        html += '</tr></thead><tbody>';
+
+        suggestions.forEach(function(s) {
+            var urgBadge;
+            if (s.urgency === 3) {
+                urgBadge = '<span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.3rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; background: var(--danger-soft); color: var(--danger-dark);"><i class="fas fa-circle-xmark"></i> نفذ</span>';
+            } else if (s.urgency === 2) {
+                urgBadge = '<span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.3rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; background: var(--warning-soft); color: var(--warning-dark);"><i class="fas fa-triangle-exclamation"></i> مهم</span>';
+            } else {
+                urgBadge = '<span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.3rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; background: var(--info-soft); color: #2563EB;"><i class="fas fa-clock"></i> متابعة</span>';
+            }
+
+            var coverageText;
+            var coverageColor;
+            if (s.coverageDays >= 999 || s.coverageDays >= 60) {
+                coverageText = '≥ 60 يوم';
+                coverageColor = 'var(--success-dark)';
+            } else if (s.coverageDays >= 30) {
+                coverageText = Math.round(s.coverageDays) + ' يوم';
+                coverageColor = 'var(--success-dark)';
+            } else if (s.coverageDays >= 14) {
+                coverageText = Math.round(s.coverageDays) + ' يوم';
+                coverageColor = 'var(--warning-dark)';
+            } else if (s.coverageDays >= 7) {
+                coverageText = Math.round(s.coverageDays) + ' يوم';
+                coverageColor = 'var(--danger-dark)';
+            } else {
+                coverageText = Math.round(s.coverageDays) + ' يوم';
+                coverageColor = 'var(--danger-dark)';
+            }
+
+            html += '<tr>';
+            html += '<td>' + urgBadge + '</td>';
+            html += '<td>' + escapeHtml(s.name) + '</td>';
+            html += '<td style="font-weight: 800;">' + formatNumber(s.current) + '</td>';
+            html += '<td style="font-family: monospace; font-weight: 700;">' + s.dailyRate.toFixed(2) + '</td>';
+            html += '<td style="font-weight: 700;">' + formatNumber(s.sold) + '</td>';
+            html += '<td style="color: ' + coverageColor + '; font-weight: 800;">' + coverageText + '</td>';
+            html += '<td><span style="display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 800; background: var(--primary-soft); color: var(--primary-dark);">+ ' + formatNumber(s.suggested) + '</span></td>';
+            html += '<td class="amount">' + formatCurrency(s.estimatedCost) + '</td>';
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        container.innerHTML = html;
+
+    }).catch(function(err) {
+        console.error('Purchases render error:', err);
+        container.innerHTML = '<div class="empty-report"><i class="fas fa-circle-xmark" style="color: var(--danger);"></i><h3>خطأ في التحميل</h3><p>' + escapeHtml(err.message || 'حدث خطأ غير متوقع') + '</p></div>';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⚠️ Shortages
+// ═══════════════════════════════════════════════════════════════
+function renderShortages() {
+    var container = document.getElementById('shortagesBody');
+    if (!container) return;
+
+    var shortages = state.products.filter(function(p) {
+        var qty = parseInt(p.quantity) || 0;
+        var minQty = parseInt(p.min_quantity) || 0;
+        return qty <= minQty;
+    }).map(function(p) {
+        var cost = parseFloat(p.cost_price) || 0;
+        var minQty = parseInt(p.min_quantity) || 0;
+        var qty = parseInt(p.quantity) || 0;
+        var deficit = Math.max(0, minQty - qty);
+        var suggestedOrder = Math.max(deficit, 10);
+        return {
+            id: p.id,
+            name: p.name,
+            barcode: p.barcode || '',
+            quantity: qty,
+            min_quantity: minQty,
+            cost: cost,
+            deficit: deficit,
+            suggestedOrder: suggestedOrder,
+            orderValue: suggestedOrder * cost,
+            priority: qty <= 0 ? 2 : (qty <= minQty * 0.5 ? 1 : 0)
+        };
+    }).sort(function(a, b) {
+        if (b.priority !== a.priority) return b.priority - a.priority;
+        return a.quantity - b.quantity;
+    }).slice(0, 15);
+
+    state.shortages = shortages;
+
+    if (!shortages.length) {
+        container.innerHTML = '<div class="empty-report"><i class="fas fa-circle-check" style="color: var(--success);"></i><h3>المخزون في حالة جيدة</h3><p>لا توجد قطع منخفضة</p></div>';
+        return;
+    }
+
+    var totalValue = shortages.reduce(function(s, p) { return s + p.orderValue; }, 0);
+
+    var html = '<div class="mini-stats">';
+    html += '<div class="mini-stat"><i class="fas fa-triangle-exclamation"></i> قطع منخفضة: <span class="val">' + shortages.length + '</span></div>';
+    html += '<div class="mini-stat"><i class="fas fa-coins"></i> قيمة إعادة الطلب: <span class="val">' + formatCurrencyShort(totalValue) + '</span></div>';
+    html += '</div>';
+
+    html += '<div class="table-wrapper"><table class="data-table">';
+    html += '<thead><tr>';
+    html += '<th>الأولوية</th><th>القطعة</th><th>الباركود</th><th>الكمية</th><th>حد التنبيه</th><th>النقص</th><th>مقترح شراء</th><th>تكلفة تقديرية</th>';
+    html += '</tr></thead><tbody>';
+
+    shortages.forEach(function(p) {
+        var isOut = p.quantity <= 0;
+        var isUrgent = p.quantity <= p.min_quantity * 0.5;
+
+        var priorityBadge = isOut
+            ? '<span style="display: inline-flex; padding: 0.3rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; background: var(--danger-soft); color: var(--danger-dark);">عاجل</span>'
+            : (isUrgent
+                ? '<span style="display: inline-flex; padding: 0.3rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; background: var(--warning-soft); color: var(--warning-dark);">مهم</span>'
+                : '<span style="display: inline-flex; padding: 0.3rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 800; background: var(--info-soft); color: #2563EB;">عادي</span>');
+
+        html += '<tr>';
+        html += '<td>' + priorityBadge + '</td>';
+        html += '<td>' + escapeHtml(p.name) + '</td>';
+        html += '<td style="font-family: monospace; font-size: 0.75rem;">' + escapeHtml(p.barcode || '—') + '</td>';
+        html += '<td style="font-weight: 800; color: ' + (isOut ? 'var(--danger-dark)' : 'var(--warning-dark)') + ';">' + p.quantity + '</td>';
+        html += '<td>' + p.min_quantity + '</td>';
+        html += '<td>' + p.deficit + '</td>';
+        html += '<td style="color: var(--primary); font-weight: 800;">+ ' + p.suggestedOrder + '</td>';
+        html += '<td>' + formatCurrency(p.orderValue) + '</td>';
+        html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔄 Comparison
+// ═══════════════════════════════════════════════════════════════
+function renderComparison() {
+    var container = document.getElementById('comparisonBody');
+    if (!container) return;
+
+    var currAOV = state.stats.invoices > 0 ? state.stats.revenue / state.stats.invoices : 0;
+    var prevAOV = state.stats.prevInvoices > 0 ? state.stats.prevRevenue / state.stats.prevInvoices : 0;
+
+    var metrics = [
+        { label: 'إجمالي المبيعات', current: state.stats.revenue, previous: state.stats.prevRevenue, icon: 'fa-money-bill-wave', color: '#10B981', format: 'currency' },
+        { label: 'إجمالي الأرباح', current: state.stats.totalProfit, previous: state.stats.prevTotalProfit, icon: 'fa-chart-line', color: '#0F766E', format: 'currency' },
+        { label: 'عدد الفواتير', current: state.stats.invoices, previous: state.stats.prevInvoices, icon: 'fa-file-invoice', color: '#8B5CF6', format: 'number' },
+        { label: 'متوسط الفاتورة', current: currAOV, previous: prevAOV, icon: 'fa-receipt', color: '#3B82F6', format: 'currency' },
+        { label: 'أوامر الصيانة', current: state.stats.repairs, previous: 0, icon: 'fa-screwdriver-wrench', color: '#F59E0B', format: 'number' }
+    ];
+
+    var html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">';
+
+    metrics.forEach(function(m) {
+        var change = 0;
+        var changeColor = 'var(--text-muted)';
+        var changeIcon = 'fa-minus';
+        var hasPrevious = m.previous > 0;
+
+        if (hasPrevious) {
+            change = ((m.current - m.previous) / m.previous) * 100;
+            changeIcon = change >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+            changeColor = change >= 0 ? 'var(--success-dark)' : 'var(--danger-dark)';
+        }
+
+        var currentStr = m.format === 'currency' ? formatCurrencyShort(m.current) : formatNumber(m.current);
+        var previousStr = m.format === 'currency' ? formatCurrencyShort(m.previous) : formatNumber(m.previous);
+
+        html += '<div style="padding: 1.15rem; background: var(--bg-subtle); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">';
+        html += '<div style="display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.85rem;">';
+        html += '<div style="width: 34px; height: 34px; border-radius: 8px; background: ' + m.color + '20; color: ' + m.color + '; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;"><i class="fas ' + m.icon + '"></i></div>';
+        html += '<div style="font-size: 0.8rem; font-weight: 800; color: var(--text-secondary);">' + m.label + '</div>';
+        html += '</div>';
+        html += '<div style="font-size: 1.4rem; font-weight: 900; color: var(--text-primary); margin-bottom: 0.4rem;">' + currentStr + '</div>';
+        html += '<div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem;">';
+        html += '<span style="color: var(--text-muted); font-weight: 700;">السابق: ' + previousStr + '</span>';
+        if (hasPrevious) {
+            html += '<span style="color: ' + changeColor + '; font-weight: 800;"><i class="fas ' + changeIcon + '"></i> ' + Math.abs(change).toFixed(1) + '%</span>';
+        } else {
+            html += '<span style="color: var(--text-muted);"><i class="fas fa-minus"></i> —</span>';
+        }
+        html += '</div>';
+        html += '</div>';
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📤 Export Functions
+// ═══════════════════════════════════════════════════════════════
+function exportProductsExcel() {
+    if (typeof XLSX === 'undefined') { showToast('مكتبة Excel غير محملة', 'error'); return; }
+    if (!state.topProducts.length) { showToast('لا توجد بيانات للتصدير', 'warning'); return; }
+
+    var data = state.topProducts.map(function(p, i) {
+        return {
+            'الترتيب': i + 1,
+            'القطعة': p.name,
+            'الكمية المباعة': p.quantity,
+            'الإيراد': parseFloat(p.revenue.toFixed(2)),
+            'التكلفة': parseFloat(p.cost.toFixed(2)),
+            'الربح': parseFloat(p.profit.toFixed(2)),
+            'الهامش %': parseFloat(p.margin.toFixed(1))
+        };
+    });
+
+    var ws = XLSX.utils.json_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'أعلى القطع');
+    XLSX.writeFile(wb, 'top_products_' + Date.now() + '.xlsx');
+    showToast('تم تصدير القطع', 'success');
+}
+
+function exportCustomersExcel() {
+    if (typeof XLSX === 'undefined') { showToast('مكتبة Excel غير محملة', 'error'); return; }
+    if (!state.topCustomers.length) { showToast('لا توجد بيانات للتصدير', 'warning'); return; }
+
+    var data = state.topCustomers.map(function(c, i) {
+        return {
+            'الترتيب': i + 1,
+            'العميل': c.name,
+            'الموبايل': c.phone,
+            'عدد الفواتير': c.invoices,
+            'إجمالي الشراء': parseFloat(c.revenue.toFixed(2)),
+            'المدفوع': parseFloat(c.paid.toFixed(2)),
+            'المديونية': parseFloat(c.unpaid.toFixed(2))
+        };
+    });
+
+    var ws = XLSX.utils.json_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'أعلى العملاء');
+    XLSX.writeFile(wb, 'top_customers_' + Date.now() + '.xlsx');
+    showToast('تم تصدير العملاء', 'success');
+}
+
+function exportPurchasesExcel() {
+    if (typeof XLSX === 'undefined') { showToast('مكتبة Excel غير محملة', 'error'); return; }
+    if (!state.purchases.length) { showToast('لا توجد بيانات للتصدير', 'warning'); return; }
+
+    var data = state.purchases.map(function(p) {
+        return {
+            'القطعة': p.name,
+            'الباركود': p.barcode,
+            'المخزون الحالي': p.current,
+            'حد التنبيه': p.min,
+            'المباع خلال الفترة': p.sold,
+            'المعدل اليومي': parseFloat(p.dailyRate.toFixed(2)),
+            'المعدل الأسبوعي': parseFloat(p.weeklyRate.toFixed(1)),
+            'المعدل الشهري': parseFloat(p.monthlyRate.toFixed(0)),
+            'تغطية المخزون (يوم)': Math.round(p.coverageDays),
+            'الكمية المقترحة': p.suggested,
+            'التكلفة التقديرية': parseFloat(p.estimatedCost.toFixed(2))
+        };
+    });
+
+    var ws = XLSX.utils.json_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'اقتراحات الشراء');
+    XLSX.writeFile(wb, 'purchase_suggestions_' + state.purchasePeriodDays + 'd_' + Date.now() + '.xlsx');
+    showToast('تم تصدير الاقتراحات', 'success');
+}
+
+function exportAllExcel() {
+    if (typeof XLSX === 'undefined') { showToast('مكتبة Excel غير محملة', 'error'); return; }
+
+    var wb = XLSX.utils.book_new();
+
+    var summaryData = [
+        { 'المؤشر': 'إجمالي المبيعات', 'القيمة': state.stats.revenue.toFixed(2) + ' ج.م' },
+        { 'المؤشر': 'إجمالي الأرباح', 'القيمة': state.stats.totalProfit.toFixed(2) + ' ج.م' },
+        { 'المؤشر': 'ربح القطع', 'القيمة': state.stats.partsProfit.toFixed(2) + ' ج.م' },
+        { 'المؤشر': 'إيراد المصنعية', 'القيمة': state.stats.laborRevenue.toFixed(2) + ' ج.م' },
+        { 'المؤشر': 'عدد الفواتير', 'القيمة': state.stats.invoices },
+        { 'المؤشر': 'عدد أوامر الصيانة', 'القيمة': state.stats.repairs },
+        { 'المؤشر': 'القطع المباعة', 'القيمة': state.stats.itemsSold },
+        { 'المؤشر': 'المبلغ المحصّل', 'القيمة': state.stats.collected.toFixed(2) + ' ج.م' },
+        { 'المؤشر': 'المديونيات', 'القيمة': state.stats.unpaid.toFixed(2) + ' ج.م' },
+        { 'المؤشر': 'عملاء فريدون', 'القيمة': state.stats.uniqueCustomers },
+        { 'المؤشر': 'الفترة', 'القيمة': state.period }
+    ];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(summaryData), 'ملخص عام');
+
+    if (state.topProducts.length) {
+        var prodData = state.topProducts.map(function(p, i) {
+            return { 'الترتيب': i + 1, 'القطعة': p.name, 'الكمية': p.quantity, 'الإيراد': parseFloat(p.revenue.toFixed(2)), 'الربح': parseFloat(p.profit.toFixed(2)), 'الهامش%': parseFloat(p.margin.toFixed(1)) };
+        });
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(prodData), 'أعلى القطع');
+    }
+
+    if (state.topCustomers.length) {
+        var custData = state.topCustomers.map(function(c, i) {
+            return { 'الترتيب': i + 1, 'العميل': c.name, 'الموبايل': c.phone, 'الفواتير': c.invoices, 'الإجمالي': parseFloat(c.revenue.toFixed(2)), 'المديونية': parseFloat(c.unpaid.toFixed(2)) };
+        });
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(custData), 'أعلى العملاء');
+    }
+
+    if (state.purchases.length) {
+        var purchData = state.purchases.map(function(p) {
+            return { 'القطعة': p.name, 'المخزون': p.current, 'المعدل اليومي': parseFloat(p.dailyRate.toFixed(2)), 'المقترح': p.suggested, 'التكلفة': parseFloat(p.estimatedCost.toFixed(2)) };
+        });
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(purchData), 'اقتراحات الشراء');
+    }
+
+    if (state.shortages.length) {
+        var shortData = state.shortages.map(function(s) {
+            return { 'القطعة': s.name, 'الكمية': s.quantity, 'حد التنبيه': s.min_quantity, 'النقص': s.deficit, 'مقترح شراء': s.suggestedOrder, 'التكلفة': parseFloat(s.orderValue.toFixed(2)) };
+        });
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(shortData), 'النواقص');
+    }
+
+    XLSX.writeFile(wb, 'topload_reports_' + Date.now() + '.xlsx');
+    showToast('تم تصدير التقرير الشامل', 'success');
+}
+
+function exportAllPDF() {
+    if (typeof window.jspdf === 'undefined') { showToast('مكتبة PDF غير محملة', 'error'); return; }
+
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF('p', 'mm', 'a4');
+
+    doc.setFontSize(20);
+    doc.setTextColor(15, 118, 110);
+    doc.text('TopLoad - Reports', 105, 18, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Washing Machine Repair Center', 105, 25, { align: 'center' });
+    doc.text('Period: ' + state.period.toUpperCase(), 105, 30, { align: 'center' });
+    doc.text('Generated: ' + new Date().toLocaleString('en-GB'), 105, 35, { align: 'center' });
+
+    var y = 45;
+
+    doc.setFontSize(13);
+    doc.setTextColor(15, 23, 42);
+    doc.text('Key Statistics', 14, y);
+    y += 6;
+
+    doc.autoTable({
+        head: [['Metric', 'Value']],
+        body: [
+            ['Revenue', formatCurrency(state.stats.revenue)],
+            ['Total Profit', formatCurrency(state.stats.totalProfit)],
+            ['Parts Profit', formatCurrency(state.stats.partsProfit)],
+            ['Labor Revenue', formatCurrency(state.stats.laborRevenue)],
+            ['Invoices', state.stats.invoices],
+            ['Repairs', state.stats.repairs],
+            ['Items Sold', state.stats.itemsSold],
+            ['Collected', formatCurrency(state.stats.collected)],
+            ['Outstanding', formatCurrency(state.stats.unpaid)],
+            ['Unique Customers', state.stats.uniqueCustomers]
+        ],
+        startY: y,
+        styles: { fontSize: 9, halign: 'center' },
+        headStyles: { fillColor: [15, 118, 110], halign: 'center' },
+        columnStyles: { 0: { halign: 'left' }, 1: { halign: 'right' } }
+    });
+
+    y = doc.lastAutoTable.finalY + 10;
+
+    if (state.topProducts.length && y < 230) {
+        doc.setFontSize(13);
+        doc.text('Top 10 Products', 14, y);
+        y += 6;
+
+        var prodData = state.topProducts.slice(0, 10).map(function(p, i) {
+            return [(i + 1), p.name.substring(0, 35), p.quantity, p.revenue.toFixed(2), p.profit.toFixed(2)];
+        });
+
+        doc.autoTable({
+            head: [['#', 'Product', 'Qty', 'Revenue', 'Profit']],
+            body: prodData,
+            startY: y,
+            styles: { fontSize: 8, halign: 'center' },
+            headStyles: { fillColor: [16, 185, 129], halign: 'center' },
+            columnStyles: { 1: { halign: 'left' } }
+        });
+        y = doc.lastAutoTable.finalY + 10;
+    }
+
+    if (state.topCustomers.length && y < 230) {
+        doc.addPage();
+        y = 20;
+        doc.setFontSize(13);
+        doc.text('Top 10 Customers', 14, y);
+        y += 6;
+
+        var custData = state.topCustomers.slice(0, 10).map(function(c, i) {
+            return [(i + 1), c.name.substring(0, 28), c.phone || '-', c.invoices, c.revenue.toFixed(2), c.unpaid.toFixed(2)];
+        });
+
+        doc.autoTable({
+            head: [['#', 'Customer', 'Phone', 'Inv', 'Total', 'Unpaid']],
+            body: custData,
+            startY: y,
+            styles: { fontSize: 8, halign: 'center' },
+            headStyles: { fillColor: [139, 92, 246], halign: 'center' },
+            columnStyles: { 1: { halign: 'left' } }
+        });
+        y = doc.lastAutoTable.finalY + 10;
+    }
+
+    if (state.purchases.length && y < 230) {
+        doc.setFontSize(13);
+        doc.text('Purchase Suggestions (' + state.purchasePeriodDays + ' days)', 14, y);
+        y += 6;
+
+        var purchData = state.purchases.slice(0, 15).map(function(p) {
+            return [p.name.substring(0, 30), p.current, p.dailyRate.toFixed(2), p.suggested, p.estimatedCost.toFixed(2)];
+        });
+
+        doc.autoTable({
+            head: [['Product', 'Stock', 'Daily Rate', 'Suggested', 'Cost']],
+            body: purchData,
+            startY: y,
+            styles: { fontSize: 8, halign: 'center' },
+            headStyles: { fillColor: [245, 158, 11], halign: 'center' },
+            columnStyles: { 0: { halign: 'left' } }
+        });
+    }
+
+    var pageCount = doc.internal.getNumberOfPages();
+    for (var i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(148, 163, 184);
+        doc.text('Page ' + i + ' / ' + pageCount + ' - TopLoad Reports', 105, 290, { align: 'center' });
+    }
+
+    doc.save('reports_' + Date.now() + '.pdf');
+    showToast('تم تصدير التقرير PDF', 'success');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔄 Refresh All
+// ═══════════════════════════════════════════════════════════════
+function refreshAllReports() {
+    updateOnlineStatus();
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        showToast('لا يمكن التحديث في وضع Offline', 'warning');
+        return;
+    }
+
+    showToast('جاري تحديث التقارير...', 'info');
+
+    loadData().then(function() {
+        calculateStats();
+        refreshAllCharts();
+        renderTopProducts();
+        renderTopCustomers();
+        renderTopCustomersChart();
+        renderPurchases();
+        renderShortages();
+        renderComparison();
+        showToast('تم تحديث التقارير', 'success');
+    }).catch(function(err) {
+        console.error('Refresh error:', err);
+        showToast('فشل التحديث: ' + (err.message || ''), 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔔 Notifications
+// ═══════════════════════════════════════════════════════════════
+var allNotifications = [];
+
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return Promise.resolve();
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return Promise.resolve();
+
+    return sb.from('notifications')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
+        .limit(20)
+        .then(function(result) {
+            allNotifications = result.data || [];
+            renderNotifications();
+        })
+        .catch(function() {});
+}
+
+function renderNotifications() {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+
+    var unread = 0;
+    allNotifications.forEach(function(n) { if (!n.read) unread++; });
+
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+
+    if (!allNotifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+
+    var typeMap = {
+        'out_of_stock': { icon: 'fa-circle-xmark', cls: 'danger' },
+        'low_stock': { icon: 'fa-triangle-exclamation', cls: 'warning' },
+        'unpaid_invoice': { icon: 'fa-file-invoice-dollar', cls: 'danger' },
+        'new_repair': { icon: 'fa-soap', cls: 'info' },
+        'ready_repair': { icon: 'fa-circle-check', cls: 'success' },
+        'info': { icon: 'fa-circle-info', cls: 'info' }
+    };
+
+    var html = '';
+    allNotifications.forEach(function(n) {
+        var t = typeMap[n.type] || typeMap.info;
+        html += '<div class="notification-item">';
+        html += '<div class="notification-item-icon ' + t.cls + '"><i class="fas ' + t.icon + '"></i></div>';
+        html += '<div class="notification-item-content">';
+        html += '<div class="notification-item-title">' + escapeHtml(n.title || '') + '</div>';
+        html += '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>';
+        html += '</div>';
+        html += '</div>';
+    });
+    list.innerHTML = html;
+}
+
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+    allNotifications.forEach(function(n) { n.read = true; });
+    renderNotifications();
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications').update({ read: true })
+            .eq('user_id', session.user.id)
+            .eq('read', false)
+            .then(function() { showToast('تم تعيين الكل كمقروء', 'success'); })
+            .catch(function() {});
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 User UI
+// ═══════════════════════════════════════════════════════════════
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+
+    document.querySelectorAll('.sidebar-link[data-perm]').forEach(function(link) {
+        if (!isAdmin && !perms[link.dataset.perm]) link.style.display = 'none';
+    });
+
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        var dal = document.getElementById('dropdownAdminLink');
+        if (al) al.style.display = 'flex';
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+
+    var session = getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    if (session.user.must_change_password) { window.location.href = 'index.html'; return; }
+
+    initTheme();
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+        refreshAllReports();
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('انقطع الاتصال', 'warning');
+    });
+
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (menuBtn) menuBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+    });
+    if (overlay) overlay.addEventListener('click', function() {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+    });
+
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+
+    if (userBtn) userBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userDropdown.classList.toggle('show');
+        notifPanel.classList.remove('show');
+    });
+
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+
+    if (notifBtn) notifBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notifPanel.classList.toggle('show');
+        userDropdown.classList.remove('show');
+    });
+
+    var markAllBtn = document.getElementById('markAllReadBtn');
+    if (markAllBtn) markAllBtn.addEventListener('click', markAllRead);
+
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+
+    document.querySelectorAll('.period-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.period-tab').forEach(function(t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+            state.period = tab.dataset.period;
+
+            var customRange = document.getElementById('customRange');
+            if (state.period === 'custom') {
+                customRange.classList.add('show');
+            } else {
+                customRange.classList.remove('show');
+                refreshAllReports();
+            }
+        });
+    });
+
+    var applyRangeBtn = document.getElementById('applyRangeBtn');
+    if (applyRangeBtn) {
+        applyRangeBtn.addEventListener('click', function() {
+            var from = document.getElementById('fromDate').value;
+            var to = document.getElementById('toDate').value;
+            if (!from || !to) { showToast('الرجاء اختيار التاريخين', 'warning'); return; }
+            state.fromDate = from;
+            state.toDate = to;
+            refreshAllReports();
+        });
+    }
+
+    var today = new Date();
+    var lastMonth = new Date();
+    lastMonth.setDate(lastMonth.getDate() - 30);
+    if (document.getElementById('fromDate')) {
+        document.getElementById('fromDate').value = lastMonth.toISOString().split('T')[0];
+        document.getElementById('toDate').value = today.toISOString().split('T')[0];
+    }
+
+    document.querySelectorAll('#purchasePeriodSelector .period-option').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#purchasePeriodSelector .period-option').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            state.purchasePeriodDays = parseInt(btn.dataset.days) || 30;
+            renderPurchases();
+        });
+    });
+
+    var refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', refreshAllReports);
+
+    var expAllExcel = document.getElementById('exportAllExcelBtn');
+    if (expAllExcel) expAllExcel.addEventListener('click', exportAllExcel);
+
+    var expAllPdf = document.getElementById('exportAllPdfBtn');
+    if (expAllPdf) expAllPdf.addEventListener('click', exportAllPDF);
+
+    document.querySelectorAll('[data-export]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var type = btn.dataset.export;
+            if (type === 'products') exportProductsExcel();
+            else if (type === 'customers') exportCustomersExcel();
+            else if (type === 'purchases') exportPurchasesExcel();
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') { e.preventDefault(); toggleTheme(); }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'r') { e.preventDefault(); refreshAllReports(); }
+    });
+
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        if (winScroll > 300) { if (scrollTopBtn) scrollTopBtn.classList.add('show'); }
+        else { if (scrollTopBtn) scrollTopBtn.classList.remove('show'); }
+    }, { passive: true });
+    if (scrollTopBtn) scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    setTimeout(function() {
+        refreshAllReports();
+        loadNotifications();
+        setInterval(loadNotifications, 60000);
+    }, 300);
+
+    startInactivityMonitor();
+
+    console.log('%c📊 TopLoad - صفحة التقارير جاهزة ✅', 'color: #0F766E; font-size: 16px; font-weight: bold;');
+    console.log('%c✅ الحسابات دقيقة 100% - ربح = (بيع - شراء) × كمية + مصنعية', 'color: #10B981; font-size: 12px;');
+    console.log('%c🛒 القطع المقترحة تُحسب بناءً على معدل البيع الفعلي', 'color: #F59E0B; font-size: 12px;');
+});
+
+})();
+</script>
+
+</body>
+</html>

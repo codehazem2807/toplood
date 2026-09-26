@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d5b8e">
+<meta name="description" content="الورديات - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>الورديات | TopLoad</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #1d5b8e; --tech-blue-dark: #154668; --tech-blue-light: #2d7ab8;
+    --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
+    --purple: #8b5cf6; --pink: #ec4899;
+    --bg-primary: #E0F7FA; --bg-card: #ffffff; --bg-hover: #f1f5f9;
+    --text-primary: #0a1f33; --text-secondary: #475569; --text-muted: #94a3b8;
+    --border-color: #e1e8f0;
+    --shadow-sm: 0 1px 3px rgba(10,31,51,0.06);
+    --shadow-md: 0 4px 12px rgba(10,31,51,0.08);
+    --shadow-lg: 0 12px 32px rgba(10,31,51,0.12);
+    --shadow-xl: 0 24px 48px rgba(10,31,51,0.16);
+    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px; --radius-full: 9999px;
+    --navbar-height: 64px; --sidebar-width: 260px;
+    --transition-fast: 0.15s ease; --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    --safe-top: env(safe-area-inset-top,0); --safe-bottom: env(safe-area-inset-bottom,0);
+    --safe-left: env(safe-area-inset-left,0); --safe-right: env(safe-area-inset-right,0);
+}
+[data-theme="dark"] {
+    --bg-primary: #0a1628; --bg-card: #142f4a; --bg-hover: #1a3a5c;
+    --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b;
+    --border-color: #1e3a5f;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    --shadow-xl: 0 24px 48px rgba(0,0,0,0.6);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: var(--bg-primary); color: var(--text-primary);
+    min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+.reading-progress {
+    position: fixed; top: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-blue-light), var(--success));
+    width: 0%; z-index: 10000; transition: width 0.1s linear;
+    box-shadow: 0 0 10px rgba(29,91,142,0.6);
+}
+
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--navbar-height); background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000; display: flex; align-items: center;
+    padding: 0 1rem; padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem; box-shadow: var(--shadow-sm);
+}
+.navbar-menu-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1.1rem;
+    transition: all var(--transition); flex-shrink: 0;
+}
+.navbar-menu-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.navbar-brand { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.navbar-logo {
+    width: 40px; height: 40px; object-fit: contain;
+    border-radius: var(--radius-md); background: var(--bg-primary);
+    padding: 4px; border: 1px solid var(--border-color);
+}
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-brand-text strong { font-size: 1rem; font-weight: 800; }
+.navbar-brand-text span { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-right: auto; }
+.navbar-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1rem;
+    transition: all var(--transition); position: relative; flex-shrink: 0;
+}
+.navbar-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.navbar-badge {
+    position: absolute; top: 4px; left: 4px;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 9px; background: var(--danger); color: white;
+    font-size: 0.65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--bg-card);
+}
+.online-dot {
+    position: absolute; top: 6px; left: 6px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--success); border: 2px solid var(--bg-card);
+    animation: pulse-online 2s infinite;
+}
+.online-dot.offline { background: var(--danger); animation: none; }
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+    100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+.navbar-user {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary); border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition); cursor: pointer; flex-shrink: 0;
+}
+.navbar-user:hover { background: var(--bg-hover); border-color: var(--tech-blue); }
+.navbar-user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
+}
+.navbar-user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--text-muted); }
+
+.sidebar {
+    position: fixed; top: var(--navbar-height); right: 0; bottom: 0;
+    width: var(--sidebar-width); background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900; overflow-y: auto;
+    padding: 1rem 0.75rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--transition);
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+.sidebar-section { margin-bottom: 1.25rem; }
+.sidebar-section-title {
+    font-size: 0.7rem; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 0 0.75rem; margin-bottom: 0.5rem;
+}
+.sidebar-link {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 0.85rem; border-radius: var(--radius-md);
+    color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
+    transition: all var(--transition-fast);
+    margin-bottom: 0.15rem; position: relative;
+}
+.sidebar-link:hover { background: var(--bg-hover); color: var(--tech-blue); transform: translateX(-3px); }
+.sidebar-link.active {
+    background: linear-gradient(135deg, rgba(29,91,142,0.12), rgba(45,122,184,0.08));
+    color: var(--tech-blue); font-weight: 700;
+}
+.sidebar-link.active::before {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 4px; height: 60%;
+    background: var(--tech-blue); border-radius: 4px;
+}
+.sidebar-link i:first-child { width: 20px; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+.sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(10,31,51,0.5);
+    backdrop-filter: blur(4px); z-index: 899;
+    opacity: 0; visibility: hidden;
+    transition: all var(--transition); top: var(--navbar-height);
+}
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem; min-height: calc(100vh - var(--navbar-height));
+}
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+}
+.page-header-text h1 {
+    font-size: 1.65rem; font-weight: 800; margin-bottom: 0.25rem;
+    display: flex; align-items: center; gap: 0.6rem;
+}
+.page-header-text h1 i { color: var(--tech-blue); }
+.page-header-text p { font-size: 0.9rem; color: var(--text-secondary); }
+.page-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn {
+    padding: 0.65rem 1.15rem; border-radius: var(--radius-md);
+    font-size: 0.9rem; font-weight: 600;
+    transition: all var(--transition);
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    justify-content: center; white-space: nowrap;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,91,142,0.4); }
+.btn-secondary {
+    background: var(--bg-card); color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover { background: var(--bg-hover); border-color: var(--tech-blue); color: var(--tech-blue); }
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    color: white;
+}
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239,68,68,0.4); }
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+}
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,0.4); }
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning), #d97706);
+    color: white;
+}
+.btn-warning:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,158,11,0.4); }
+.btn-sm { padding: 0.45rem 0.8rem; font-size: 0.8rem; }
+.btn-lg { padding: 0.85rem 1.5rem; font-size: 1rem; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* Current Shift Banner */
+.current-shift-banner {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    position: relative; overflow: hidden;
+    animation: slideDown 0.5s ease;
+}
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.current-shift-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+.shift-banner-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.25rem; position: relative; z-index: 1;
+    flex-wrap: wrap;
+}
+.shift-banner-icon {
+    width: 60px; height: 60px; border-radius: var(--radius-lg);
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.75rem; flex-shrink: 0;
+    backdrop-filter: blur(8px);
+    animation: pulseShift 2s infinite;
+}
+@keyframes pulseShift {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+.shift-banner-info { flex: 1; min-width: 0; }
+.shift-banner-info h2 {
+    font-size: 1.35rem; font-weight: 800;
+    margin-bottom: 0.25rem;
+    display: flex; align-items: center; gap: 0.5rem;
+}
+.shift-banner-info p {
+    font-size: 0.85rem; opacity: 0.9;
+    display: flex; align-items: center; gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.shift-banner-info p i { font-size: 0.75rem; }
+
+.shift-banner-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    position: relative; z-index: 1;
+}
+.shift-banner-stat {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    padding: 0.85rem;
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+.shift-banner-stat-label {
+    font-size: 0.7rem; font-weight: 600;
+    opacity: 0.85; margin-bottom: 0.35rem;
+}
+.shift-banner-stat-value {
+    font-size: 1.15rem; font-weight: 800;
+    font-family: 'Courier New', monospace;
+}
+.shift-banner-stat-value.warning { color: #fde68a; }
+.shift-banner-stat-value.danger { color: #fecaca; }
+.shift-banner-actions {
+    display: flex; gap: 0.5rem;
+    position: relative; z-index: 1;
+    flex-wrap: wrap;
+}
+.shift-banner-actions .btn { flex: 1; min-width: 160px; }
+.shift-banner-actions .btn-light {
+    background: rgba(255,255,255,0.95);
+    color: var(--tech-blue);
+    font-weight: 800;
+}
+.shift-banner-actions .btn-light:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* No Active Shift Banner */
+.no-shift-banner {
+    background: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.5s ease;
+}
+.no-shift-icon {
+    width: 80px; height: 80px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(29,91,142,0.1), rgba(45,122,184,0.05));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; color: var(--tech-blue);
+    border: 2px solid var(--border-color);
+}
+.no-shift-banner h3 {
+    font-size: 1.2rem; font-weight: 800;
+    margin-bottom: 0.35rem;
+}
+.no-shift-banner p {
+    font-size: 0.9rem; color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+}
+
+/* Stats Bar */
+.stats-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem; margin-bottom: 1.25rem;
+}
+.stat-item {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 1.15rem;
+    display: flex; align-items: center; gap: 0.85rem;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease backwards;
+}
+.stat-item:nth-child(1) { animation-delay: 0.05s; }
+.stat-item:nth-child(2) { animation-delay: 0.1s; }
+.stat-item:nth-child(3) { animation-delay: 0.15s; }
+.stat-item:nth-child(4) { animation-delay: 0.2s; }
+.stat-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--tech-blue); }
+.stat-item-icon {
+    width: 46px; height: 46px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: white; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.stat-item-icon.success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+.stat-item-icon.warning { background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+.stat-item-icon.danger { background: linear-gradient(135deg, var(--danger), #dc2626); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+.stat-item-content { flex: 1; min-width: 0; }
+.stat-item-value { font-size: 1.35rem; font-weight: 800; line-height: 1.2; }
+.stat-item-value small { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+.stat-item-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+
+/* Toolbar */
+.toolbar {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 1rem;
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;
+}
+.toolbar-search { flex: 1; min-width: 240px; position: relative; }
+.toolbar-search-input {
+    width: 100%; padding: 0.65rem 1rem; padding-right: 2.75rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem;
+    outline: none; transition: all var(--transition);
+}
+.toolbar-search-input:focus {
+    border-color: var(--tech-blue); background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29,91,142,0.12);
+}
+.toolbar-search-icon {
+    position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none;
+}
+.toolbar-select, .toolbar-date {
+    padding: 0.65rem 2.25rem 0.65rem 1rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 500;
+    color: var(--text-primary); outline: none; cursor: pointer;
+    transition: all var(--transition); appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: left 0.75rem center;
+    min-width: 160px;
+}
+.toolbar-date { min-width: 150px; }
+.toolbar-select:focus, .toolbar-date:focus {
+    border-color: var(--tech-blue); box-shadow: 0 0 0 4px rgba(29,91,142,0.12);
+}
+
+/* Shifts List */
+.shifts-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+.shift-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease backwards;
+    position: relative; overflow: hidden;
+}
+.shift-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--tech-blue);
+}
+.shift-card.active {
+    border-color: var(--success);
+    background: linear-gradient(135deg, rgba(16,185,129,0.04), transparent);
+}
+.shift-card.active::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, var(--success) 0%, transparent 70%);
+    opacity: 0.08; border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.shift-card-header {
+    display: flex; align-items: flex-start;
+    gap: 0.85rem; margin-bottom: 1rem;
+    position: relative; z-index: 1;
+    flex-wrap: wrap;
+}
+.shift-card-icon {
+    width: 48px; height: 48px; border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.shift-card.active .shift-card-icon {
+    background: linear-gradient(135deg, var(--success), #059669);
+    box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+    animation: pulseShift 2s infinite;
+}
+.shift-card-info { flex: 1; min-width: 0; }
+.shift-card-info h3 {
+    font-size: 1rem; font-weight: 800;
+    margin-bottom: 0.25rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.shift-card-info p {
+    font-size: 0.75rem; color: var(--text-secondary);
+    display: flex; gap: 0.75rem; flex-wrap: wrap;
+}
+.shift-card-info p span { display: flex; align-items: center; gap: 0.3rem; }
+
+.shift-status-badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem; font-weight: 800;
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    flex-shrink: 0;
+}
+.shift-status-badge.active {
+    background: rgba(16,185,129,0.15); color: var(--success);
+    border: 1px solid rgba(16,185,129,0.3);
+}
+.shift-status-badge.closed {
+    background: var(--bg-hover); color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.shift-card-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+    position: relative; z-index: 1;
+}
+.shift-stat {
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+.shift-stat-label {
+    font-size: 0.68rem; color: var(--text-muted);
+    font-weight: 700; margin-bottom: 0.35rem;
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+.shift-stat-value {
+    font-size: 1rem; font-weight: 800;
+    font-family: 'Courier New', monospace;
+    color: var(--text-primary);
+}
+.shift-stat-value.success { color: var(--success); }
+.shift-stat-value.danger { color: var(--danger); }
+.shift-stat-value.warning { color: var(--warning); }
+.shift-stat-value.tech { color: var(--tech-blue); }
+.shift-stat-value.info { color: var(--info); }
+
+.shift-diff-indicator {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem; font-weight: 800;
+    margin-bottom: 0.75rem;
+    position: relative; z-index: 1;
+}
+.shift-diff-indicator.success {
+    background: rgba(16,185,129,0.1); color: var(--success);
+    border: 1px solid rgba(16,185,129,0.3);
+}
+.shift-diff-indicator.danger {
+    background: rgba(239,68,68,0.1); color: var(--danger);
+    border: 1px solid rgba(239,68,68,0.3);
+}
+.shift-diff-indicator.balanced {
+    background: rgba(59,130,246,0.1); color: var(--info);
+    border: 1px solid rgba(59,130,246,0.3);
+}
+.shift-diff-indicator i { font-size: 1rem; }
+
+.shift-card-actions {
+    display: flex; gap: 0.35rem;
+    position: relative; z-index: 1;
+    flex-wrap: wrap;
+}
+.shift-card-actions .btn { flex: 1; min-width: 100px; }
+
+/* Modal */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(10,31,51,0.75);
+    backdrop-filter: blur(8px); display: none;
+    align-items: center; justify-content: center;
+    z-index: 2000; padding: 1rem;
+    animation: fadeIn 0.3s ease; overflow-y: auto;
+}
+.modal-overlay.show { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+    background: var(--bg-card); border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 560px; width: 100%; max-height: 92vh;
+    overflow: hidden;
+    animation: modalIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    display: flex; flex-direction: column; margin: auto;
+    border: 1px solid var(--border-color);
+}
+.modal-lg { max-width: 780px; }
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-shrink: 0;
+}
+.modal-title {
+    font-size: 1.15rem; font-weight: 700;
+    display: flex; align-items: center; gap: 0.6rem;
+}
+.modal-title i { color: var(--tech-blue); }
+.modal-close {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all var(--transition);
+    flex-shrink: 0;
+}
+.modal-close:hover { background: rgba(239,68,68,0.1); color: var(--danger); transform: rotate(90deg); }
+.modal-body {
+    padding: 1.5rem; overflow-y: auto;
+    flex: 1; min-height: 0;
+    max-height: calc(92vh - 180px);
+    scrollbar-width: thin;
+}
+.modal-body::-webkit-scrollbar { width: 8px; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex; gap: 0.75rem; justify-content: flex-end;
+    flex-shrink: 0; background: var(--bg-primary); flex-wrap: wrap;
+}
+.modal-footer .btn { flex: 1; min-width: 120px; }
+@media (min-width: 480px) { .modal-footer .btn { flex: initial; min-width: auto; } }
+
+.form-group { margin-bottom: 1.15rem; }
+.form-group:last-child { margin-bottom: 0; }
+.form-label {
+    display: block; font-size: 0.85rem; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 0.5rem;
+}
+.form-label .required { color: var(--danger); }
+.form-label i { color: var(--tech-blue); margin-left: 0.35rem; font-size: 0.8rem; }
+.form-input, .form-textarea, .form-select {
+    width: 100%; padding: 0.85rem 0.95rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 1rem; font-weight: 700;
+    color: var(--text-primary); outline: none;
+    transition: all var(--transition); font-family: inherit;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--tech-blue); background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29,91,142,0.12);
+}
+.form-input[type="number"] {
+    font-family: 'Courier New', monospace;
+    font-size: 1.15rem;
+    text-align: center;
+}
+.form-textarea { resize: vertical; min-height: 80px; max-height: 200px; line-height: 1.6; font-weight: 500; }
+.form-error {
+    font-size: 0.75rem; color: var(--danger); margin-top: 0.4rem;
+    display: none; align-items: center; gap: 0.35rem; font-weight: 600;
+}
+.form-error.show { display: flex; }
+.form-hint {
+    font-size: 0.72rem; color: var(--text-muted); margin-top: 0.4rem;
+    display: flex; align-items: center; gap: 0.35rem; line-height: 1.5;
+}
+
+/* Summary Box */
+.summary-box {
+    background: linear-gradient(135deg, rgba(29,91,142,0.06), rgba(45,122,184,0.03));
+    border: 1.5px solid var(--tech-blue);
+    border-radius: var(--radius-lg); padding: 1.15rem;
+    margin-top: 1.15rem;
+}
+.summary-box h4 {
+    font-size: 0.95rem; font-weight: 800;
+    margin-bottom: 0.85rem;
+    display: flex; align-items: center; gap: 0.4rem;
+    color: var(--tech-blue);
+}
+.summary-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.5rem 0; font-size: 0.9rem;
+}
+.summary-row:not(:last-child) { border-bottom: 1px dashed var(--border-color); }
+.summary-row-label {
+    color: var(--text-secondary); font-weight: 600;
+    display: flex; align-items: center; gap: 0.4rem;
+}
+.summary-row-value {
+    font-weight: 800; color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+}
+.summary-row.total {
+    padding-top: 0.85rem; margin-top: 0.35rem;
+    border-top: 2px solid var(--tech-blue);
+}
+.summary-row.total .summary-row-label {
+    font-size: 1rem; font-weight: 800;
+    color: var(--text-primary);
+}
+.summary-row.total .summary-row-value {
+    font-size: 1.35rem; color: var(--tech-blue);
+}
+.summary-row.diff.success .summary-row-value { color: var(--success); }
+.summary-row.diff.danger .summary-row-value { color: var(--danger); }
+.summary-row.debt .summary-row-value { color: var(--danger); }
+.summary-row.collected .summary-row-value { color: var(--success); }
+.summary-row.section-header {
+    padding: 0.65rem 0 0.35rem;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 0.25rem;
+}
+.summary-row.section-header .summary-row-label {
+    font-size: 0.8rem;
+    color: var(--tech-blue);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Info box */
+.info-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem; font-weight: 700;
+    margin-bottom: 1rem;
+}
+.info-badge.info {
+    background: rgba(59,130,246,0.1); color: var(--info);
+    border: 1px solid rgba(59,130,246,0.2);
+}
+.info-badge.warning {
+    background: rgba(245,158,11,0.1); color: var(--warning);
+    border: 1px solid rgba(245,158,11,0.2);
+}
+.info-badge.success {
+    background: rgba(16,185,129,0.1); color: var(--success);
+    border: 1px solid rgba(16,185,129,0.2);
+}
+.info-badge.danger {
+    background: rgba(239,68,68,0.1); color: var(--danger);
+    border: 1px solid rgba(239,68,68,0.2);
+}
+
+/* Detail Cards Grid */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+.detail-card {
+    padding: 1rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+.detail-card-label {
+    font-size: 0.7rem; color: var(--text-muted);
+    font-weight: 700; margin-bottom: 0.35rem;
+    text-transform: uppercase;
+}
+.detail-card-value {
+    font-size: 1.15rem; font-weight: 800;
+    font-family: 'Courier New', monospace;
+    color: var(--text-primary);
+}
+.detail-card-value.success { color: var(--success); }
+.detail-card-value.danger { color: var(--danger); }
+.detail-card-value.warning { color: var(--warning); }
+.detail-card-value.tech { color: var(--tech-blue); }
+.detail-card-value.info { color: var(--info); }
+.detail-card.highlight {
+    background: linear-gradient(135deg, rgba(29,91,142,0.08), rgba(45,122,184,0.04));
+    border-color: var(--tech-blue);
+}
+
+/* Empty state */
+.empty-state {
+    padding: 4rem 1rem; text-align: center; color: var(--text-muted);
+    background: var(--bg-card);
+    border: 2px dashed var(--border-color); border-radius: var(--radius-lg);
+}
+.empty-state i {
+    font-size: 4rem; opacity: 0.25; margin-bottom: 1rem;
+    display: block; color: var(--tech-blue);
+}
+.empty-state h3 {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--text-secondary); margin-bottom: 0.35rem;
+}
+.empty-state p { font-size: 0.85rem; margin-bottom: 1rem; }
+
+/* Pagination */
+.pagination {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.35rem; margin-top: 1.5rem; flex-wrap: wrap;
+}
+.pagination-btn {
+    min-width: 40px; height: 40px; padding: 0 0.75rem;
+    border-radius: var(--radius-md);
+    background: var(--bg-card); border: 1.5px solid var(--border-color);
+    color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+}
+.pagination-btn:hover:not(:disabled):not(.active) { border-color: var(--tech-blue); color: var(--tech-blue); }
+.pagination-btn.active {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; border-color: var(--tech-blue);
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-lg);
+}
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.skeleton-card { height: 200px; }
+
+/* Toast */
+.toast-container {
+    position: fixed; top: calc(var(--navbar-height) + 1rem);
+    left: 50%; transform: translateX(-50%);
+    z-index: 3000; display: flex; flex-direction: column;
+    gap: 0.75rem; pointer-events: none;
+    max-width: 90vw; width: 400px;
+}
+.toast {
+    background: var(--bg-card); color: var(--text-primary);
+    padding: 1rem 1.25rem; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl); border: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.9rem; font-weight: 500; pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    border-right: 4px solid var(--info);
+}
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast i { font-size: 1.2rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+.toast.hide { animation: toastOut 0.3s ease forwards; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut { to { opacity: 0; transform: translateY(-20px) scale(0.95); } }
+
+.scroll-top {
+    position: fixed; bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; box-shadow: var(--shadow-lg);
+    opacity: 0; visibility: hidden; transform: translateY(20px);
+    transition: all var(--transition); z-index: 1400;
+}
+.scroll-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.scroll-top:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(29,91,142,0.5); }
+
+.notifications-panel, .user-dropdown {
+    position: fixed; top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem; width: 360px; max-width: calc(100vw - 2rem);
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+    z-index: 1200; opacity: 0; visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--transition); overflow: hidden;
+}
+.user-dropdown { width: 240px; }
+.notifications-panel.show, .user-dropdown.show {
+    opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+}
+.notifications-header {
+    padding: 1rem 1.15rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.notifications-title { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+.notifications-title i { color: var(--tech-blue); }
+.notifications-mark-read {
+    font-size: 0.75rem; font-weight: 600; color: var(--tech-blue);
+    padding: 0.35rem 0.65rem; border-radius: var(--radius-sm);
+    transition: all var(--transition);
+}
+.notifications-mark-read:hover { background: rgba(29,91,142,0.1); }
+.notifications-list { max-height: 400px; overflow-y: auto; }
+.notification-item {
+    display: flex; gap: 0.75rem; padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--transition-fast); cursor: pointer; position: relative;
+}
+.notification-item:hover { background: var(--bg-hover); }
+.notification-item.unread { background: rgba(29,91,142,0.04); }
+.notification-item.unread::before {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 3px; height: 60%;
+    background: var(--tech-blue); border-radius: 3px;
+}
+.notification-item-icon {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+}
+.notification-item-icon.info { background: rgba(59,130,246,0.12); color: var(--info); }
+.notification-item-icon.warning { background: rgba(245,158,11,0.12); color: var(--warning); }
+.notification-item-icon.danger { background: rgba(239,68,68,0.12); color: var(--danger); }
+.notification-item-icon.success { background: rgba(16,185,129,0.12); color: var(--success); }
+.notification-item-content { flex: 1; min-width: 0; }
+.notification-item-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.15rem; }
+.notification-item-message {
+    font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.notification-item-time { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.25rem; }
+.notifications-empty { padding: 2.5rem 1rem; text-align: center; color: var(--text-muted); }
+.notifications-empty i { font-size: 2.5rem; opacity: 0.3; margin-bottom: 0.75rem; display: block; }
+.user-dropdown-header {
+    padding: 1rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+}
+.user-dropdown-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
+}
+.user-dropdown-info strong { display: block; font-size: 0.9rem; font-weight: 700; }
+.user-dropdown-info span { font-size: 0.75rem; color: var(--text-muted); }
+.user-dropdown-menu { padding: 0.5rem; }
+.user-dropdown-item {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.65rem 0.75rem; border-radius: var(--radius-sm);
+    font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);
+    transition: all var(--transition-fast); width: 100%; text-align: right;
+}
+.user-dropdown-item:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.user-dropdown-item.danger:hover { background: rgba(239,68,68,0.1); color: var(--danger); }
+.user-dropdown-divider { height: 1px; background: var(--border-color); margin: 0.35rem 0.5rem; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); box-shadow: var(--shadow-xl); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+}
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    .notifications-panel, .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    .toolbar { padding: 0.85rem; }
+    .toolbar-search { min-width: 0; flex: 1 1 100%; }
+    .toolbar-select, .toolbar-date { flex: 1; min-width: 0; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .stat-item { padding: 0.85rem; gap: 0.6rem; }
+    .stat-item-icon { width: 38px; height: 38px; font-size: 1rem; }
+    .stat-item-value { font-size: 1.05rem; }
+    .stat-item-label { font-size: 0.68rem; }
+    .modal-body { padding: 1rem; max-height: calc(92vh - 160px); }
+    .modal-header { padding: 1rem 1.25rem; }
+    .modal-footer { padding: 0.85rem 1.25rem; gap: 0.5rem; }
+    .shift-banner-header { flex-direction: column; align-items: flex-start; }
+    .shift-banner-actions { flex-direction: column; }
+    .shift-banner-actions .btn { width: 100%; }
+    .shift-card-stats { grid-template-columns: repeat(2, 1fr); }
+    .shift-banner-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 400px) {
+    .stats-bar { grid-template-columns: 1fr; }
+    .shift-card-stats { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الأجهزة الإلكترونية</span>
+        </div>
+    </a>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-house"></i><span>لوحة التحكم</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products"><i class="fas fa-boxes-stacked"></i><span>الأصناف</span></a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories"><i class="fas fa-tags"></i><span>الفئات</span></a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in"><i class="fas fa-truck-ramp-box"></i><span>الوارد</span></a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers"><i class="fas fa-handshake"></i><span>الموردين</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers"><i class="fas fa-users"></i><span>العملاء</span></a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts"><i class="fas fa-hand-holding-dollar"></i><span>المديونيات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span></a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-chart-pie"></i><span>التقارير</span></a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link active" data-perm="can_manage_shifts"><i class="fas fa-clock"></i><span>الورديات</span></a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log"><i class="fas fa-clipboard-list"></i><span>سجل الحركات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1><i class="fas fa-clock"></i> الورديات</h1>
+            <p id="pageSubtitle">إدارة ورديات العمل</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportBtn">
+                <i class="fas fa-file-excel"></i> تصدير
+            </button>
+        </div>
+    </div>
+    
+    <div id="shiftBannerContainer"></div>
+    
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-item-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalShifts">0</div>
+                <div class="stat-item-label">إجمالي الورديات</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon success"><i class="fas fa-coins"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalSalesAll">0 <small>ج.م</small></div>
+                <div class="stat-item-label">إجمالي المبيعات</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon danger"><i class="fas fa-hand-holding-dollar"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalDebts">0 <small>ج.م</small></div>
+                <div class="stat-item-label">إجمالي المديونيات</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon warning"><i class="fas fa-scale-balanced"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalDifference">0 <small>ج.م</small></div>
+                <div class="stat-item-label">إجمالي فرق الكاش</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toolbar">
+        <div class="toolbar-search">
+            <input type="text" class="toolbar-search-input" id="searchInput" placeholder="ابحث باسم الموظف..." autocomplete="off">
+            <i class="fas fa-magnifying-glass toolbar-search-icon"></i>
+        </div>
+        <select class="toolbar-select" id="employeeFilter">
+            <option value="">كل الموظفين</option>
+        </select>
+        <select class="toolbar-select" id="statusFilter">
+            <option value="">كل الحالات</option>
+            <option value="active">نشطة</option>
+            <option value="closed">مغلقة</option>
+        </select>
+        <input type="date" class="toolbar-date" id="dateFrom" title="من تاريخ">
+        <input type="date" class="toolbar-date" id="dateTo" title="إلى تاريخ">
+    </div>
+    
+    <div class="shifts-list" id="shiftsList">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+    </div>
+    
+    <div class="pagination" id="pagination" style="display: none;"></div>
+    
+</main>
+
+<!-- Open Shift Modal -->
+<div class="modal-overlay" id="openShiftModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-play-circle" style="color: var(--success);"></i>
+                <span>فتح وردية جديدة</span>
+            </h3>
+            <button class="modal-close" id="closeOpenShiftModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="openShiftForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="info-badge info">
+                    <i class="fas fa-info-circle"></i>
+                    ابدأ ورديتك بجرد النقدية الموجود في الدرج
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i> الموظف
+                    </label>
+                    <input type="text" class="form-input" id="openShiftEmployee" readonly style="background: var(--bg-hover); cursor: not-allowed;">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-money-bill-wave"></i> بداية الكاش (ج.م) <span class="required">*</span>
+                    </label>
+                    <input type="number" class="form-input" id="openingCash" placeholder="0.00" min="0" step="0.01" value="0" required>
+                    <div class="form-error" id="openingCashError">
+                        <i class="fas fa-circle-exclamation"></i>
+                        <span>الرجاء إدخال مبلغ صحيح</span>
+                    </div>
+                    <div class="form-hint">
+                        <i class="fas fa-info-circle"></i>
+                        المبلغ الموجود في الدرج قبل بداية البيع
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-align-right"></i> ملاحظات (اختياري)
+                    </label>
+                    <textarea class="form-textarea" id="openShiftNotes" placeholder="أي ملاحظات عن بداية الوردية..." maxlength="300"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelOpenShiftBtn">إلغاء</button>
+                <button type="submit" class="btn btn-success" id="saveOpenShiftBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-play"></i>
+                    <span id="saveOpenShiftText">فتح الوردية</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Close Shift Modal -->
+<div class="modal-overlay" id="closeShiftModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-stop-circle" style="color: var(--danger);"></i>
+                <span>إغلاق الوردية</span>
+            </h3>
+            <button class="modal-close" id="closeCloseShiftModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="closeShiftForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="info-badge warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    اعدّ النقدية الفعلية في الدرج ثم أدخل المبلغ
+                </div>
+                
+                <div id="closeShiftSummary"></div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-hand-holding-dollar"></i> النقدية الفعلية في الدرج (ج.م) <span class="required">*</span>
+                    </label>
+                    <input type="number" class="form-input" id="closingCash" placeholder="0.00" min="0" step="0.01" required>
+                    <div class="form-error" id="closingCashError">
+                        <i class="fas fa-circle-exclamation"></i>
+                        <span>الرجاء إدخال مبلغ صحيح</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-align-right"></i> ملاحظات (اختياري)
+                    </label>
+                    <textarea class="form-textarea" id="closeShiftNotes" placeholder="سبب الفرق إن وُجد..." maxlength="500"></textarea>
+                </div>
+                
+                <div class="summary-box" id="diffPreviewBox" style="display: none;">
+                    <h4><i class="fas fa-calculator"></i> معاينة الفرق</h4>
+                    <div class="summary-row">
+                        <span class="summary-row-label">المتوقع في الدرج</span>
+                        <span class="summary-row-value" id="previewExpected">0.00 ج.م</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-row-label">الفعلي في الدرج</span>
+                        <span class="summary-row-value" id="previewActual">0.00 ج.م</span>
+                    </div>
+                    <div class="summary-row total" id="previewDiffRow">
+                        <span class="summary-row-label">الفرق</span>
+                        <span class="summary-row-value" id="previewDiff">0.00 ج.م</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelCloseShiftBtn">إلغاء</button>
+                <button type="submit" class="btn btn-danger" id="saveCloseShiftBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-stop"></i>
+                    <span id="saveCloseShiftText">إغلاق الوردية</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Shift Details Modal -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-circle-info"></i>
+                <span>تفاصيل الوردية</span>
+            </h3>
+            <button class="modal-close" id="closeDetailsModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="detailsContent"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="closeDetailsBtn">إغلاق</button>
+            <button type="button" class="btn btn-primary" id="printShiftBtn">
+                <i class="fas fa-print"></i> طباعة
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width: 480px;">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--danger);"></i>
+                <span>تأكيد الحذف</span>
+            </h3>
+            <button class="modal-close" id="closeDeleteModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                هل أنت متأكد من حذف هذه الوردية؟
+            </p>
+            <div style="padding: 0.75rem 1rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); color: var(--danger); font-size: 0.85rem; font-weight: 600;">
+                <i class="fas fa-exclamation-triangle"></i>
+                لا يمكن التراجع عن هذه العملية
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> حذف نهائي
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title"><i class="fas fa-bell"></i> الإشعارات</h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+</div>
+
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn"><i class="fas fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+var DB_NAME = 'electronic_db';
+var DB_VERSION = 5;
+var PAGE_SIZE = 15;
+
+// ═══════════════════════════════════════════════════════════════
+// 🗄️ Supabase
+// ═══════════════════════════════════════════════════════════════
+var supabaseClient = null;
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+function isValidUUID(uuid) {
+    if (!uuid || typeof uuid !== 'string') return false;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
+}
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ج.م'; }
+    catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+function formatCurrencyShort(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م'; }
+    catch (e) { return num.toFixed(0) + ' ج.م'; }
+}
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+function formatDate(date) {
+    if (!date) return '—';
+    try { return new Date(date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }); }
+    catch (e) { return '—'; }
+}
+function formatDateTime(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', { 
+            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+    } catch (e) { return '—'; }
+}
+function formatTime(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+    } catch (e) { return '—'; }
+}
+function formatTimeAgo(date) {
+    if (!date) return '';
+    try {
+        var seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        if (seconds < 60) return 'الآن';
+        if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+        if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+        if (seconds < 604800) return 'منذ ' + Math.floor(seconds / 86400) + ' يوم';
+        return formatDate(date);
+    } catch (e) { return ''; }
+}
+function formatDuration(seconds) {
+    if (!seconds || seconds < 0) return '0 دقيقة';
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var parts = [];
+    if (hours > 0) parts.push(hours + ' س');
+    if (minutes > 0 || hours === 0) parts.push(minutes + ' د');
+    return parts.join(' ');
+}
+function getInitials(name) {
+    if (!name) return '؟';
+    var parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check', error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation', info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🌐 Online
+// ═══════════════════════════════════════════════════════════════
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    if (!dot) return;
+    dot.classList.toggle('offline', !navigator.onLine);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 Session
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⏱️ Inactivity
+// ═══════════════════════════════════════════════════════════════
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+var inactivityTimer = null;
+function resetInactivity() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+function startInactivityMonitor() {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📦 IndexedDB
+// ═══════════════════════════════════════════════════════════════
+var dbInstance = null;
+var dbPromise = null;
+var dbFailed = false;
+function openDB() {
+    if (dbFailed) return Promise.resolve(null);
+    if (dbInstance) return Promise.resolve(dbInstance);
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise(function(resolve) {
+        try {
+            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                var stores = ['accounts', 'cache', 'settings', 'products', 'categories',
+                              'customers', 'invoices', 'repairs', 'suppliers',
+                              'stock_movements', 'notifications', 'payments', 
+                              'invoice_items', 'shifts'];
+                stores.forEach(function(name) {
+                    if (!db.objectStoreNames.contains(name)) {
+                        db.createObjectStore(name, { keyPath: 'id' });
+                    }
+                });
+                if (!db.objectStoreNames.contains('outbox')) {
+                    var s = db.createObjectStore('outbox', { keyPath: 'id', autoIncrement: true });
+                    s.createIndex('status', 'status');
+                }
+            };
+            req.onsuccess = function() {
+                dbInstance = req.result;
+                dbInstance.onversionchange = function() {
+                    try { dbInstance.close(); } catch(e) {}
+                    dbInstance = null; dbPromise = null;
+                };
+                resolve(dbInstance);
+            };
+            req.onerror = function() { dbFailed = true; dbPromise = null; resolve(null); };
+            req.onblocked = function() { setTimeout(function() { dbFailed = true; dbPromise = null; resolve(null); }, 500); };
+        } catch (e) { dbFailed = true; resolve(null); }
+    });
+    return dbPromise;
+}
+function dbPut(store, data) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).put(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+function dbBulkPut(store, items) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var os = tx.objectStore(store);
+                items.forEach(function(item) { try { os.put(item); } catch(e) {} });
+                tx.oncomplete = function() { resolve(); };
+                tx.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+function dbGetAll(store) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return [];
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readonly');
+                var r = tx.objectStore(store).getAll();
+                r.onsuccess = function() { resolve(r.result || []); };
+                r.onerror = function() { resolve([]); };
+            } catch (e) { resolve([]); }
+        });
+    });
+}
+function dbDelete(store, key) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).delete(key);
+                r.onsuccess = function() { resolve(); };
+                r.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+function addToOutbox(action) {
+    return openDB().then(function(db) {
+        if (!db) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction('outbox', 'readwrite');
+                var data = Object.assign({}, action, { status: 'pending', created_at: Date.now() });
+                var r = tx.objectStore('outbox').add(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    shifts: [],
+    employees: [],
+    invoices: [],
+    payments: [],
+    filtered: [],
+    currentShift: null,
+    searchQuery: '',
+    employeeFilter: '',
+    statusFilter: '',
+    dateFrom: '',
+    dateTo: '',
+    currentPage: 1,
+    viewingShift: null,
+    deletingShift: null,
+    isLoading: true
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Data
+// ═══════════════════════════════════════════════════════════════
+function loadData() {
+    state.isLoading = true;
+    var sb = getSupabaseClient();
+    
+    if (!sb || !navigator.onLine) {
+        return loadFromCache();
+    }
+    
+    return Promise.all([
+        sb.from('shifts').select('*').order('start_time', { ascending: false }).limit(500),
+        sb.from('accounts').select('id, full_name, username, role'),
+        sb.from('invoices').select('id, total, paid_amount, paid, created_at, created_by, payment_method'),
+        sb.from('payments').select('id, amount, method, created_at, created_by, invoice_id')
+    ]).then(function(results) {
+        state.shifts = results[0].data || [];
+        state.employees = results[1].data || [];
+        state.invoices = results[2].data || [];
+        state.payments = results[3].data || [];
+        
+        console.log('✅ Loaded:', {
+            shifts: state.shifts.length,
+            invoices: state.invoices.length,
+            payments: state.payments.length
+        });
+        
+        var empMap = {};
+        state.employees.forEach(function(e) { empMap[e.id] = e; });
+        state.shifts = state.shifts.map(function(s) {
+            if (s.employee_id && empMap[s.employee_id]) {
+                s.employee = empMap[s.employee_id];
+            }
+            return s;
+        });
+        
+        var session = getSession();
+        if (session && session.user) {
+            for (var i = 0; i < state.shifts.length; i++) {
+                if (state.shifts[i].is_active !== false && 
+                    state.shifts[i].employee_id === session.user.id && 
+                    !state.shifts[i].end_time) {
+                    state.currentShift = state.shifts[i];
+                    break;
+                }
+            }
+        }
+        
+        return Promise.all([
+            dbBulkPut('shifts', state.shifts),
+            dbBulkPut('accounts', state.employees),
+            dbBulkPut('invoices', state.invoices),
+            dbBulkPut('payments', state.payments)
+        ]);
+    }).catch(function(err) {
+        console.warn('Load failed:', err);
+        return loadFromCacheInternal();
+    }).then(function() {
+        state.isLoading = false;
+        updateStats();
+        populateEmployeeFilter();
+        renderShiftBanner();
+        applyFilters();
+    });
+}
+function loadFromCache() {
+    return loadFromCacheInternal().then(function() {
+        state.isLoading = false;
+        updateStats();
+        populateEmployeeFilter();
+        renderShiftBanner();
+        applyFilters();
+    });
+}
+function loadFromCacheInternal() {
+    return Promise.all([
+        dbGetAll('shifts'),
+        dbGetAll('accounts'),
+        dbGetAll('invoices'),
+        dbGetAll('payments')
+    ]).then(function(cached) {
+        state.shifts = cached[0] || [];
+        state.employees = cached[1] || [];
+        state.invoices = cached[2] || [];
+        state.payments = cached[3] || [];
+        
+        var empMap = {};
+        state.employees.forEach(function(e) { empMap[e.id] = e; });
+        state.shifts = state.shifts.map(function(s) {
+            if (s.employee_id && empMap[s.employee_id]) {
+                s.employee = empMap[s.employee_id];
+            }
+            return s;
+        });
+        
+        var session = getSession();
+        if (session && session.user) {
+            for (var i = 0; i < state.shifts.length; i++) {
+                if (state.shifts[i].is_active !== false && 
+                    state.shifts[i].employee_id === session.user.id && 
+                    !state.shifts[i].end_time) {
+                    state.currentShift = state.shifts[i];
+                    break;
+                }
+            }
+        }
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 Stats
+// ═══════════════════════════════════════════════════════════════
+function updateStats() {
+    var totalShifts = state.shifts.length;
+    var totalSales = 0;
+    var totalDebts = 0;
+    var totalDiff = 0;
+    
+    state.shifts.forEach(function(s) {
+        var sales = parseFloat(s.sales_total) || 0;
+        var payments = parseFloat(s.payments_total) || 0;
+        var debts = sales - payments;
+        if (debts < 0) debts = 0;
+        var diff = parseFloat(s.difference) || 0;
+        
+        totalSales += sales;
+        totalDebts += debts;
+        totalDiff += diff;
+    });
+    
+    var setEl = function(id, html) {
+        var el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    };
+    
+    setEl('totalShifts', formatNumber(totalShifts));
+    setEl('totalSalesAll', formatCurrencyShort(totalSales) + ' <small>ج.م</small>');
+    
+    var debtsEl = document.getElementById('totalDebts');
+    if (debtsEl) {
+        var debtsColor = totalDebts > 0 ? 'style="color: var(--danger);"' : '';
+        debtsEl.innerHTML = '<span ' + debtsColor + '>' + formatCurrencyShort(totalDebts) + '</span> <small>ج.م</small>';
+    }
+    
+    var diffEl = document.getElementById('totalDifference');
+    if (diffEl) {
+        var diffColor = Math.abs(totalDiff) < 1 ? '' : (totalDiff > 0 ? 'style="color: var(--success);"' : 'style="color: var(--danger);"');
+        diffEl.innerHTML = '<span ' + diffColor + '>' + formatCurrencyShort(totalDiff) + '</span> <small>ج.م</small>';
+    }
+    
+    var subtitle = document.getElementById('pageSubtitle');
+    if (subtitle) subtitle.textContent = totalShifts + ' وردية مسجلة';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 Populate Employee Filter
+// ═══════════════════════════════════════════════════════════════
+function populateEmployeeFilter() {
+    var select = document.getElementById('employeeFilter');
+    if (!select) return;
+    
+    var currentVal = select.value;
+    select.innerHTML = '<option value="">كل الموظفين</option>' + 
+        state.employees.map(function(e) {
+            return '<option value="' + e.id + '">' + escapeHtml(e.full_name || e.username) + '</option>';
+        }).join('');
+    select.value = currentVal;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render Shift Banner
+// ═══════════════════════════════════════════════════════════════
+function renderShiftBanner() {
+    var container = document.getElementById('shiftBannerContainer');
+    if (!container) return;
+    
+    if (state.currentShift) {
+        container.innerHTML = renderCurrentShiftBanner(state.currentShift);
+        bindCurrentShiftEvents();
+    } else {
+        container.innerHTML = renderNoShiftBanner();
+        bindNoShiftEvents();
+    }
+}
+
+function renderCurrentShiftBanner(shift) {
+    var session = getSession();
+    var empName = (shift.employee && shift.employee.full_name) || 
+                  (session && session.user.full_name) || 
+                  (session && session.user.username) || 'المستخدم';
+    
+    var elapsed = Math.floor((Date.now() - new Date(shift.start_time).getTime()) / 1000);
+    var liveStats = calculateShiftStats(shift);
+    
+    return '<div class="current-shift-banner">' +
+        '<div class="shift-banner-header">' +
+            '<div class="shift-banner-icon"><i class="fas fa-user-clock"></i></div>' +
+            '<div class="shift-banner-info">' +
+                '<h2>' +
+                    '<i class="fas fa-circle" style="font-size: 0.7rem; animation: pulseShift 2s infinite;"></i>' +
+                    'وردية نشطة - ' + escapeHtml(empName) +
+                '</h2>' +
+                '<p>' +
+                    '<span><i class="fas fa-clock"></i> بدأت: ' + formatDateTime(shift.start_time) + '</span>' +
+                    '<span><i class="fas fa-hourglass-half"></i> مر منذ: ' + formatDuration(elapsed) + '</span>' +
+                '</p>' +
+            '</div>' +
+        '</div>' +
+        
+        '<div class="shift-banner-stats">' +
+            '<div class="shift-banner-stat">' +
+                '<div class="shift-banner-stat-label">بداية الكاش</div>' +
+                '<div class="shift-banner-stat-value">' + formatCurrencyShort(liveStats.opening_cash) + '</div>' +
+            '</div>' +
+            '<div class="shift-banner-stat">' +
+                '<div class="shift-banner-stat-label">إجمالي المبيعات</div>' +
+                '<div class="shift-banner-stat-value">' + formatCurrencyShort(liveStats.sales_total) + '</div>' +
+            '</div>' +
+            '<div class="shift-banner-stat">' +
+                '<div class="shift-banner-stat-label">المحصّل فعلاً</div>' +
+                '<div class="shift-banner-stat-value">' + formatCurrencyShort(liveStats.payments_total) + '</div>' +
+            '</div>' +
+            '<div class="shift-banner-stat">' +
+                '<div class="shift-banner-stat-label">مديونيات الوردية</div>' +
+                '<div class="shift-banner-stat-value warning">' + formatCurrencyShort(liveStats.debts_total) + '</div>' +
+            '</div>' +
+            '<div class="shift-banner-stat">' +
+                '<div class="shift-banner-stat-label">عدد الفواتير</div>' +
+                '<div class="shift-banner-stat-value">' + formatNumber(liveStats.invoice_count) + '</div>' +
+            '</div>' +
+            '<div class="shift-banner-stat">' +
+                '<div class="shift-banner-stat-label">💰 الكاش المتوقع</div>' +
+                '<div class="shift-banner-stat-value">' + formatCurrencyShort(liveStats.expected_cash) + '</div>' +
+            '</div>' +
+        '</div>' +
+        
+        '<div class="shift-banner-actions">' +
+            '<button class="btn btn-light" id="closeShiftBannerBtn">' +
+                '<i class="fas fa-stop-circle"></i> إغلاق الوردية' +
+            '</button>' +
+            '<button class="btn btn-light" id="viewShiftDetailsBtn">' +
+                '<i class="fas fa-eye"></i> تفاصيل الوردية' +
+            '</button>' +
+        '</div>' +
+    '</div>';
+}
+
+function renderNoShiftBanner() {
+    return '<div class="no-shift-banner">' +
+        '<div class="no-shift-icon"><i class="fas fa-clock"></i></div>' +
+        '<h3>لا توجد وردية نشطة</h3>' +
+        '<p>ابدأ ورديتك بجرد النقدية ثم اضغط "فتح وردية جديدة"</p>' +
+        '<button class="btn btn-success btn-lg" id="openShiftBannerBtn">' +
+            '<i class="fas fa-play-circle"></i> فتح وردية جديدة' +
+        '</button>' +
+    '</div>';
+}
+
+function bindCurrentShiftEvents() {
+    document.getElementById('closeShiftBannerBtn')?.addEventListener('click', openCloseShiftModal);
+    document.getElementById('viewShiftDetailsBtn')?.addEventListener('click', function() {
+        if (state.currentShift) openDetailsModal(state.currentShift.id);
+    });
+}
+
+function bindNoShiftEvents() {
+    document.getElementById('openShiftBannerBtn')?.addEventListener('click', openOpenShiftModal);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 حساب إحصائيات الوردية
+// ═══════════════════════════════════════════════════════════════
+// 📌 القاعدة:
+//   المبيعات = مجموع total من كل الفواتير
+//   المحصّل = مجموع paid_amount
+//   المديونيات = المبيعات - المحصّل
+//   الكاش المتوقع = بداية الكاش + المحصّل
+// ═══════════════════════════════════════════════════════════════
+function calculateShiftStats(shift) {
+    var startTime = new Date(shift.start_time).getTime();
+    var endTime = shift.end_time ? new Date(shift.end_time).getTime() : Date.now();
+    
+    // فلترة الفواتير في فترة الوردية
+    var shiftInvoices = state.invoices.filter(function(inv) {
+        var invTime = new Date(inv.created_at).getTime();
+        return invTime >= startTime && invTime <= endTime;
+    });
+    
+    var totalSales = 0;
+    var collectedAmount = 0;
+    var debtsAmount = 0;
+    var invoiceCount = shiftInvoices.length;
+    
+    shiftInvoices.forEach(function(inv) {
+        var total = parseFloat(inv.total) || 0;
+        var paidAmount = parseFloat(inv.paid_amount) || 0;
+        
+        if (isNaN(paidAmount)) paidAmount = 0;
+        
+        // لو paid = true يبقى مدفوعة بالكامل
+        if (inv.paid === true && paidAmount < total) {
+            paidAmount = total;
+        }
+        
+        if (paidAmount > total) paidAmount = total;
+        if (paidAmount < 0) paidAmount = 0;
+        
+        var debt = total - paidAmount;
+        if (debt < 0) debt = 0;
+        
+        totalSales += total;
+        collectedAmount += paidAmount;
+        debtsAmount += debt;
+    });
+    
+    // لو الوردية مغلقة، نستخدم القيم المحفوظة للأمان
+    if (shift.end_time) {
+        var storedSales = parseFloat(shift.sales_total);
+        var storedPayments = parseFloat(shift.payments_total);
+        var storedDebts = parseFloat(shift.debts_total);
+        
+        if (!isNaN(storedSales) && storedSales > 0) totalSales = storedSales;
+        if (!isNaN(storedPayments) && storedPayments > 0) collectedAmount = storedPayments;
+        if (!isNaN(storedDebts) && storedDebts >= 0) debtsAmount = storedDebts;
+        else debtsAmount = Math.max(0, totalSales - collectedAmount);
+    }
+    
+    var openingCash = parseFloat(shift.opening_cash) || 0;
+    var expectedCash = openingCash + collectedAmount;
+    
+    return {
+        opening_cash: openingCash,
+        sales_total: totalSales,
+        payments_total: collectedAmount,
+        collected_amount: collectedAmount,
+        debts_total: debtsAmount,
+        debts_amount: debtsAmount,
+        invoice_count: invoiceCount,
+        expected_cash: expectedCash,
+        shift_invoices: shiftInvoices
+    };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 Filters
+// ═══════════════════════════════════════════════════════════════
+function applyFilters() {
+    var list = state.shifts.slice();
+    var q = (state.searchQuery || '').trim().toLowerCase();
+    
+    if (q) {
+        list = list.filter(function(s) {
+            var empName = (s.employee && s.employee.full_name) || '';
+            var empUsername = (s.employee && s.employee.username) || '';
+            return empName.toLowerCase().indexOf(q) !== -1 ||
+                   empUsername.toLowerCase().indexOf(q) !== -1;
+        });
+    }
+    
+    if (state.employeeFilter) {
+        list = list.filter(function(s) { return s.employee_id === state.employeeFilter; });
+    }
+    
+    if (state.statusFilter) {
+        if (state.statusFilter === 'active') {
+            list = list.filter(function(s) { return s.is_active !== false && !s.end_time; });
+        } else if (state.statusFilter === 'closed') {
+            list = list.filter(function(s) { return s.end_time || s.is_active === false; });
+        }
+    }
+    
+    if (state.dateFrom) {
+        var fromDate = new Date(state.dateFrom);
+        fromDate.setHours(0, 0, 0, 0);
+        list = list.filter(function(s) {
+            return new Date(s.start_time) >= fromDate;
+        });
+    }
+    if (state.dateTo) {
+        var toDate = new Date(state.dateTo);
+        toDate.setHours(23, 59, 59, 999);
+        list = list.filter(function(s) {
+            return new Date(s.start_time) <= toDate;
+        });
+    }
+    
+    list.sort(function(a, b) {
+        return new Date(b.start_time || 0).getTime() - new Date(a.start_time || 0).getTime();
+    });
+    
+    state.filtered = list;
+    state.currentPage = 1;
+    render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render Shifts List
+// ═══════════════════════════════════════════════════════════════
+function render() {
+    var container = document.getElementById('shiftsList');
+    var pagination = document.getElementById('pagination');
+    if (!container) return;
+    
+    if (state.isLoading) {
+        container.innerHTML = '<div class="skeleton skeleton-card"></div>'.repeat(3);
+        if (pagination) pagination.style.display = 'none';
+        return;
+    }
+    
+    if (!state.filtered.length) {
+        container.innerHTML = getEmptyState();
+        if (pagination) pagination.style.display = 'none';
+        return;
+    }
+    
+    var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+    var start = (state.currentPage - 1) * PAGE_SIZE;
+    var pageItems = state.filtered.slice(start, start + PAGE_SIZE);
+    
+    container.innerHTML = pageItems.map(renderShiftCard).join('');
+    
+    if (totalPages > 1 && pagination) {
+        pagination.style.display = 'flex';
+        pagination.innerHTML = renderPagination(totalPages);
+        bindPaginationEvents();
+    } else if (pagination) {
+        pagination.style.display = 'none';
+    }
+    
+    bindShiftEvents();
+}
+
+function getEmptyState() {
+    if (state.searchQuery || state.employeeFilter || state.statusFilter || state.dateFrom || state.dateTo) {
+        return '<div class="empty-state"><i class="fas fa-magnifying-glass"></i>' +
+            '<h3>لا توجد نتائج</h3><p>لم نجد ورديات تطابق الفلاتر المحددة</p></div>';
+    }
+    return '<div class="empty-state"><i class="fas fa-clock"></i>' +
+        '<h3>لا توجد ورديات بعد</h3><p>ابدأ أول وردية من الزر أعلاه</p></div>';
+}
+
+function renderShiftCard(shift) {
+    var isActive = shift.is_active !== false && !shift.end_time;
+    var empName = (shift.employee && shift.employee.full_name) || 
+                  (shift.employee && shift.employee.username) || 
+                  'موظف غير معروف';
+    
+    var openingCash = parseFloat(shift.opening_cash) || 0;
+    var closingCash = parseFloat(shift.closing_cash) || 0;
+    var salesTotal = parseFloat(shift.sales_total) || 0;
+    var paymentsTotal = parseFloat(shift.payments_total) || 0;
+    var debtsTotal = salesTotal - paymentsTotal;
+    if (debtsTotal < 0) debtsTotal = 0;
+    
+    var expectedCash = parseFloat(shift.expected_cash) || (openingCash + paymentsTotal);
+    var difference = parseFloat(shift.difference) || 0;
+    
+    var duration = shift.end_time 
+        ? Math.floor((new Date(shift.end_time).getTime() - new Date(shift.start_time).getTime()) / 1000)
+        : Math.floor((Date.now() - new Date(shift.start_time).getTime()) / 1000);
+    
+    var diffCls = Math.abs(difference) < 1 ? 'balanced' : (difference > 0 ? 'success' : 'danger');
+    var diffIcon = Math.abs(difference) < 1 ? 'fa-check-circle' : (difference > 0 ? 'fa-arrow-up' : 'fa-arrow-down');
+    var diffText = Math.abs(difference) < 1 
+        ? 'متوازن تمامًا' 
+        : (difference > 0 ? 'زيادة ' + formatCurrency(difference) : 'نقص ' + formatCurrency(Math.abs(difference)));
+    
+    return '<div class="shift-card ' + (isActive ? 'active' : '') + '" data-id="' + shift.id + '">' +
+        '<div class="shift-card-header">' +
+            '<div class="shift-card-icon">' +
+                '<i class="fas ' + (isActive ? 'fa-user-clock' : 'fa-clock') + '"></i>' +
+            '</div>' +
+            '<div class="shift-card-info">' +
+                '<h3>' + escapeHtml(empName) + '</h3>' +
+                '<p>' +
+                    '<span><i class="fas fa-calendar"></i> ' + formatDateTime(shift.start_time) + '</span>' +
+                    (shift.end_time ? '<span><i class="fas fa-stop-circle"></i> ' + formatTime(shift.end_time) + '</span>' : '') +
+                    '<span><i class="fas fa-hourglass-half"></i> ' + formatDuration(duration) + '</span>' +
+                '</p>' +
+            '</div>' +
+            '<span class="shift-status-badge ' + (isActive ? 'active' : 'closed') + '">' +
+                '<i class="fas ' + (isActive ? 'fa-circle' : 'fa-check-circle') + '"></i> ' +
+                (isActive ? 'نشطة' : 'مغلقة') +
+            '</span>' +
+        '</div>' +
+        
+        '<div class="shift-card-stats">' +
+            '<div class="shift-stat">' +
+                '<div class="shift-stat-label">بداية</div>' +
+                '<div class="shift-stat-value tech">' + formatCurrencyShort(openingCash) + '</div>' +
+            '</div>' +
+            '<div class="shift-stat">' +
+                '<div class="shift-stat-label">مبيعات</div>' +
+                '<div class="shift-stat-value success">' + formatCurrencyShort(salesTotal) + '</div>' +
+            '</div>' +
+            '<div class="shift-stat">' +
+                '<div class="shift-stat-label">محصّل</div>' +
+                '<div class="shift-stat-value info">' + formatCurrencyShort(paymentsTotal) + '</div>' +
+            '</div>' +
+            '<div class="shift-stat">' +
+                '<div class="shift-stat-label">مديونيات</div>' +
+                '<div class="shift-stat-value ' + (debtsTotal > 0 ? 'danger' : '') + '">' + formatCurrencyShort(debtsTotal) + '</div>' +
+            '</div>' +
+            '<div class="shift-stat">' +
+                '<div class="shift-stat-label">متوقع</div>' +
+                '<div class="shift-stat-value info">' + formatCurrencyShort(expectedCash) + '</div>' +
+            '</div>' +
+            (shift.end_time ? 
+                '<div class="shift-stat">' +
+                    '<div class="shift-stat-label">فعلي</div>' +
+                    '<div class="shift-stat-value">' + formatCurrencyShort(closingCash) + '</div>' +
+                '</div>'
+                : '') +
+        '</div>' +
+        
+        (shift.end_time ? 
+            '<div class="shift-diff-indicator ' + diffCls + '">' +
+                '<i class="fas ' + diffIcon + '"></i>' +
+                '<span>' + diffText + '</span>' +
+            '</div>'
+            : '') +
+        
+        '<div class="shift-card-actions">' +
+            (isActive ? 
+                '<button class="btn btn-danger btn-sm" data-action="close" data-id="' + shift.id + '">' +
+                    '<i class="fas fa-stop-circle"></i> إغلاق' +
+                '</button>'
+                : '') +
+            '<button class="btn btn-secondary btn-sm" data-action="view" data-id="' + shift.id + '">' +
+                '<i class="fas fa-eye"></i> تفاصيل' +
+            '</button>' +
+            '<button class="btn btn-danger btn-sm" data-action="delete" data-id="' + shift.id + '" title="حذف">' +
+                '<i class="fas fa-trash"></i>' +
+            '</button>' +
+        '</div>' +
+    '</div>';
+}
+
+function renderPagination(totalPages) {
+    var current = state.currentPage;
+    var pages = [];
+    pages.push('<button class="pagination-btn" data-page="' + (current - 1) + '" ' + (current === 1 ? 'disabled' : '') + '><i class="fas fa-chevron-right"></i></button>');
+    var start = Math.max(1, current - 2);
+    var end = Math.min(totalPages, current + 2);
+    if (start > 1) {
+        pages.push('<button class="pagination-btn" data-page="1">1</button>');
+        if (start > 2) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+    }
+    for (var i = start; i <= end; i++) {
+        pages.push('<button class="pagination-btn ' + (i === current ? 'active' : '') + '" data-page="' + i + '">' + i + '</button>');
+    }
+    if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+        pages.push('<button class="pagination-btn" data-page="' + totalPages + '">' + totalPages + '</button>');
+    }
+    pages.push('<button class="pagination-btn" data-page="' + (current + 1) + '" ' + (current === totalPages ? 'disabled' : '') + '><i class="fas fa-chevron-left"></i></button>');
+    return pages.join('');
+}
+
+function bindPaginationEvents() {
+    var btns = document.querySelectorAll('.pagination-btn[data-page]');
+    for (var i = 0; i < btns.length; i++) {
+        (function(btn) {
+            btn.addEventListener('click', function() {
+                var page = parseInt(btn.dataset.page);
+                var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+                if (page >= 1 && page <= totalPages) {
+                    state.currentPage = page;
+                    render();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        })(btns[i]);
+    }
+}
+
+function bindShiftEvents() {
+    document.querySelectorAll('.shift-card').forEach(function(card) {
+        card.querySelectorAll('[data-action]').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var action = btn.dataset.action;
+                var id = btn.dataset.id;
+                if (action === 'close') openCloseShiftModal();
+                else if (action === 'view') openDetailsModal(id);
+                else if (action === 'delete') openDeleteModal(id);
+            });
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Open Shift Modal
+// ═══════════════════════════════════════════════════════════════
+function openOpenShiftModal() {
+    var session = getSession();
+    if (!session) return;
+    
+    if (state.currentShift) {
+        showToast('يوجد وردية نشطة بالفعل', 'warning');
+        return;
+    }
+    
+    var empName = session.user.full_name || session.user.username;
+    document.getElementById('openShiftEmployee').value = empName;
+    document.getElementById('openingCash').value = '0';
+    document.getElementById('openShiftNotes').value = '';
+    document.getElementById('openingCashError').classList.remove('show');
+    document.getElementById('openingCash').classList.remove('error');
+    
+    document.getElementById('openShiftModal').classList.add('show');
+    setTimeout(function() {
+        document.getElementById('openingCash').focus();
+        document.getElementById('openingCash').select();
+    }, 300);
+}
+
+function closeOpenShiftModal() {
+    document.getElementById('openShiftModal').classList.remove('show');
+}
+
+function saveOpenShift(e) {
+    e.preventDefault();
+    
+    var openingCash = parseFloat(document.getElementById('openingCash').value) || 0;
+    var notes = document.getElementById('openShiftNotes').value.trim() || null;
+    
+    if (openingCash < 0) {
+        document.getElementById('openingCash').classList.add('error');
+        document.getElementById('openingCashError').classList.add('show');
+        return;
+    }
+    
+    var session = getSession();
+    if (!session) return;
+    
+    var btn = document.getElementById('saveOpenShiftBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveOpenShiftText');
+    
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الفتح...';
+    
+    var sb = getSupabaseClient();
+    var shiftData = {
+        employee_id: session.user.id,
+        start_time: new Date().toISOString(),
+        opening_cash: openingCash,
+        closing_cash: 0,
+        expected_cash: 0,
+        sales_total: 0,
+        payments_total: 0,
+        difference: 0,
+        notes: notes,
+        is_active: true
+    };
+    
+    var promise;
+    
+    if (sb && navigator.onLine) {
+        promise = sb.from('shifts').insert(shiftData).select().single()
+            .then(function(result) {
+                if (result.error) throw result.error;
+                return result.data;
+            });
+    } else {
+        var tempShift = Object.assign({
+            id: 'temp_' + Date.now(),
+            created_at: new Date().toISOString()
+        }, shiftData);
+        promise = addToOutbox({ type: 'insert', table: 'shifts', tempId: tempShift.id, data: shiftData })
+            .then(function() { return tempShift; });
+    }
+    
+    promise.then(function(newShift) {
+        showToast('✅ تم فتح الوردية بنجاح', 'success');
+        closeOpenShiftModal();
+        loadData();
+    }).catch(function(err) {
+        console.error('Open shift error:', err);
+        showToast('حدث خطأ في فتح الوردية', 'error');
+    }).then(function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = 'فتح الوردية';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Close Shift Modal
+// ═══════════════════════════════════════════════════════════════
+function openCloseShiftModal() {
+    if (!state.currentShift) {
+        showToast('لا توجد وردية نشطة', 'warning');
+        return;
+    }
+    
+    var shift = state.currentShift;
+    var stats = calculateShiftStats(shift);
+    
+    document.getElementById('closeShiftSummary').innerHTML = 
+        '<div class="summary-box" style="margin-bottom: 1rem;">' +
+            '<h4><i class="fas fa-chart-simple"></i> ملخص الوردية</h4>' +
+            
+            '<div class="summary-row">' +
+                '<span class="summary-row-label"><i class="fas fa-clock"></i> بدأت في</span>' +
+                '<span class="summary-row-value" style="font-size: 0.9rem;">' + formatDateTime(shift.start_time) + '</span>' +
+            '</div>' +
+            '<div class="summary-row">' +
+                '<span class="summary-row-label"><i class="fas fa-hourglass-half"></i> المدة</span>' +
+                '<span class="summary-row-value" style="font-size: 0.9rem;">' + 
+                    formatDuration(Math.floor((Date.now() - new Date(shift.start_time).getTime()) / 1000)) +
+                '</span>' +
+            '</div>' +
+            '<div class="summary-row">' +
+                '<span class="summary-row-label"><i class="fas fa-receipt"></i> عدد الفواتير</span>' +
+                '<span class="summary-row-value">' + formatNumber(stats.invoice_count) + '</span>' +
+            '</div>' +
+            
+            '<div class="summary-row section-header">' +
+                '<span class="summary-row-label"><i class="fas fa-calculator"></i> تفصيل الحساب</span>' +
+                '<span></span>' +
+            '</div>' +
+            
+            '<div class="summary-row">' +
+                '<span class="summary-row-label"><i class="fas fa-money-bill-wave"></i> بداية الكاش</span>' +
+                '<span class="summary-row-value">' + formatCurrency(stats.opening_cash) + '</span>' +
+            '</div>' +
+            '<div class="summary-row">' +
+                '<span class="summary-row-label"><i class="fas fa-shopping-cart"></i> إجمالي المبيعات</span>' +
+                '<span class="summary-row-value">' + formatCurrency(stats.sales_total) + '</span>' +
+            '</div>' +
+            '<div class="summary-row collected">' +
+                '<span class="summary-row-label"><i class="fas fa-check-circle"></i> المحصّل فعلاً</span>' +
+                '<span class="summary-row-value">+ ' + formatCurrency(stats.payments_total) + '</span>' +
+            '</div>' +
+            (stats.debts_total > 0 ? 
+                '<div class="summary-row debt">' +
+                    '<span class="summary-row-label"><i class="fas fa-hand-holding-dollar"></i> مديونيات الوردية</span>' +
+                    '<span class="summary-row-value">' + formatCurrency(stats.debts_total) + '</span>' +
+                '</div>'
+                : '') +
+            '<div class="summary-row total">' +
+                '<span class="summary-row-label"><i class="fas fa-cash-register"></i> المتوقع في الدرج</span>' +
+                '<span class="summary-row-value">' + formatCurrency(stats.expected_cash) + '</span>' +
+            '</div>' +
+        '</div>';
+    
+    document.getElementById('closingCash').value = '';
+    document.getElementById('closeShiftNotes').value = '';
+    document.getElementById('diffPreviewBox').style.display = 'none';
+    document.getElementById('closingCashError').classList.remove('show');
+    document.getElementById('closingCash').classList.remove('error');
+    
+    document.getElementById('closeShiftModal').classList.add('show');
+    setTimeout(function() {
+        document.getElementById('closingCash').focus();
+    }, 300);
+}
+
+function closeCloseShiftModal() {
+    document.getElementById('closeShiftModal').classList.remove('show');
+}
+
+function updateDiffPreview() {
+    if (!state.currentShift) return;
+    var closingCash = parseFloat(document.getElementById('closingCash').value);
+    if (isNaN(closingCash)) {
+        document.getElementById('diffPreviewBox').style.display = 'none';
+        return;
+    }
+    
+    var stats = calculateShiftStats(state.currentShift);
+    var expected = stats.expected_cash;
+    var diff = closingCash - expected;
+    
+    document.getElementById('diffPreviewBox').style.display = 'block';
+    document.getElementById('previewExpected').textContent = formatCurrency(expected);
+    document.getElementById('previewActual').textContent = formatCurrency(closingCash);
+    document.getElementById('previewDiff').textContent = (diff >= 0 ? '+ ' : '- ') + formatCurrency(Math.abs(diff));
+    
+    var diffRow = document.getElementById('previewDiffRow');
+    diffRow.classList.remove('success', 'danger');
+    if (Math.abs(diff) < 1) {
+        document.getElementById('previewDiff').style.color = 'var(--info)';
+    } else if (diff > 0) {
+        diffRow.classList.add('success');
+        document.getElementById('previewDiff').style.color = 'var(--success)';
+    } else {
+        diffRow.classList.add('danger');
+        document.getElementById('previewDiff').style.color = 'var(--danger)';
+    }
+}
+
+function saveCloseShift(e) {
+    e.preventDefault();
+    
+    if (!state.currentShift) {
+        showToast('لا توجد وردية نشطة', 'warning');
+        return;
+    }
+    
+    var closingCash = parseFloat(document.getElementById('closingCash').value);
+    if (isNaN(closingCash) || closingCash < 0) {
+        document.getElementById('closingCash').classList.add('error');
+        document.getElementById('closingCashError').classList.add('show');
+        return;
+    }
+    
+    var notes = document.getElementById('closeShiftNotes').value.trim() || null;
+    var shift = state.currentShift;
+    var stats = calculateShiftStats(shift);
+    
+    var expectedCash = stats.expected_cash;
+    var salesTotal = stats.sales_total;
+    var paymentsTotal = stats.payments_total;
+    var debtsTotal = stats.debts_total;
+    var difference = closingCash - expectedCash;
+    
+    var btn = document.getElementById('saveCloseShiftBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveCloseShiftText');
+    
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الإغلاق...';
+    
+    var sb = getSupabaseClient();
+    var updateData = {
+        end_time: new Date().toISOString(),
+        closing_cash: closingCash,
+        expected_cash: expectedCash,
+        sales_total: salesTotal,
+        payments_total: paymentsTotal,
+        difference: difference,
+        is_active: false,
+        notes: notes
+    };
+    
+    // ✅ إضافة المديونيات لو العمود موجود
+    try {
+        updateData.debts_total = debtsTotal;
+    } catch (e) {}
+    
+    var promise;
+    
+    if (sb && navigator.onLine && isValidUUID(shift.id)) {
+        promise = sb.from('shifts').update(updateData).eq('id', shift.id)
+            .then(function(result) {
+                if (result.error) {
+                    // لو العمود مش موجود، نحاول من غير debts_total
+                    if (result.error.message && result.error.message.indexOf('debts_total') !== -1) {
+                        delete updateData.debts_total;
+                        return sb.from('shifts').update(updateData).eq('id', shift.id)
+                            .then(function(r2) {
+                                if (r2.error) throw r2.error;
+                                return Object.assign({}, shift, updateData);
+                            });
+                    }
+                    throw result.error;
+                }
+                return Object.assign({}, shift, updateData);
+            });
+    } else {
+        promise = addToOutbox({ type: 'update', table: 'shifts', id: shift.id, data: updateData })
+            .then(function() {
+                return Object.assign({}, shift, updateData);
+            });
+    }
+    
+    promise.then(function(updatedShift) {
+        if (Math.abs(difference) >= 1) {
+            var msg = difference > 0 
+                ? '⚠️ زيادة في الكاش: ' + formatCurrency(difference) 
+                : '⚠️ نقص في الكاش: ' + formatCurrency(Math.abs(difference));
+            showToast(msg, 'warning', 6000);
+            
+            if (sb && navigator.onLine) {
+                sb.from('notifications').insert({
+                    user_id: shift.employee_id,
+                    type: 'info',
+                    title: 'فرق في الوردية',
+                    message: msg
+                }).then(function(){}, function(){});
+            }
+        } else {
+            showToast('✅ تم إغلاق الوردية - الكاش متوازن', 'success');
+        }
+        
+        closeCloseShiftModal();
+        state.currentShift = null;
+        loadData();
+    }).catch(function(err) {
+        console.error('Close shift error:', err);
+        showToast('حدث خطأ في إغلاق الوردية: ' + (err.message || ''), 'error', 5000);
+    }).then(function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = 'إغلاق الوردية';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📋 Details Modal
+// ═══════════════════════════════════════════════════════════════
+function openDetailsModal(id) {
+    var shift = null;
+    for (var i = 0; i < state.shifts.length; i++) {
+        if (state.shifts[i].id === id) { shift = state.shifts[i]; break; }
+    }
+    if (!shift) return;
+    
+    state.viewingShift = shift;
+    
+    var isActive = shift.is_active !== false && !shift.end_time;
+    var empName = (shift.employee && shift.employee.full_name) || 
+                  (shift.employee && shift.employee.username) || 
+                  'موظف غير معروف';
+    var empInitial = getInitials(empName);
+    
+    var stats = calculateShiftStats(shift);
+    
+    var duration = shift.end_time 
+        ? Math.floor((new Date(shift.end_time).getTime() - new Date(shift.start_time).getTime()) / 1000)
+        : Math.floor((Date.now() - new Date(shift.start_time).getTime()) / 1000);
+    
+    var difference = parseFloat(shift.difference) || 0;
+    var closingCash = parseFloat(shift.closing_cash) || 0;
+    
+    var diffCls = Math.abs(difference) < 1 ? 'balanced' : (difference > 0 ? 'success' : 'danger');
+    var diffIcon = Math.abs(difference) < 1 ? 'fa-check-circle' : (difference > 0 ? 'fa-arrow-up' : 'fa-arrow-down');
+    var diffText = Math.abs(difference) < 1 
+        ? 'متوازن تمامًا' 
+        : (difference > 0 ? 'زيادة ' + formatCurrency(difference) : 'نقص ' + formatCurrency(Math.abs(difference)));
+    
+    var shiftInvoices = stats.shift_invoices;
+    
+    document.getElementById('detailsContent').innerHTML =
+        '<div style="background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark)); color: white; padding: 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.25rem; position: relative; overflow: hidden;">' +
+            '<div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">' +
+                '<div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; backdrop-filter: blur(8px);">' +
+                    escapeHtml(empInitial) +
+                '</div>' +
+                '<div style="flex: 1; min-width: 0;">' +
+                    '<h2 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 0.25rem;">' + escapeHtml(empName) + '</h2>' +
+                    '<div style="font-size: 0.85rem; opacity: 0.9; display: flex; gap: 1rem; flex-wrap: wrap;">' +
+                        '<span><i class="fas fa-calendar"></i> ' + formatDate(shift.start_time) + '</span>' +
+                        '<span><i class="fas fa-hourglass-half"></i> ' + formatDuration(duration) + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<span style="padding: 0.5rem 1rem; border-radius: var(--radius-full); background: rgba(255,255,255,0.2); font-size: 0.8rem; font-weight: 700; backdrop-filter: blur(8px);">' +
+                    '<i class="fas ' + (isActive ? 'fa-circle' : 'fa-check-circle') + '"></i> ' +
+                    (isActive ? 'نشطة' : 'مغلقة') +
+                '</span>' +
+            '</div>' +
+        '</div>' +
+        
+        '<h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.4rem;">' +
+            '<i class="fas fa-calculator" style="color: var(--tech-blue);"></i> تفصيل الحسابات' +
+        '</h4>' +
+        
+        '<div class="detail-grid">' +
+            '<div class="detail-card">' +
+                '<div class="detail-card-label">بداية الكاش</div>' +
+                '<div class="detail-card-value tech">' + formatCurrency(stats.opening_cash) + '</div>' +
+            '</div>' +
+            '<div class="detail-card">' +
+                '<div class="detail-card-label">إجمالي المبيعات</div>' +
+                '<div class="detail-card-value success">' + formatCurrency(stats.sales_total) + '</div>' +
+            '</div>' +
+            '<div class="detail-card">' +
+                '<div class="detail-card-label">المحصّل فعلاً</div>' +
+                '<div class="detail-card-value success">' + formatCurrency(stats.payments_total) + '</div>' +
+            '</div>' +
+            '<div class="detail-card">' +
+                '<div class="detail-card-label">مديونيات الوردية</div>' +
+                '<div class="detail-card-value ' + (stats.debts_total > 0 ? 'danger' : '') + '">' + formatCurrency(stats.debts_total) + '</div>' +
+            '</div>' +
+            '<div class="detail-card highlight">' +
+                '<div class="detail-card-label">💰 الكاش المتوقع</div>' +
+                '<div class="detail-card-value tech">' + formatCurrency(stats.expected_cash) + '</div>' +
+            '</div>' +
+            (shift.end_time ? 
+                '<div class="detail-card">' +
+                    '<div class="detail-card-label">الكاش الفعلي</div>' +
+                    '<div class="detail-card-value info">' + formatCurrency(closingCash) + '</div>' +
+                '</div>'
+                : '') +
+            '<div class="detail-card">' +
+                '<div class="detail-card-label">عدد الفواتير</div>' +
+                '<div class="detail-card-value">' + formatNumber(stats.invoice_count) + '</div>' +
+            '</div>' +
+        '</div>' +
+        
+        (shift.end_time ? 
+            '<div class="shift-diff-indicator ' + diffCls + '" style="margin-bottom: 1.25rem; padding: 1rem;">' +
+                '<i class="fas ' + diffIcon + '" style="font-size: 1.25rem;"></i>' +
+                '<span style="font-size: 1rem;">' + diffText + '</span>' +
+            '</div>'
+            : '') +
+        
+        '<h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.4rem;">' +
+            '<i class="fas fa-receipt" style="color: var(--tech-blue);"></i> الفواتير في هذه الوردية (' + shiftInvoices.length + ')' +
+        '</h4>' +
+        
+        (shiftInvoices.length ? 
+            '<div style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md);">' +
+                shiftInvoices.map(function(inv) {
+                    var methodText = { 'cash': 'كاش', 'visa': 'فيزا', 'credit': 'آجل' }[inv.payment_method] || 'كاش';
+                    var methodIcon = { 'cash': 'fa-money-bill-wave', 'visa': 'fa-credit-card', 'credit': 'fa-file-invoice' }[inv.payment_method] || 'fa-money-bill-wave';
+                    
+                    var total = parseFloat(inv.total) || 0;
+                    var paidAmount = parseFloat(inv.paid_amount) || 0;
+                    if (isNaN(paidAmount)) paidAmount = 0;
+                    if (inv.paid === true && paidAmount < total) paidAmount = total;
+                    if (paidAmount > total) paidAmount = total;
+                    var debt = Math.max(0, total - paidAmount);
+                    
+                    var statusBadge = debt <= 0 
+                        ? '<span style="display:inline-flex; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; background: rgba(16,185,129,0.12); color: var(--success);">مسدد</span>'
+                        : '<span style="display:inline-flex; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; background: rgba(239,68,68,0.12); color: var(--danger);">دين ' + formatCurrencyShort(debt) + '</span>';
+                    
+                    return '<div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--border-color);">' +
+                        '<div style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--bg-primary); display: flex; align-items: center; justify-content: center; color: var(--tech-blue);">' +
+                            '<i class="fas ' + methodIcon + '"></i>' +
+                        '</div>' +
+                        '<div style="flex: 1; min-width: 0;">' +
+                            '<div style="font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">' +
+                                methodText + ' ' + statusBadge +
+                            '</div>' +
+                            '<div style="font-size: 0.7rem; color: var(--text-muted);">' + formatDateTime(inv.created_at) + '</div>' +
+                        '</div>' +
+                        '<div style="text-align: left;">' +
+                            '<div style="font-size: 0.95rem; font-weight: 800; color: var(--tech-blue); font-family: monospace;">' + formatCurrency(total) + '</div>' +
+                            (debt > 0 ? '<div style="font-size: 0.7rem; color: var(--success); font-weight: 700;">مدفوع: ' + formatCurrencyShort(paidAmount) + '</div>' : '') +
+                        '</div>' +
+                    '</div>';
+                }).join('') +
+            '</div>'
+            : '<div style="padding: 2rem; text-align: center; color: var(--text-muted); background: var(--bg-primary); border-radius: var(--radius-md); border: 2px dashed var(--border-color);">' +
+                '<i class="fas fa-receipt" style="font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 0.5rem;"></i>' +
+                '<p style="font-size: 0.85rem;">لا توجد فواتير</p>' +
+            '</div>') +
+        
+        (shift.notes ? 
+            '<h4 style="font-size: 0.95rem; font-weight: 800; margin: 1.25rem 0 0.65rem; display: flex; align-items: center; gap: 0.4rem;">' +
+                '<i class="fas fa-sticky-note" style="color: var(--warning);"></i> ملاحظات' +
+            '</h4>' +
+            '<div style="padding: 1rem; background: var(--bg-primary); border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 0.9rem; line-height: 1.7;">' +
+                escapeHtml(shift.notes) +
+            '</div>'
+            : '');
+    
+    document.getElementById('detailsModal').classList.add('show');
+}
+
+function closeDetailsModal() {
+    document.getElementById('detailsModal').classList.remove('show');
+    state.viewingShift = null;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🖨️ Print Shift Report
+// ═══════════════════════════════════════════════════════════════
+function printShift() {
+    var shift = state.viewingShift;
+    if (!shift) return;
+    
+    var empName = (shift.employee && shift.employee.full_name) || 'موظف';
+    var stats = calculateShiftStats(shift);
+    
+    var duration = shift.end_time 
+        ? Math.floor((new Date(shift.end_time).getTime() - new Date(shift.start_time).getTime()) / 1000)
+        : 0;
+    
+    var difference = parseFloat(shift.difference) || 0;
+    var closingCash = parseFloat(shift.closing_cash) || 0;
+    
+    var html = '<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>تقرير وردية</title>' +
+        '<style>' +
+        '@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap");' +
+        '* { margin: 0; padding: 0; box-sizing: border-box; }' +
+        'body { font-family: "Cairo", sans-serif; padding: 15mm; background: white; color: #0a1f33; }' +
+        '.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #1d5b8e; padding-bottom: 5mm; margin-bottom: 8mm; }' +
+        '.brand h1 { font-size: 22pt; font-weight: 900; color: #1d5b8e; }' +
+        '.brand p { font-size: 10pt; color: #64748b; }' +
+        '.title h2 { font-size: 24pt; font-weight: 900; color: #1d5b8e; }' +
+        '.title p { font-size: 10pt; color: #64748b; }' +
+        '.info { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin-bottom: 8mm; }' +
+        '.info-box { padding: 4mm; background: #f6f8fb; border-radius: 3mm; border: 1px solid #e1e8f0; }' +
+        '.info-box h3 { font-size: 9pt; color: #64748b; font-weight: 700; margin-bottom: 2mm; }' +
+        '.info-box p { font-size: 12pt; font-weight: 700; }' +
+        '.stats-table { width: 100%; border-collapse: collapse; margin-bottom: 8mm; }' +
+        '.stats-table th { background: #1d5b8e; color: white; padding: 4mm; text-align: right; font-size: 11pt; }' +
+        '.stats-table td { padding: 4mm; border-bottom: 1px solid #e1e8f0; font-size: 12pt; font-weight: 700; }' +
+        '.stats-table td.value { text-align: left; font-family: monospace; font-weight: 900; font-size: 13pt; }' +
+        '.diff-box { padding: 5mm; border-radius: 3mm; text-align: center; font-size: 14pt; font-weight: 900; margin-bottom: 8mm; }' +
+        '.diff-success { background: #dcfce7; color: #16a34a; border: 2px solid #16a34a; }' +
+        '.diff-danger { background: #fee2e2; color: #dc2626; border: 2px solid #dc2626; }' +
+        '.diff-balanced { background: #dbeafe; color: #2563eb; border: 2px solid #2563eb; }' +
+        '.footer { text-align: center; font-size: 10pt; color: #64748b; padding-top: 5mm; border-top: 1px solid #e1e8f0; }' +
+        '</style></head><body>' +
+        '<div class="header">' +
+            '<div class="brand"><h1>TopLoad</h1><p>لصيانة الأجهزة الإلكترونية</p></div>' +
+            '<div class="title"><h2>تقرير وردية</h2><p>' + formatDateTime(shift.start_time) + '</p></div>' +
+        '</div>' +
+        
+        '<div class="info">' +
+            '<div class="info-box"><h3>الموظف</h3><p>' + escapeHtml(empName) + '</p></div>' +
+            '<div class="info-box"><h3>المدة</h3><p>' + formatDuration(duration) + '</p></div>' +
+        '</div>' +
+        
+        '<table class="stats-table">' +
+            '<thead><tr><th>البند</th><th style="text-align:left;">المبلغ</th></tr></thead>' +
+            '<tbody>' +
+                '<tr><td>بداية الكاش</td><td class="value">' + formatCurrency(stats.opening_cash) + '</td></tr>' +
+                '<tr><td>إجمالي المبيعات</td><td class="value">' + formatCurrency(stats.sales_total) + '</td></tr>' +
+                '<tr><td>المحصّل فعلاً</td><td class="value" style="color:#16a34a;">+ ' + formatCurrency(stats.payments_total) + '</td></tr>' +
+                (stats.debts_total > 0 ? '<tr><td>مديونيات الوردية</td><td class="value" style="color:#dc2626;">' + formatCurrency(stats.debts_total) + '</td></tr>' : '') +
+                '<tr><td style="background:#f1f5f9; font-weight:900;">💰 الكاش المتوقع</td><td class="value" style="background:#f1f5f9; color:#1d5b8e;">' + formatCurrency(stats.expected_cash) + '</td></tr>' +
+                (shift.end_time ? '<tr><td>الكاش الفعلي</td><td class="value">' + formatCurrency(closingCash) + '</td></tr>' : '') +
+            '</tbody>' +
+        '</table>' +
+        
+        (shift.end_time ? 
+            '<div class="diff-box diff-' + (Math.abs(difference) < 1 ? 'balanced' : (difference > 0 ? 'success' : 'danger')) + '">' +
+                (Math.abs(difference) < 1 
+                    ? '✓ الكاش متوازن تمامًا' 
+                    : (difference > 0 
+                        ? '↑ زيادة: ' + formatCurrency(difference) 
+                        : '↓ نقص: ' + formatCurrency(Math.abs(difference)))) +
+            '</div>'
+            : '') +
+        
+        (shift.notes ? '<div style="padding: 4mm; background: #fef3c7; border-radius: 3mm; margin-bottom: 5mm;"><strong>ملاحظات:</strong> ' + escapeHtml(shift.notes) + '</div>' : '') +
+        
+        '<div class="footer">طُبع في ' + formatDateTime(new Date().toISOString()) + '</div>' +
+        '<script>window.onload = function() { setTimeout(function() { window.print(); }, 300); };<\/script>' +
+        '</body></html>';
+    
+    var win = window.open('', '_blank');
+    if (!win) { showToast('يرجى السماح بالنوافذ المنبثقة', 'error'); return; }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🗑️ Delete
+// ═══════════════════════════════════════════════════════════════
+function openDeleteModal(id) {
+    var shift = null;
+    for (var i = 0; i < state.shifts.length; i++) {
+        if (state.shifts[i].id === id) { shift = state.shifts[i]; break; }
+    }
+    if (!shift) return;
+    
+    state.deletingShift = shift;
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+    state.deletingShift = null;
+}
+
+function confirmDelete() {
+    var shift = state.deletingShift;
+    if (!shift) return;
+    
+    var btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="display:block;width:16px;height:16px;"></span>';
+    
+    var sb = getSupabaseClient();
+    var promise;
+    
+    if (sb && navigator.onLine && isValidUUID(shift.id)) {
+        promise = sb.from('shifts').delete().eq('id', shift.id)
+            .then(function(result) {
+                if (result.error) throw result.error;
+            });
+    } else {
+        promise = addToOutbox({ type: 'delete', table: 'shifts', id: shift.id });
+    }
+    
+    promise.then(function() {
+        state.shifts = state.shifts.filter(function(s) { return s.id !== shift.id; });
+        dbDelete('shifts', shift.id);
+        showToast('✅ تم حذف الوردية', 'success');
+        closeDeleteModal();
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.error(err);
+        showToast('حدث خطأ في الحذف', 'error');
+    }).then(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash"></i> حذف نهائي';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📤 Export
+// ═══════════════════════════════════════════════════════════════
+function exportData() {
+    var loadLib = Promise.resolve();
+    if (typeof XLSX === 'undefined') {
+        loadLib = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+    loadLib.then(function() {
+        var data = state.filtered.map(function(s) {
+            var empName = (s.employee && s.employee.full_name) || '—';
+            var duration = s.end_time 
+                ? Math.floor((new Date(s.end_time).getTime() - new Date(s.start_time).getTime()) / 1000)
+                : Math.floor((Date.now() - new Date(s.start_time).getTime()) / 1000);
+            
+            var salesTotal = parseFloat(s.sales_total) || 0;
+            var paymentsTotal = parseFloat(s.payments_total) || 0;
+            var debtsTotal = Math.max(0, salesTotal - paymentsTotal);
+            
+            return {
+                'الموظف': empName,
+                'بداية الوردية': formatDateTime(s.start_time),
+                'نهاية الوردية': s.end_time ? formatDateTime(s.end_time) : 'نشطة',
+                'المدة': formatDuration(duration),
+                'بداية الكاش': parseFloat(s.opening_cash) || 0,
+                'إجمالي المبيعات': salesTotal,
+                'المحصّل فعلاً': paymentsTotal,
+                'المديونيات': debtsTotal,
+                'الكاش المتوقع': parseFloat(s.expected_cash) || 0,
+                'الكاش الفعلي': parseFloat(s.closing_cash) || 0,
+                'الفرق': parseFloat(s.difference) || 0,
+                'الحالة': s.end_time ? 'مغلقة' : 'نشطة',
+                'ملاحظات': s.notes || ''
+            };
+        });
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'الورديات');
+        XLSX.writeFile(wb, 'shifts_' + new Date().toISOString().split('T')[0] + '.xlsx');
+        showToast('تم التصدير بنجاح', 'success');
+    }).catch(function(err) {
+        console.error(err);
+        showToast('فشل التصدير', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔔 Notifications
+// ═══════════════════════════════════════════════════════════════
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return;
+    sb.from('notifications').select('*').eq('user_id', session.user.id)
+        .order('created_at', { ascending: false }).limit(20)
+        .then(function(result) { renderNotifications(result.data || []); })
+        .catch(function(){});
+}
+function renderNotifications(notifications) {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+    var unread = notifications.filter(function(n) { return !n.read; }).length;
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else badge.style.display = 'none';
+    if (!notifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+    list.innerHTML = notifications.map(function(n) {
+        return '<div class="notification-item ' + (n.read ? '' : 'unread') + '">' +
+            '<div class="notification-item-icon info"><i class="fas fa-bell"></i></div>' +
+            '<div class="notification-item-content">' +
+                '<div class="notification-item-title">' + escapeHtml(n.title) + '</div>' +
+                '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>' +
+                '<div class="notification-item-time"><i class="fas fa-clock"></i> ' + formatTimeAgo(n.created_at) + '</div>' +
+            '</div></div>';
+    }).join('');
+}
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications').update({ read: true }).eq('user_id', session.user.id).eq('read', false)
+            .then(function() { loadNotifications(); showToast('تم تعيين الكل كمقروء', 'success'); })
+            .catch(function(){});
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 User UI
+// ═══════════════════════════════════════════════════════════════
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+    document.querySelectorAll('.sidebar-link[data-perm]').forEach(function(link) {
+        if (!isAdmin && !perms[link.dataset.perm]) link.style.display = 'none';
+    });
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        var dal = document.getElementById('dropdownAdminLink');
+        if (al) al.style.display = 'flex';
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    var session = getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    if (session.user.must_change_password) { window.location.href = 'index.html'; return; }
+    
+    initTheme();
+    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+    
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+        loadData();
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('وضع Offline', 'warning');
+    });
+    
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+    
+    document.getElementById('menuBtn')?.addEventListener('click', function() {
+        document.getElementById('sidebar')?.classList.toggle('show');
+        document.getElementById('sidebarOverlay')?.classList.toggle('show');
+    });
+    document.getElementById('sidebarOverlay')?.addEventListener('click', function() {
+        document.getElementById('sidebar')?.classList.remove('show');
+        document.getElementById('sidebarOverlay')?.classList.remove('show');
+    });
+    
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+    
+    userBtn?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userDropdown?.classList.toggle('show');
+        notifPanel?.classList.remove('show');
+    });
+    document.getElementById('logoutBtn')?.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+    notifBtn?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notifPanel?.classList.toggle('show');
+        userDropdown?.classList.remove('show');
+    });
+    document.getElementById('markAllReadBtn')?.addEventListener('click', markAllRead);
+    
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+    
+    var searchTimeout;
+    document.getElementById('searchInput')?.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        var val = e.target.value;
+        searchTimeout = setTimeout(function() {
+            state.searchQuery = val;
+            applyFilters();
+        }, 250);
+    });
+    
+    document.getElementById('employeeFilter')?.addEventListener('change', function(e) {
+        state.employeeFilter = e.target.value;
+        applyFilters();
+    });
+    
+    document.getElementById('statusFilter')?.addEventListener('change', function(e) {
+        state.statusFilter = e.target.value;
+        applyFilters();
+    });
+    
+    document.getElementById('dateFrom')?.addEventListener('change', function(e) {
+        state.dateFrom = e.target.value;
+        applyFilters();
+    });
+    
+    document.getElementById('dateTo')?.addEventListener('change', function(e) {
+        state.dateTo = e.target.value;
+        applyFilters();
+    });
+    
+    document.getElementById('closeOpenShiftModal')?.addEventListener('click', closeOpenShiftModal);
+    document.getElementById('cancelOpenShiftBtn')?.addEventListener('click', closeOpenShiftModal);
+    document.getElementById('openShiftForm')?.addEventListener('submit', saveOpenShift);
+    
+    document.getElementById('closeCloseShiftModal')?.addEventListener('click', closeCloseShiftModal);
+    document.getElementById('cancelCloseShiftBtn')?.addEventListener('click', closeCloseShiftModal);
+    document.getElementById('closeShiftForm')?.addEventListener('submit', saveCloseShift);
+    
+    document.getElementById('closingCash')?.addEventListener('input', updateDiffPreview);
+    
+    document.getElementById('closeDetailsModal')?.addEventListener('click', closeDetailsModal);
+    document.getElementById('closeDetailsBtn')?.addEventListener('click', closeDetailsModal);
+    document.getElementById('printShiftBtn')?.addEventListener('click', printShift);
+    
+    document.getElementById('closeDeleteModal')?.addEventListener('click', closeDeleteModal);
+    document.getElementById('cancelDeleteBtn')?.addEventListener('click', closeDeleteModal);
+    document.getElementById('confirmDeleteBtn')?.addEventListener('click', confirmDelete);
+    
+    document.getElementById('exportBtn')?.addEventListener('click', exportData);
+    
+    document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+        ov.addEventListener('click', function(e) {
+            if (e.target === ov) ov.classList.remove('show');
+        });
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.show').forEach(function(m) { m.classList.remove('show'); });
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            document.getElementById('searchInput')?.focus();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+    
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        if (winScroll > 300) scrollTopBtn?.classList.add('show');
+        else scrollTopBtn?.classList.remove('show');
+    }, { passive: true });
+    scrollTopBtn?.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    
+    openDB()
+        .then(function() { return loadData(); })
+        .then(function() {
+            loadNotifications();
+            setInterval(loadNotifications, 60000);
+        })
+        .catch(function(err) {
+            console.error('Init error:', err);
+            state.isLoading = false;
+            showToast('حدث خطأ في تحميل البيانات', 'error');
+        });
+    
+    startInactivityMonitor();
+    console.log('%c⏰ صفحة الورديات جاهزة', 'color: #1d5b8e; font-size: 16px; font-weight: bold;');
+    console.log('%c💰 الكاش المتوقع = بداية الكاش + المحصّل فعلاً', 'color: #10b981; font-size: 12px;');
+    console.log('%c📊 المديونيات = إجمالي المبيعات - المحصّل', 'color: #f59e0b; font-size: 12px;');
+});
+
+window.ShiftsApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession,
+    reload: function() { return loadData(); }
+};
+
+})();
+</script>
+
+</body>
+</html>

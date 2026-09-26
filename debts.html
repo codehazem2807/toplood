@@ -1,0 +1,2901 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d5b8e" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a1628" media="(prefers-color-scheme: dark)">
+<meta name="description" content="المديونيات - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="TopLoad">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TopLoad">
+<title>المديونيات | TopLoad - لصيانة الأجهزة الإلكترونية</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #1d5b8e;
+    --tech-blue-dark: #154668;
+    --tech-blue-light: #2d7ab8;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --purple: #8b5cf6;
+    --gold: #fbbf24;
+    --bg-primary: #E0F7FA;
+    --bg-card: #ffffff;
+    --bg-hover: #f1f5f9;
+    --text-primary: #0a1f33;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border-color: #e1e8f0;
+    --shadow-sm: 0 1px 3px rgba(10, 31, 51, 0.06);
+    --shadow-md: 0 4px 12px rgba(10, 31, 51, 0.08);
+    --shadow-lg: 0 12px 32px rgba(10, 31, 51, 0.12);
+    --shadow-xl: 0 24px 48px rgba(10, 31, 51, 0.16);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    --navbar-height: 64px;
+    --sidebar-width: 260px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0a1628;
+    --bg-card: #142f4a;
+    --bg-hover: #1a3a5c;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --border-color: #1e3a5f;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.6);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-blue-light), var(--success));
+    width: 0%;
+    z-index: 10000;
+    transition: width 0.1s linear;
+}
+
+.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--navbar-height);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar-menu-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.navbar-menu-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+
+.navbar-brand { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+.navbar-logo {
+    width: 40px; height: 40px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    padding: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-brand-text strong { font-size: 1rem; font-weight: 800; }
+.navbar-brand-text span { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+
+.navbar-search { flex: 1; max-width: 480px; position: relative; margin: 0 auto; }
+
+.navbar-search-input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    padding-right: 2.75rem;
+    padding-left: 3rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.navbar-search-input:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29, 91, 142, 0.12);
+}
+
+.navbar-search-icon {
+    position: absolute;
+    right: 1rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.navbar-search-shortcut {
+    position: absolute;
+    left: 0.5rem; top: 50%; transform: translateY(-50%);
+    padding: 0.2rem 0.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-right: auto; }
+
+.navbar-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary);
+    font-size: 1rem;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.navbar-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+
+.navbar-badge {
+    position: absolute;
+    top: 4px; left: 4px;
+    min-width: 18px; height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--bg-card);
+}
+
+.online-dot {
+    position: absolute;
+    top: 6px; left: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 2px solid var(--bg-card);
+}
+
+.online-dot.offline { background: var(--danger); }
+
+.navbar-user {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.navbar-user:hover { background: var(--bg-hover); border-color: var(--tech-blue); }
+
+.navbar-user-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.navbar-user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--text-muted); }
+
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    right: 0; bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900;
+    overflow-y: auto;
+    padding: 1rem 0.75rem calc(1rem + var(--safe-bottom));
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+
+.sidebar-section { margin-bottom: 1.25rem; }
+
+.sidebar-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+    position: relative;
+}
+
+.sidebar-link:hover { background: var(--bg-hover); color: var(--tech-blue); }
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, rgba(29, 91, 142, 0.12), rgba(45, 122, 184, 0.08));
+    color: var(--tech-blue);
+    font-weight: 700;
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 4px; height: 60%;
+    background: var(--tech-blue);
+    border-radius: 4px;
+}
+
+.sidebar-link i:first-child { width: 20px; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 31, 51, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 899;
+    opacity: 0;
+    visibility: hidden;
+    top: var(--navbar-height);
+}
+
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem;
+    min-height: calc(100vh - var(--navbar-height));
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header-text h1 {
+    font-size: 1.65rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.page-header-text h1 i { color: var(--danger); }
+.page-header-text p { font-size: 0.9rem; color: var(--text-secondary); }
+.page-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn {
+    padding: 0.65rem 1.15rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    box-shadow: 0 4px 12px rgba(29, 91, 142, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover { background: var(--bg-hover); border-color: var(--tech-blue); color: var(--tech-blue); }
+.btn-danger { background: var(--danger); color: white; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover { box-shadow: var(--shadow-lg); border-color: var(--tech-blue); }
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, var(--accent-color, var(--tech-blue)) 0%, transparent 70%);
+    opacity: 0.08;
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+}
+
+.stat-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    background: linear-gradient(135deg, var(--accent-color, var(--tech-blue)), var(--accent-color-dark, var(--tech-blue-dark)));
+}
+
+.stat-value { font-size: 1.75rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.25rem; }
+.stat-label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
+
+.toolbar {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-box { flex: 1; min-width: 220px; position: relative; }
+
+.search-box i {
+    position: absolute;
+    right: 1rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.65rem 2.5rem 0.65rem 1rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+}
+
+.filter-select {
+    padding: 0.65rem 2.25rem 0.65rem 1rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    font-weight: 600;
+    min-width: 160px;
+}
+
+.filter-select:focus { border-color: var(--tech-blue); }
+
+.filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+
+.filter-chip {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border-color);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.filter-chip:hover { border-color: var(--danger); color: var(--danger); }
+
+.filter-chip.active {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    color: white;
+    border-color: var(--danger);
+}
+
+.filter-chip .count {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 0.05rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    min-width: 22px;
+    text-align: center;
+}
+
+.filter-chip:not(.active) .count {
+    background: var(--bg-primary);
+    color: var(--text-muted);
+}
+
+.debts-list {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.debts-header {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1fr 1.2fr 1.2fr 130px;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.debt-item {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1fr 1.2fr 1.2fr 130px;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+}
+
+.debt-item:last-child { border-bottom: none; }
+.debt-item:hover { background: var(--bg-hover); }
+
+.debt-customer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.debt-avatar {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.debt-info { min-width: 0; flex: 1; }
+
+.debt-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.debt-phone {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+}
+
+.debt-cell {
+    font-size: 0.85rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.debt-cell small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 0.15rem;
+}
+
+.debt-amount {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--danger);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.debt-amount small {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.debt-days {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-full);
+}
+
+.debt-days.recent { background: rgba(59, 130, 246, 0.12); color: var(--info); }
+.debt-days.medium { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+.debt-days.old { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+
+.debt-actions {
+    display: flex;
+    gap: 0.35rem;
+    justify-content: flex-end;
+}
+
+.action-btn-sm {
+    width: 34px; height: 34px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+}
+
+.action-btn-sm:hover { background: var(--bg-hover); color: var(--tech-blue); border-color: var(--tech-blue); }
+.action-btn-sm.success { background: rgba(16, 185, 129, 0.12); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+.action-btn-sm.success:hover { background: var(--success); color: white; }
+.action-btn-sm.wa { background: rgba(37, 211, 102, 0.12); color: #25d366; border-color: rgba(37, 211, 102, 0.3); }
+.action-btn-sm.wa:hover { background: #25d366; color: white; }
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-danger { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+.badge-success { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 31, 51, 0.7);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 600px;
+    width: 100%;
+    max-height: 92vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    border: 1px solid var(--border-color);
+}
+
+.modal-lg { max-width: 820px; }
+
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-shrink: 0;
+    background: var(--bg-card);
+}
+
+.modal-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.modal-title i { color: var(--tech-blue); }
+
+.modal-close {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.modal-close:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    max-height: calc(92vh - 180px);
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    flex-wrap: wrap;
+}
+
+.modal-footer .btn { flex: 1; min-width: 120px; }
+
+@media (min-width: 480px) {
+    .modal-footer .btn { flex: initial; min-width: auto; }
+}
+
+.form-group { margin-bottom: 1rem; }
+.form-group:last-child { margin-bottom: 0; }
+
+.form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.form-label .required { color: var(--danger); }
+.form-label i { color: var(--tech-blue); margin-left: 0.35rem; font-size: 0.8rem; }
+
+.form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 0.75rem 0.95rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    outline: none;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29, 91, 142, 0.12);
+}
+
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-input.error { border-color: var(--danger); }
+
+.form-error {
+    font-size: 0.75rem;
+    color: var(--danger);
+    margin-top: 0.4rem;
+    display: none;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+
+.form-error.show { display: flex; }
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+@media (max-width: 520px) {
+    .form-row { grid-template-columns: 1fr; }
+}
+
+.amount-input-wrapper { position: relative; }
+
+.amount-input-wrapper input {
+    padding-left: 4rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--success);
+    text-align: center;
+}
+
+.amount-input-wrapper .currency {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.quick-amounts {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+}
+
+.quick-amount-btn {
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border-color);
+    cursor: pointer;
+}
+
+.quick-amount-btn:hover { background: var(--success); color: white; border-color: var(--success); }
+.quick-amount-btn.full { background: rgba(239, 68, 68, 0.12); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+.quick-amount-btn.full:hover { background: var(--danger); color: white; }
+
+.debt-summary {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(239, 68, 68, 0.03));
+    border: 1.5px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.15rem;
+    margin-bottom: 1.25rem;
+}
+
+.debt-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+}
+
+.debt-summary-row:not(:last-child) {
+    border-bottom: 1px dashed rgba(239, 68, 68, 0.2);
+}
+
+.debt-summary-label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.debt-summary-value {
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+.debt-summary-value.danger { color: var(--danger); font-size: 1.1rem; }
+
+.toast-container {
+    position: fixed;
+    top: calc(var(--navbar-height) + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2500;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 400px;
+}
+
+.toast {
+    background: var(--bg-card);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    pointer-events: auto;
+    border-right: 4px solid var(--info);
+}
+
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+
+.toast i { font-size: 1.2rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-row {
+    height: 72px;
+    margin-bottom: 0.5rem;
+    border-radius: var(--radius-md);
+}
+
+.empty-state {
+    padding: 4rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    opacity: 0.25;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--success);
+}
+
+.empty-state h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.empty-state p { font-size: 0.85rem; }
+
+.invoice-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.invoice-item:hover { background: var(--bg-hover); }
+.invoice-item:last-child { border-bottom: none; }
+
+.invoice-info { flex: 1; min-width: 0; }
+
+.invoice-number {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+    font-family: 'Courier New', monospace;
+}
+
+.invoice-date { font-size: 0.72rem; color: var(--text-muted); }
+.invoice-amounts { text-align: left; flex-shrink: 0; }
+.invoice-total { font-size: 0.9rem; font-weight: 800; color: var(--tech-blue); }
+.invoice-remaining { font-size: 0.75rem; font-weight: 700; color: var(--danger); margin-top: 0.15rem; }
+
+.scroll-top {
+    position: fixed;
+    bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1400;
+}
+
+.scroll-top.show { opacity: 1; visibility: visible; }
+
+.notifications-panel {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem;
+    width: 380px;
+    max-width: calc(100vw - 2rem);
+    max-height: 500px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.notifications-panel.show { opacity: 1; visibility: visible; }
+
+.notifications-header {
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notifications-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notifications-title i { color: var(--tech-blue); }
+
+.notifications-mark-read {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--tech-blue);
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-sm);
+}
+
+.notifications-mark-read:hover { background: rgba(29, 91, 142, 0.1); }
+
+.notifications-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.notification-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.notification-item:hover { background: var(--bg-hover); }
+
+.notification-item-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.notification-item-icon.info { background: rgba(59, 130, 246, 0.12); color: var(--info); }
+.notification-item-icon.warning { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+.notification-item-icon.danger { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+.notification-item-icon.success { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+
+.notification-item-content { flex: 1; min-width: 0; }
+
+.notification-item-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+}
+
+.notification-item-message {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.notifications-empty {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.notifications-empty i {
+    font-size: 2.5rem;
+    opacity: 0.3;
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.notifications-empty p { font-size: 0.85rem; font-weight: 600; }
+
+.notifications-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    background: var(--bg-primary);
+    flex-shrink: 0;
+}
+
+.notifications-footer button {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--tech-blue);
+}
+
+.user-dropdown {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem;
+    width: 240px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+}
+
+.user-dropdown.show { opacity: 1; visibility: visible; }
+
+.user-dropdown-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-dropdown-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.user-dropdown-info strong { display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.15rem; }
+.user-dropdown-info span { font-size: 0.75rem; color: var(--text-muted); }
+
+.user-dropdown-menu { padding: 0.5rem; }
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    width: 100%;
+    text-align: right;
+}
+
+.user-dropdown-item:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.user-dropdown-item.danger:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+.user-dropdown-item i { width: 18px; text-align: center; }
+
+.user-dropdown-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0.35rem 0.5rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-search { display: none; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+
+    .debts-header { display: none; }
+
+    .debt-item {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.5rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .debt-cell, .debt-amount, .debt-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row-reverse;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .stat-card { padding: 1rem; }
+    .stat-value { font-size: 1.35rem; }
+    .stat-icon { width: 38px; height: 38px; font-size: 1rem; }
+    .notifications-panel, .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    .toolbar { padding: 0.85rem; gap: 0.5rem; }
+    .search-box { min-width: 0; flex: 1 1 100%; }
+    .filter-select { flex: 1; min-width: 0; }
+}
+
+@media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الأجهزة الإلكترونية</span>
+        </div>
+    </a>
+    <div class="navbar-search">
+        <input type="text" class="navbar-search-input" id="globalSearchInput" placeholder="ابحث..." autocomplete="off">
+        <i class="fas fa-magnifying-glass navbar-search-icon"></i>
+        <span class="navbar-search-shortcut">Ctrl+K</span>
+    </div>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link">
+            <i class="fas fa-house"></i><span>لوحة التحكم</span>
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products">
+            <i class="fas fa-boxes-stacked"></i><span>الأصناف</span>
+        </a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories">
+            <i class="fas fa-tags"></i><span>الفئات</span>
+        </a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in">
+            <i class="fas fa-truck-ramp-box"></i><span>الوارد</span>
+        </a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers">
+            <i class="fas fa-handshake"></i><span>الموردين</span>
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices">
+            <i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span>
+        </a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers">
+            <i class="fas fa-users"></i><span>العملاء</span>
+        </a>
+        <a href="debts.html" class="sidebar-link active" data-perm="can_view_debts">
+            <i class="fas fa-hand-holding-dollar"></i><span>المديونيات</span>
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs">
+            <i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span>
+        </a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports">
+            <i class="fas fa-chart-pie"></i><span>التقارير</span>
+        </a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts">
+            <i class="fas fa-clock"></i><span>الورديات</span>
+        </a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log">
+            <i class="fas fa-clipboard-list"></i><span>سجل الحركات</span>
+        </a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link">
+            <i class="fas fa-star"></i><span>المفضلة</span>
+        </a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;">
+            <i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span>
+        </a>
+    </div>
+</aside>
+
+<main class="main-content">
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1><i class="fas fa-hand-holding-dollar"></i> المديونيات</h1>
+            <p id="pageSubtitle">تقرير العملاء اللي عليهم فلوس</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportExcelBtn">
+                <i class="fas fa-file-excel"></i> Excel
+            </button>
+            <button class="btn btn-secondary" id="exportPdfBtn">
+                <i class="fas fa-file-pdf"></i> PDF
+            </button>
+            <button class="btn btn-secondary" id="refreshBtn">
+                <i class="fas fa-rotate"></i> تحديث
+            </button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card" style="--accent-color: #ef4444; --accent-color-dark: #dc2626;">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+            </div>
+            <div class="stat-value" id="totalDebt">0</div>
+            <div class="stat-label">إجمالي المديونيات (ج.م)</div>
+        </div>
+        <div class="stat-card" style="--accent-color: #f59e0b; --accent-color-dark: #d97706;">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="stat-value" id="totalDebtors">0</div>
+            <div class="stat-label">عدد العملاء المدينين</div>
+        </div>
+        <div class="stat-card" style="--accent-color: #8b5cf6; --accent-color-dark: #7c3aed;">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
+            </div>
+            <div class="stat-value" id="unpaidInvoices">0</div>
+            <div class="stat-label">فواتير غير مدفوعة</div>
+        </div>
+        <div class="stat-card" style="--accent-color: #10b981; --accent-color-dark: #059669;">
+            <div class="stat-card-header">
+                <div class="stat-icon"><i class="fas fa-circle-check"></i></div>
+            </div>
+            <div class="stat-value" id="avgDebt">0</div>
+            <div class="stat-label">متوسط المديونية</div>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <div class="search-box">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="ابحث بالاسم أو رقم الموبايل..." autocomplete="off">
+        </div>
+        <select class="filter-select" id="sortFilter">
+            <option value="highest">الأعلى مديونية</option>
+            <option value="lowest">الأقل مديونية</option>
+            <option value="oldest">الأقدم مديونية</option>
+            <option value="newest">الأحدث</option>
+            <option value="name">الاسم (أ-ي)</option>
+        </select>
+    </div>
+
+    <div class="filter-chips">
+        <button class="filter-chip active" data-filter="all">
+            <i class="fas fa-list"></i> الكل <span class="count" id="countAll">0</span>
+        </button>
+        <button class="filter-chip" data-filter="recent">
+            <i class="fas fa-clock"></i> حديث <span class="count" id="countRecent">0</span>
+        </button>
+        <button class="filter-chip" data-filter="medium">
+            <i class="fas fa-hourglass-half"></i> متوسط <span class="count" id="countMedium">0</span>
+        </button>
+        <button class="filter-chip" data-filter="old">
+            <i class="fas fa-triangle-exclamation"></i> متأخر <span class="count" id="countOld">0</span>
+        </button>
+    </div>
+
+    <div id="debtsContainer">
+        <div class="debts-list">
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+        </div>
+    </div>
+</main>
+
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-money-bill-wave" style="color: var(--success);"></i>
+                <span>تسجيل دفعة</span>
+            </h3>
+            <button class="modal-close" id="closePaymentBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <div id="paymentCustomerInfo"></div>
+            <div class="debt-summary" id="paymentSummary"></div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-money-bill-wave"></i>
+                    المبلغ <span class="required">*</span>
+                </label>
+                <div class="amount-input-wrapper">
+                    <input type="number" class="form-input" id="paymentAmount" placeholder="0" min="0" step="0.01">
+                    <span class="currency">ج.م</span>
+                </div>
+                <div class="quick-amounts" id="quickAmounts"></div>
+                <div class="form-error" id="amountError">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <span>الرجاء إدخال مبلغ صحيح</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-credit-card"></i> طريقة الدفع</label>
+                    <select class="form-select" id="paymentMethod">
+                        <option value="cash">كاش</option>
+                        <option value="card">فيزا</option>
+                        <option value="wallet">محفظة إلكترونية</option>
+                        <option value="transfer">تحويل بنكي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-calendar"></i> تاريخ الدفع</label>
+                    <input type="date" class="form-input" id="paymentDate">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-align-right"></i> ملاحظات (اختياري)</label>
+                <textarea class="form-textarea" id="paymentNotes" placeholder="أي ملاحظات عن الدفعة..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelPaymentBtn">إلغاء</button>
+            <button class="btn btn-success" id="savePaymentBtn">
+                <span class="spinner" style="display:none;"></span>
+                <i class="fas fa-check"></i>
+                <span>حفظ الدفعة</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title"><i class="fas fa-circle-info"></i> تفاصيل مديونية العميل</h3>
+            <button class="modal-close" id="closeDetailsBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="detailsBody"></div>
+    </div>
+</div>
+
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title"><i class="fas fa-bell"></i> الإشعارات</h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+    <div class="notifications-footer">
+        <button id="refreshNotifsBtn"><i class="fas fa-rotate"></i> تحديث</button>
+    </div>
+</div>
+
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item">
+            <i class="fas fa-star"></i><span>المفضلة</span>
+        </a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;">
+            <i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span>
+        </a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn">
+            <i class="fas fa-right-from-bracket"></i><span>تسجيل الخروج</span>
+        </button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<button class="scroll-top" id="scrollTop">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+
+var supabaseClient = null;
+
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) {
+        return null;
+    }
+}
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try {
+        return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م';
+    } catch (e) {
+        return num.toFixed(2) + ' ج.م';
+    }
+}
+
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+
+function formatDate(date) {
+    if (!date) return '—';
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return '—';
+    try {
+        return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch (e) {
+        return d.toISOString().split('T')[0];
+    }
+}
+
+function formatTimeAgo(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    var seconds = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (seconds < 60) return 'الآن';
+    if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+    if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+    return formatDate(date);
+}
+
+function daysBetween(date) {
+    if (!date) return 0;
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return 0;
+    return Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    var btn = document.getElementById('onlineBtn');
+    if (!dot || !btn) return;
+    if (navigator.onLine) {
+        dot.classList.remove('offline');
+        btn.title = 'متصل';
+    } else {
+        dot.classList.add('offline');
+        btn.title = 'غير متصل';
+    }
+}
+
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) {
+        return null;
+    }
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+var inactivityTimer = null;
+
+function resetInactivity() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+
+function startInactivityMonitor() {
+    var events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    events.forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+var state = {
+    debts: [],
+    invoices: [],
+    customers: [],
+    filtered: [],
+    searchQuery: '',
+    sortFilter: 'highest',
+    currentFilter: 'all',
+    paymentTarget: null,
+    viewingCustomer: null
+};
+
+var allNotifications = [];
+
+var CACHE_KEY = 'elk_debts_cache_v2';
+var CACHE_INVOICES = 'elk_debts_invoices_cache_v2';
+var CACHE_CUSTOMERS = 'elk_debts_customers_cache_v2';
+var CACHE_NOTIFS = 'elk_debts_notifications_cache_v2';
+var OFFLINE_PAYMENTS_KEY = 'elk_debts_offline_payments_v2';
+
+function getCache(k) {
+    try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; }
+}
+
+function setCache(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+}
+
+function loadData() {
+    var cachedInvoices = getCache(CACHE_INVOICES);
+    var cachedCustomers = getCache(CACHE_CUSTOMERS);
+    var cachedDebts = getCache(CACHE_KEY);
+
+    if (cachedInvoices && Array.isArray(cachedInvoices)) state.invoices = cachedInvoices;
+    if (cachedCustomers && Array.isArray(cachedCustomers)) state.customers = cachedCustomers;
+    if (cachedDebts && Array.isArray(cachedDebts)) state.debts = cachedDebts;
+
+    if (state.invoices.length || state.customers.length) {
+        recomputeDebts();
+        updateStats();
+        applyFilters();
+    }
+
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return Promise.resolve();
+
+    return Promise.all([
+        sb.from('invoices')
+            .select('id, invoice_number, customer_id, total, paid_amount, paid, created_at, payment_method')
+            .order('created_at', { ascending: false }),
+        sb.from('customers')
+            .select('id, name, phone, address, notes, created_at')
+    ]).then(function(results) {
+        var invoicesRes = results[0];
+        var customersRes = results[1];
+
+        if (invoicesRes.error) throw invoicesRes.error;
+
+        state.invoices = [];
+        (invoicesRes.data || []).forEach(function(i) {
+            var total = parseFloat(i.total) || 0;
+            var paid = parseFloat(i.paid_amount) || 0;
+            var remaining = Math.max(0, total - paid);
+            if (remaining > 0.01) {
+                state.invoices.push({
+                    id: i.id,
+                    invoice_number: i.invoice_number || '',
+                    customer_id: i.customer_id,
+                    total: total,
+                    paid_amount: paid,
+                    paid: !!i.paid,
+                    created_at: i.created_at,
+                    payment_method: i.payment_method || 'cash',
+                    remaining: remaining
+                });
+            }
+        });
+
+        state.customers = customersRes.data || [];
+
+        setCache(CACHE_INVOICES, state.invoices);
+        setCache(CACHE_CUSTOMERS, state.customers);
+
+        recomputeDebts();
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.warn('Load error:', err);
+    });
+}
+
+function recomputeDebts() {
+    var customerMap = {};
+    state.customers.forEach(function(c) { customerMap[c.id] = c; });
+
+    var debtMap = {};
+
+    state.invoices.forEach(function(inv) {
+        var cid = inv.customer_id;
+        if (!cid) return;
+
+        if (!debtMap[cid]) {
+            var cust = customerMap[cid] || { id: cid, name: 'عميل', phone: '', address: '' };
+            debtMap[cid] = {
+                customer_id: cid,
+                customer_name: cust.name || 'عميل',
+                customer_phone: cust.phone || '',
+                customer_address: cust.address || '',
+                unpaid_invoices_count: 0,
+                total_debt: 0,
+                total_paid: 0,
+                total_invoiced: 0,
+                oldest_debt_date: null,
+                latest_invoice_date: null,
+                invoices: []
+            };
+        }
+
+        var debt = debtMap[cid];
+        debt.unpaid_invoices_count += 1;
+        debt.total_debt += inv.remaining;
+        debt.total_paid += inv.paid_amount;
+        debt.total_invoiced += inv.total;
+        debt.invoices.push(inv);
+
+        if (!debt.oldest_debt_date || new Date(inv.created_at) < new Date(debt.oldest_debt_date)) {
+            debt.oldest_debt_date = inv.created_at;
+        }
+        if (!debt.latest_invoice_date || new Date(inv.created_at) > new Date(debt.latest_invoice_date)) {
+            debt.latest_invoice_date = inv.created_at;
+        }
+    });
+
+    state.debts = Object.keys(debtMap).map(function(k) { return debtMap[k]; });
+
+    state.debts.forEach(function(d) {
+        d.invoices.sort(function(a, b) {
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+    });
+
+    setCache(CACHE_KEY, state.debts);
+}
+
+function updateStats() {
+    var totalDebt = 0;
+    var totalInvoices = 0;
+    var debtorsCount = state.debts.length;
+
+    state.debts.forEach(function(d) {
+        totalDebt += d.total_debt;
+        totalInvoices += d.unpaid_invoices_count;
+    });
+
+    var avgDebt = debtorsCount > 0 ? totalDebt / debtorsCount : 0;
+
+    var el = document.getElementById('totalDebt');
+    if (el) el.textContent = formatNumber(Math.round(totalDebt));
+
+    el = document.getElementById('totalDebtors');
+    if (el) el.textContent = formatNumber(debtorsCount);
+
+    el = document.getElementById('unpaidInvoices');
+    if (el) el.textContent = formatNumber(totalInvoices);
+
+    el = document.getElementById('avgDebt');
+    if (el) el.textContent = formatNumber(Math.round(avgDebt));
+
+    el = document.getElementById('pageSubtitle');
+    if (el) el.textContent = debtorsCount + ' عميل مدين • ' + totalInvoices + ' فاتورة';
+
+    var recent = 0, medium = 0, old = 0;
+    state.debts.forEach(function(d) {
+        var days = daysBetween(d.oldest_debt_date);
+        if (days <= 30) recent += 1;
+        else if (days <= 90) medium += 1;
+        else old += 1;
+    });
+
+    el = document.getElementById('countAll');
+    if (el) el.textContent = state.debts.length;
+
+    el = document.getElementById('countRecent');
+    if (el) el.textContent = recent;
+
+    el = document.getElementById('countMedium');
+    if (el) el.textContent = medium;
+
+    el = document.getElementById('countOld');
+    if (el) el.textContent = old;
+}
+
+function applyFilters() {
+    var list = state.debts.slice();
+    var q = (state.searchQuery || '').trim().toLowerCase();
+
+    if (q) {
+        list = list.filter(function(d) {
+            return (d.customer_name || '').toLowerCase().indexOf(q) !== -1 ||
+                   (d.customer_phone || '').indexOf(q) !== -1;
+        });
+    }
+
+    if (state.currentFilter === 'recent') {
+        list = list.filter(function(d) { return daysBetween(d.oldest_debt_date) <= 30; });
+    } else if (state.currentFilter === 'medium') {
+        list = list.filter(function(d) {
+            var days = daysBetween(d.oldest_debt_date);
+            return days > 30 && days <= 90;
+        });
+    } else if (state.currentFilter === 'old') {
+        list = list.filter(function(d) { return daysBetween(d.oldest_debt_date) > 90; });
+    }
+
+    if (state.sortFilter === 'lowest') {
+        list.sort(function(a, b) { return a.total_debt - b.total_debt; });
+    } else if (state.sortFilter === 'oldest') {
+        list.sort(function(a, b) {
+            return new Date(a.oldest_debt_date || 0).getTime() - new Date(b.oldest_debt_date || 0).getTime();
+        });
+    } else if (state.sortFilter === 'newest') {
+        list.sort(function(a, b) {
+            return new Date(b.latest_invoice_date || 0).getTime() - new Date(a.latest_invoice_date || 0).getTime();
+        });
+    } else if (state.sortFilter === 'name') {
+        list.sort(function(a, b) {
+            return (a.customer_name || '').localeCompare(b.customer_name || '', 'ar');
+        });
+    } else {
+        list.sort(function(a, b) { return b.total_debt - a.total_debt; });
+    }
+
+    state.filtered = list;
+    render();
+}
+
+function render() {
+    var container = document.getElementById('debtsContainer');
+    if (!container) return;
+
+    if (!state.filtered.length) {
+        var isFiltered = state.searchQuery || state.currentFilter !== 'all';
+        var icon = isFiltered ? 'fa-magnifying-glass' : 'fa-circle-check';
+        var title = isFiltered ? 'لا توجد نتائج مطابقة' : 'لا توجد مديونيات';
+        var desc = isFiltered ? 'جرّب فلتر أو بحث مختلف' : 'كل العملاء سدّدوا مستحقاتهم';
+        container.innerHTML = '<div class="empty-state">' +
+            '<i class="fas ' + icon + '"></i>' +
+            '<h3>' + title + '</h3>' +
+            '<p>' + desc + '</p>' +
+            '</div>';
+        return;
+    }
+
+    var html = '<div class="debts-list">';
+    html += '<div class="debts-header">';
+    html += '<div>العميل</div>';
+    html += '<div>الموبايل</div>';
+    html += '<div>عدد الفواتير</div>';
+    html += '<div>المديونية</div>';
+    html += '<div>أقدم مديونية</div>';
+    html += '<div>إجراءات</div>';
+    html += '</div>';
+
+    state.filtered.forEach(function(d) {
+        html += renderDebtRow(d);
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function renderDebtRow(d) {
+    var days = daysBetween(d.oldest_debt_date);
+    var daysClass = days <= 30 ? 'recent' : (days <= 90 ? 'medium' : 'old');
+    var daysLabel = days <= 30 ? 'حديث' : (days <= 90 ? 'متوسط' : 'متأخر');
+    var initials = (d.customer_name || '?').trim().charAt(0);
+
+    var phoneHtml = d.customer_phone
+        ? '<i class="fas fa-phone" style="font-size: 0.7rem;"></i> ' + escapeHtml(d.customer_phone)
+        : '—';
+
+    var waBtnHtml = '';
+    if (d.customer_phone) {
+        waBtnHtml = '<button class="action-btn-sm wa" data-action="whatsapp" data-id="' + d.customer_id + '" title="واتساب"><i class="fab fa-whatsapp"></i></button>';
+    }
+
+    return '<div class="debt-item">' +
+        '<div class="debt-customer">' +
+            '<div class="debt-avatar">' + escapeHtml(initials) + '</div>' +
+            '<div class="debt-info">' +
+                '<div class="debt-name">' + escapeHtml(d.customer_name) + '</div>' +
+                '<div class="debt-phone">' + phoneHtml + '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="debt-cell">' + (d.customer_phone ? escapeHtml(d.customer_phone) : '—') + '</div>' +
+        '<div class="debt-cell">' +
+            '<span class="badge badge-danger">' + formatNumber(d.unpaid_invoices_count) + ' فاتورة</span>' +
+        '</div>' +
+        '<div class="debt-amount">' +
+            formatCurrency(d.total_debt) +
+            '<small>من ' + formatCurrency(d.total_invoiced) + '</small>' +
+        '</div>' +
+        '<div class="debt-cell">' +
+            '<span class="debt-days ' + daysClass + '">' +
+                '<i class="fas fa-clock"></i> ' +
+                days + ' يوم - ' + daysLabel +
+            '</span>' +
+            '<small>' + formatDate(d.oldest_debt_date) + '</small>' +
+        '</div>' +
+        '<div class="debt-actions">' +
+            '<button class="action-btn-sm success" data-action="payment" data-id="' + d.customer_id + '" title="تسجيل دفعة"><i class="fas fa-money-bill-wave"></i></button>' +
+            waBtnHtml +
+            '<button class="action-btn-sm" data-action="details" data-id="' + d.customer_id + '" title="التفاصيل"><i class="fas fa-eye"></i></button>' +
+        '</div>' +
+    '</div>';
+}
+
+function openPaymentModal(customerId) {
+    var d = null;
+    for (var i = 0; i < state.debts.length; i++) {
+        if (state.debts[i].customer_id === customerId) {
+            d = state.debts[i];
+            break;
+        }
+    }
+    if (!d) return;
+
+    state.paymentTarget = d;
+
+    var infoEl = document.getElementById('paymentCustomerInfo');
+    if (infoEl) {
+        infoEl.innerHTML =
+            '<div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg-primary); border-radius: var(--radius-md); margin-bottom: 1.25rem;">' +
+                '<div class="debt-avatar" style="width: 56px; height: 56px; font-size: 1.4rem;">' + escapeHtml((d.customer_name || '?').charAt(0)) + '</div>' +
+                '<div style="flex: 1; min-width: 0;">' +
+                    '<h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 0.2rem;">' + escapeHtml(d.customer_name) + '</h3>' +
+                    '<div style="font-size: 0.8rem; color: var(--text-muted);">' + escapeHtml(d.customer_phone || '—') + '</div>' +
+                '</div>' +
+            '</div>';
+    }
+
+    var summaryEl = document.getElementById('paymentSummary');
+    if (summaryEl) {
+        summaryEl.innerHTML =
+            '<div class="debt-summary-row">' +
+                '<span class="debt-summary-label"><i class="fas fa-file-invoice"></i> عدد الفواتير</span>' +
+                '<span class="debt-summary-value">' + formatNumber(d.unpaid_invoices_count) + '</span>' +
+            '</div>' +
+            '<div class="debt-summary-row">' +
+                '<span class="debt-summary-label"><i class="fas fa-hand-holding-dollar"></i> إجمالي المديونية</span>' +
+                '<span class="debt-summary-value danger">' + formatCurrency(d.total_debt) + '</span>' +
+            '</div>';
+    }
+
+    var quickHtml = '';
+    var presets = [100, 200, 500, 1000];
+    presets.forEach(function(a) {
+        if (a <= d.total_debt) {
+            quickHtml += '<button type="button" class="quick-amount-btn" data-amount="' + a + '">' + a + ' ج.م</button>';
+        }
+    });
+    quickHtml += '<button type="button" class="quick-amount-btn full" data-amount="' + d.total_debt.toFixed(2) + '">سداد كامل</button>';
+
+    var quickEl = document.getElementById('quickAmounts');
+    if (quickEl) quickEl.innerHTML = quickHtml;
+
+    var amtEl = document.getElementById('paymentAmount');
+    if (amtEl) amtEl.value = '';
+
+    var methodEl = document.getElementById('paymentMethod');
+    if (methodEl) methodEl.value = 'cash';
+
+    var notesEl = document.getElementById('paymentNotes');
+    if (notesEl) notesEl.value = '';
+
+    var dateEl = document.getElementById('paymentDate');
+    if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+
+    var errEl = document.getElementById('amountError');
+    if (errEl) errEl.classList.remove('show');
+
+    document.getElementById('paymentModal').classList.add('show');
+
+    setTimeout(function() {
+        var a = document.getElementById('paymentAmount');
+        if (a) a.focus();
+    }, 300);
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').classList.remove('show');
+    state.paymentTarget = null;
+}
+
+function setPaymentAmount(amount) {
+    var input = document.getElementById('paymentAmount');
+    if (!input) return;
+    input.value = parseFloat(amount).toFixed(2);
+    input.focus();
+}
+
+function savePayment() {
+    if (!state.paymentTarget) return;
+
+    var amountInput = document.getElementById('paymentAmount');
+    var methodInput = document.getElementById('paymentMethod');
+    var notesInput = document.getElementById('paymentNotes');
+    var dateInput = document.getElementById('paymentDate');
+
+    var amount = parseFloat(amountInput.value) || 0;
+    var method = methodInput.value;
+    var notes = notesInput.value.trim();
+    var payDate = dateInput.value || new Date().toISOString().split('T')[0];
+    var d = state.paymentTarget;
+
+    if (amount <= 0) {
+        document.getElementById('amountError').classList.add('show');
+        amountInput.focus();
+        return;
+    }
+
+    if (amount > d.total_debt + 0.01) {
+        showToast('المبلغ أكبر من المديونية (' + formatCurrency(d.total_debt) + ')', 'warning', 4000);
+        return;
+    }
+
+    var btn = document.getElementById('savePaymentBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = btn.querySelector('span:last-child');
+
+    btn.disabled = true;
+    spinner.style.display = 'inline-block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+
+    var session = getSession();
+    var sb = getSupabaseClient();
+
+    var remainingPayment = amount;
+    var invoicesToUpdate = [];
+    var sortedInvoices = d.invoices.slice().sort(function(a, b) {
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    });
+
+    sortedInvoices.forEach(function(inv) {
+        if (remainingPayment <= 0.01) return;
+        var toPay = Math.min(remainingPayment, inv.remaining);
+        if (toPay > 0.01) {
+            invoicesToUpdate.push({
+                id: inv.id,
+                new_paid: inv.paid_amount + toPay,
+                total: inv.total,
+                payment: toPay
+            });
+            remainingPayment -= toPay;
+        }
+    });
+
+    var finalize = function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = 'حفظ الدفعة';
+        closePaymentModal();
+        recomputeDebts();
+        updateStats();
+        applyFilters();
+    };
+
+    if (!sb || !navigator.onLine) {
+        queueOfflinePayment(d, amount, method, notes, payDate, invoicesToUpdate);
+        applyLocalPayment(invoicesToUpdate);
+        showToast('تم الحفظ محليًا - سيُزامن لاحقًا', 'warning');
+        finalize();
+        return;
+    }
+
+    var chain = Promise.resolve();
+    invoicesToUpdate.forEach(function(upd) {
+        chain = chain.then(function() {
+            var isFullyPaid = upd.new_paid >= upd.total - 0.01;
+            return sb.from('invoices').update({
+                paid_amount: upd.new_paid,
+                paid: isFullyPaid
+            }).eq('id', upd.id).then(function(result) {
+                if (result.error) throw result.error;
+                return sb.from('payments').insert([{
+                    invoice_id: upd.id,
+                    amount: upd.payment,
+                    method: method,
+                    notes: notes || null,
+                    created_by: session && session.user ? session.user.id : null
+                }]);
+            });
+        });
+    });
+
+    chain.then(function() {
+        applyLocalPayment(invoicesToUpdate);
+        showToast('تم تسجيل الدفعة بنجاح', 'success');
+    }).catch(function(err) {
+        console.error('Payment error:', err);
+        showToast('حدث خطأ: ' + (err.message || ''), 'error', 5000);
+    }).then(function() {
+        finalize();
+    });
+}
+
+function applyLocalPayment(invoicesToUpdate) {
+    invoicesToUpdate.forEach(function(upd) {
+        for (var i = 0; i < state.invoices.length; i++) {
+            if (state.invoices[i].id === upd.id) {
+                state.invoices[i].paid_amount = upd.new_paid;
+                state.invoices[i].paid = upd.new_paid >= state.invoices[i].total - 0.01;
+                state.invoices[i].remaining = Math.max(0, state.invoices[i].total - state.invoices[i].paid_amount);
+                break;
+            }
+        }
+    });
+    state.invoices = state.invoices.filter(function(i) { return i.remaining > 0.01; });
+    setCache(CACHE_INVOICES, state.invoices);
+}
+
+function queueOfflinePayment(customerDebt, amount, method, notes, payDate, invoicesToUpdate) {
+    try {
+        var q = JSON.parse(localStorage.getItem(OFFLINE_PAYMENTS_KEY) || '[]');
+        q.push({
+            customer_id: customerDebt.customer_id,
+            customer_name: customerDebt.customer_name,
+            amount: amount,
+            method: method,
+            notes: notes,
+            pay_date: payDate,
+            invoices: invoicesToUpdate,
+            ts: Date.now()
+        });
+        localStorage.setItem(OFFLINE_PAYMENTS_KEY, JSON.stringify(q));
+    } catch (e) {}
+}
+
+function syncOfflinePayments() {
+    if (!navigator.onLine) return;
+    var sb = getSupabaseClient();
+    if (!sb) return;
+
+    try {
+        var q = JSON.parse(localStorage.getItem(OFFLINE_PAYMENTS_KEY) || '[]');
+        if (!q.length) return;
+
+        var session = getSession();
+        var synced = 0;
+        var chain = Promise.resolve();
+
+        q.forEach(function(payment) {
+            chain = chain.then(function() {
+                var subChain = Promise.resolve();
+                payment.invoices.forEach(function(upd) {
+                    subChain = subChain.then(function() {
+                        var isFullyPaid = upd.new_paid >= upd.total - 0.01;
+                        return sb.from('invoices').update({
+                            paid_amount: upd.new_paid,
+                            paid: isFullyPaid
+                        }).eq('id', upd.id).then(function() {
+                            return sb.from('payments').insert([{
+                                invoice_id: upd.id,
+                                amount: upd.payment,
+                                method: payment.method,
+                                notes: payment.notes || null,
+                                created_by: session && session.user ? session.user.id : null
+                            }]);
+                        });
+                    });
+                });
+                return subChain.then(function() { synced += 1; });
+            });
+        });
+
+        chain.then(function() {
+            localStorage.removeItem(OFFLINE_PAYMENTS_KEY);
+            if (synced > 0) {
+                showToast('تم مزامنة ' + synced + ' دفعة', 'success');
+                loadData();
+            }
+        }).catch(function(err) {
+            console.warn('Sync failed:', err);
+        });
+    } catch (e) {}
+}
+
+function openDetailsModal(customerId) {
+    var d = null;
+    for (var i = 0; i < state.debts.length; i++) {
+        if (state.debts[i].customer_id === customerId) {
+            d = state.debts[i];
+            break;
+        }
+    }
+    if (!d) return;
+
+    state.viewingCustomer = d;
+
+    var initials = (d.customer_name || '?').trim().charAt(0);
+    var days = daysBetween(d.oldest_debt_date);
+
+    var invoicesHtml = '';
+    d.invoices.forEach(function(inv) {
+        invoicesHtml += '<div class="invoice-item" data-invoice-id="' + inv.id + '">' +
+            '<div class="invoice-info">' +
+                '<div class="invoice-number">' + escapeHtml(inv.invoice_number || 'بدون رقم') + '</div>' +
+                '<div class="invoice-date"><i class="fas fa-calendar"></i> ' + formatDate(inv.created_at) + '</div>' +
+            '</div>' +
+            '<div class="invoice-amounts">' +
+                '<div class="invoice-total">' + formatCurrency(inv.total) + '</div>' +
+                '<div class="invoice-remaining">متبقي: ' + formatCurrency(inv.remaining) + '</div>' +
+            '</div>' +
+        '</div>';
+    });
+
+    var bodyHtml = '';
+    bodyHtml += '<div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">';
+    bodyHtml += '<div class="debt-avatar" style="width: 72px; height: 72px; font-size: 1.8rem;">' + escapeHtml(initials) + '</div>';
+    bodyHtml += '<div style="flex: 1; min-width: 0;">';
+    bodyHtml += '<h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.35rem;">' + escapeHtml(d.customer_name) + '</h2>';
+    bodyHtml += '<div style="font-size: 0.85rem; color: var(--text-muted);">';
+    bodyHtml += '<i class="fas fa-phone"></i> ' + escapeHtml(d.customer_phone || '—');
+    bodyHtml += '</div>';
+    if (d.customer_address) {
+        bodyHtml += '<div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">';
+        bodyHtml += '<i class="fas fa-location-dot"></i> ' + escapeHtml(d.customer_address);
+        bodyHtml += '</div>';
+    }
+    bodyHtml += '</div>';
+    bodyHtml += '</div>';
+
+    bodyHtml += '<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.25rem; gap: 0.75rem;">';
+    bodyHtml += '<div class="stat-card" style="padding: 1rem; --accent-color: #ef4444;">';
+    bodyHtml += '<div class="stat-value" style="font-size: 1.35rem;">' + formatCurrency(d.total_debt) + '</div>';
+    bodyHtml += '<div class="stat-label" style="font-size: 0.75rem;">المديونية</div>';
+    bodyHtml += '</div>';
+    bodyHtml += '<div class="stat-card" style="padding: 1rem; --accent-color: #10b981;">';
+    bodyHtml += '<div class="stat-value" style="font-size: 1.35rem;">' + formatCurrency(d.total_paid) + '</div>';
+    bodyHtml += '<div class="stat-label" style="font-size: 0.75rem;">إجمالي المدفوع</div>';
+    bodyHtml += '</div>';
+    bodyHtml += '<div class="stat-card" style="padding: 1rem; --accent-color: #8b5cf6;">';
+    bodyHtml += '<div class="stat-value" style="font-size: 1.35rem;">' + days + ' يوم</div>';
+    bodyHtml += '<div class="stat-label" style="font-size: 0.75rem;">عمر أقدم دين</div>';
+    bodyHtml += '</div>';
+    bodyHtml += '</div>';
+
+    bodyHtml += '<h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.85rem;">';
+    bodyHtml += '<i class="fas fa-file-invoice" style="color: var(--tech-blue);"></i> ';
+    bodyHtml += 'الفواتير غير المدفوعة (' + d.invoices.length + ')';
+    bodyHtml += '</h3>';
+
+    bodyHtml += '<div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; max-height: 320px; overflow-y: auto;">';
+    bodyHtml += invoicesHtml;
+    bodyHtml += '</div>';
+
+    document.getElementById('detailsBody').innerHTML = bodyHtml;
+    document.getElementById('detailsModal').classList.add('show');
+}
+
+function closeDetailsModal() {
+    document.getElementById('detailsModal').classList.remove('show');
+    state.viewingCustomer = null;
+}
+
+function remindWhatsApp(customerId) {
+    var d = null;
+    for (var i = 0; i < state.debts.length; i++) {
+        if (state.debts[i].customer_id === customerId) {
+            d = state.debts[i];
+            break;
+        }
+    }
+    if (!d || !d.customer_phone) {
+        showToast('لا يوجد رقم مسجل', 'warning');
+        return;
+    }
+
+    var msg = 'السلام عليكم ' + d.customer_name + '،\n' +
+              'تذكير لطيف من مركز TopLoad لصيانة الأجهزة الإلكترونية.\n\n' +
+              'عليك مديونية بقيمة: ' + formatCurrency(d.total_debt) + '\n' +
+              'عدد الفواتير: ' + d.unpaid_invoices_count + '\n\n' +
+              'نرجو التكرم بالسداد في أقرب وقت.\n' +
+              'شكراً لتعاملكم معنا';
+
+    var encoded = encodeURIComponent(msg);
+    var phone = d.customer_phone.replace(/^0/, '');
+    window.open('https://wa.me/2' + phone + '?text=' + encoded, '_blank');
+}
+
+function exportExcel() {
+    if (typeof XLSX === 'undefined') {
+        showToast('مكتبة Excel غير محملة', 'error');
+        return;
+    }
+
+    var data = state.filtered.map(function(d) {
+        var days = daysBetween(d.oldest_debt_date);
+        return {
+            'العميل': d.customer_name,
+            'الموبايل': d.customer_phone,
+            'العنوان': d.customer_address || '',
+            'عدد الفواتير': d.unpaid_invoices_count,
+            'إجمالي الفواتير': d.total_invoiced.toFixed(2),
+            'إجمالي المدفوع': d.total_paid.toFixed(2),
+            'المديونية': d.total_debt.toFixed(2),
+            'أقدم مديونية': days + ' يوم',
+            'تاريخ أقدم فاتورة': formatDate(d.oldest_debt_date),
+            'آخر فاتورة': formatDate(d.latest_invoice_date)
+        };
+    });
+
+    var ws = XLSX.utils.json_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'المديونيات');
+    XLSX.writeFile(wb, 'debts_' + new Date().toISOString().split('T')[0] + '.xlsx');
+    showToast('تم تصدير ملف Excel', 'success');
+}
+
+function exportPDF() {
+    if (typeof window.jspdf === 'undefined') {
+        showToast('مكتبة PDF غير محملة', 'error');
+        return;
+    }
+
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF('p', 'mm', 'a4');
+
+    doc.setFontSize(16);
+    doc.text('Debts Report', 105, 15, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text('Electronk - Electronics Repair Center', 105, 22, { align: 'center' });
+    doc.text('Date: ' + new Date().toLocaleDateString('en-GB'), 105, 28, { align: 'center' });
+
+    var totalDebt = state.filtered.reduce(function(s, d) { return s + d.total_debt; }, 0);
+    doc.text('Total Debt: ' + totalDebt.toFixed(2) + ' EGP', 105, 34, { align: 'center' });
+
+    var rows = state.filtered.map(function(d) {
+        var days = daysBetween(d.oldest_debt_date);
+        return [
+            d.customer_name,
+            d.customer_phone || '-',
+            d.unpaid_invoices_count,
+            d.total_debt.toFixed(2) + ' EGP',
+            days + ' days'
+        ];
+    });
+
+    doc.autoTable({
+        head: [['Customer', 'Phone', 'Invoices', 'Total Debt', 'Age']],
+        body: rows,
+        startY: 40,
+        styles: { fontSize: 9, halign: 'center' },
+        headStyles: { fillColor: [239, 68, 68], textColor: 255 }
+    });
+
+    doc.save('debts_' + Date.now() + '.pdf');
+    showToast('تم تصدير ملف PDF', 'success');
+}
+
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return Promise.resolve();
+    var sb = getSupabaseClient();
+
+    var cached = getCache(CACHE_NOTIFS);
+    if (cached && Array.isArray(cached)) {
+        allNotifications = cached;
+        renderNotifications();
+    }
+
+    if (!sb || !navigator.onLine) {
+        renderNotifications();
+        return Promise.resolve();
+    }
+
+    return sb.from('notifications')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
+        .limit(20)
+        .then(function(result) {
+            allNotifications = result.data || [];
+            setCache(CACHE_NOTIFS, allNotifications);
+            renderNotifications();
+        })
+        .catch(function() {
+            renderNotifications();
+        });
+}
+
+function renderNotifications() {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+
+    var unread = 0;
+    allNotifications.forEach(function(n) {
+        if (!n.read) unread += 1;
+    });
+
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+
+    if (!allNotifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+
+    var typeMap = {
+        'unpaid_invoice': { icon: 'fa-file-invoice-dollar', cls: 'danger' },
+        'debt_reminder': { icon: 'fa-hand-holding-dollar', cls: 'warning' },
+        'payment_received': { icon: 'fa-circle-check', cls: 'success' },
+        'info': { icon: 'fa-circle-info', cls: 'info' }
+    };
+
+    var html = '';
+    allNotifications.forEach(function(n) {
+        var t = typeMap[n.type] || typeMap.info;
+        html += '<div class="notification-item">';
+        html += '<div class="notification-item-icon ' + t.cls + '"><i class="fas ' + t.icon + '"></i></div>';
+        html += '<div class="notification-item-content">';
+        html += '<div class="notification-item-title">' + escapeHtml(n.title || '') + '</div>';
+        html += '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>';
+        html += '</div>';
+        html += '</div>';
+    });
+
+    list.innerHTML = html;
+}
+
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+
+    allNotifications.forEach(function(n) { n.read = true; });
+    setCache(CACHE_NOTIFS, allNotifications);
+    renderNotifications();
+
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications').update({ read: true })
+            .eq('user_id', session.user.id)
+            .eq('read', false)
+            .then(function() {
+                showToast('تم تعيين الكل كمقروء', 'success');
+            })
+            .catch(function() {});
+    }
+}
+
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+
+    var el = document.getElementById('userAvatar');
+    if (el) el.textContent = initial;
+    el = document.getElementById('dropdownAvatar');
+    if (el) el.textContent = initial;
+    el = document.getElementById('userName');
+    if (el) el.textContent = user.full_name || user.username;
+    el = document.getElementById('dropdownName');
+    if (el) el.textContent = user.full_name || user.username;
+    el = document.getElementById('userRole');
+    if (el) el.textContent = roleText;
+    el = document.getElementById('dropdownRole');
+    if (el) el.textContent = roleText;
+}
+
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+
+    var links = document.querySelectorAll('.sidebar-link[data-perm]');
+    links.forEach(function(link) {
+        if (!isAdmin && !perms[link.dataset.perm]) {
+            link.style.display = 'none';
+        }
+    });
+
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        if (al) al.style.display = 'flex';
+        var dal = document.getElementById('dropdownAdminLink');
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+function bindEvents() {
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+    // Sidebar
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (menuBtn) menuBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+    });
+    if (overlay) overlay.addEventListener('click', function() {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+    });
+
+    // User Dropdown
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+
+    if (userBtn) userBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userDropdown.classList.toggle('show');
+        if (notifPanel) notifPanel.classList.remove('show');
+    });
+
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+
+    if (notifBtn) notifBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notifPanel.classList.toggle('show');
+        if (userDropdown) userDropdown.classList.remove('show');
+        if (notifPanel.classList.contains('show')) loadNotifications();
+    });
+
+    var markAllBtn = document.getElementById('markAllReadBtn');
+    if (markAllBtn) markAllBtn.addEventListener('click', markAllRead);
+
+    var refreshNotifsBtn = document.getElementById('refreshNotifsBtn');
+    if (refreshNotifsBtn) refreshNotifsBtn.addEventListener('click', function() {
+        showToast('جاري تحديث الإشعارات...', 'info', 1500);
+        loadNotifications().then(function() {
+            showToast('تم التحديث', 'success', 1500);
+        });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+
+    // Search
+    var searchTimeout;
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        var val = e.target.value;
+        searchTimeout = setTimeout(function() {
+            state.searchQuery = val;
+            applyFilters();
+        }, 250);
+    });
+
+    var sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) sortFilter.addEventListener('change', function(e) {
+        state.sortFilter = e.target.value;
+        applyFilters();
+    });
+
+    // Filter chips
+    var chips = document.querySelectorAll('.filter-chip');
+    chips.forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            chips.forEach(function(c) { c.classList.remove('active'); });
+            chip.classList.add('active');
+            state.currentFilter = chip.dataset.filter;
+            applyFilters();
+        });
+    });
+
+    // Buttons
+    var refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', function() {
+        showToast('جاري التحديث...', 'info');
+        loadData().then(function() {
+            showToast('تم تحديث البيانات', 'success');
+        });
+    });
+
+    var expBtn = document.getElementById('exportExcelBtn');
+    if (expBtn) expBtn.addEventListener('click', exportExcel);
+
+    var pdfBtn = document.getElementById('exportPdfBtn');
+    if (pdfBtn) pdfBtn.addEventListener('click', exportPDF);
+
+    // Modal close
+    var closePayBtn = document.getElementById('closePaymentBtn');
+    if (closePayBtn) closePayBtn.addEventListener('click', closePaymentModal);
+
+    var cancelPayBtn = document.getElementById('cancelPaymentBtn');
+    if (cancelPayBtn) cancelPayBtn.addEventListener('click', closePaymentModal);
+
+    var closeDetBtn = document.getElementById('closeDetailsBtn');
+    if (closeDetBtn) closeDetBtn.addEventListener('click', closeDetailsModal);
+
+    // Save payment
+    var savePayBtn = document.getElementById('savePaymentBtn');
+    if (savePayBtn) savePayBtn.addEventListener('click', savePayment);
+
+    // Quick amounts
+    var quickEl = document.getElementById('quickAmounts');
+    if (quickEl) quickEl.addEventListener('click', function(e) {
+        var target = e.target.closest('.quick-amount-btn');
+        if (!target) return;
+        var amt = target.dataset.amount;
+        if (amt) setPaymentAmount(amt);
+    });
+
+    // Debts actions (delegation)
+    var debtsContainer = document.getElementById('debtsContainer');
+    if (debtsContainer) debtsContainer.addEventListener('click', function(e) {
+        var btn = e.target.closest('[data-action]');
+        if (!btn) return;
+        var action = btn.dataset.action;
+        var id = btn.dataset.id;
+        if (action === 'payment') openPaymentModal(id);
+        else if (action === 'whatsapp') remindWhatsApp(id);
+        else if (action === 'details') openDetailsModal(id);
+    });
+
+    // Invoice items
+    var detailsBody = document.getElementById('detailsBody');
+    if (detailsBody) detailsBody.addEventListener('click', function(e) {
+        var item = e.target.closest('.invoice-item');
+        if (!item) return;
+        var invoiceId = item.dataset.invoiceId;
+        if (invoiceId) window.location.href = 'invoice-view.html?id=' + invoiceId;
+    });
+
+    // Modal overlay
+    var pm = document.getElementById('paymentModal');
+    if (pm) pm.addEventListener('click', function(e) {
+        if (e.target.id === 'paymentModal') closePaymentModal();
+    });
+    var dm = document.getElementById('detailsModal');
+    if (dm) dm.addEventListener('click', function(e) {
+        if (e.target.id === 'detailsModal') closeDetailsModal();
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            var si = document.getElementById('globalSearchInput');
+            if (si) si.focus();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+            e.preventDefault();
+            toggleTheme();
+        }
+        if (e.key === 'Escape') {
+            closePaymentModal();
+            closeDetailsModal();
+            if (notifPanel) notifPanel.classList.remove('show');
+            if (userDropdown) userDropdown.classList.remove('show');
+        }
+    });
+
+    // Scroll
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        if (winScroll > 300) {
+            if (scrollTopBtn) scrollTopBtn.classList.add('show');
+        } else {
+            if (scrollTopBtn) scrollTopBtn.classList.remove('show');
+        }
+    }, { passive: true });
+
+    if (scrollTopBtn) scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Online / Offline
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+        syncOfflinePayments();
+        loadData();
+    });
+
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('انقطع الاتصال', 'warning');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var session = getSession();
+    if (!session) {
+        window.location.href = 'index.html';
+        return;
+    }
+    if (session.user.must_change_password) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    initTheme();
+    updateOnlineStatus();
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+    bindEvents();
+
+    loadData().then(function() {
+        loadNotifications();
+    });
+
+    setInterval(syncOfflinePayments, 60000);
+    setInterval(function() {
+        if (navigator.onLine) loadNotifications();
+    }, 60000);
+
+    startInactivityMonitor();
+
+    console.log('Debts page ready');
+});
+
+})();
+</script>
+
+</body>
+</html>

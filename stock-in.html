@@ -1,0 +1,3707 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F766E">
+<meta name="description" content="الوارد - TopLoad لصيانة الغسالات">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>الوارد | TopLoad - لصيانة الغسالات</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #0F766E;
+    --tech-blue-dark: #115E59;
+    --tech-blue-light: #14B8A6;
+    --tech-black: #0F172A;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+    
+    --bg-primary: #E0F7FA;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-hover: #F0FDFA;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border-color: #E2E8F0;
+    
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    --navbar-height: 64px;
+    --sidebar-width: 260px;
+    
+    --transition-fast: 0.15s ease;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+    --bg-hover: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --border-color: #334155;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.6);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-blue-light), var(--success));
+    width: 0%;
+    z-index: 10000;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 10px rgba(15, 118, 110, 0.6);
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-height);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar-menu-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+
+.navbar-menu-btn:hover {
+    background: var(--bg-hover);
+    color: var(--tech-blue);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.navbar-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    padding: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-brand-text strong { font-size: 1rem; font-weight: 800; }
+.navbar-brand-text span { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-right: auto; }
+
+.navbar-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--transition);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.navbar-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+
+.navbar-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg-card);
+}
+
+.online-dot {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 2px solid var(--bg-card);
+    animation: pulse-online 2s infinite;
+}
+
+.online-dot.offline { background: var(--danger); animation: none; }
+
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.navbar-user:hover { background: var(--bg-hover); border-color: var(--tech-blue); }
+
+.navbar-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.navbar-user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--text-muted); }
+
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    right: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900;
+    overflow-y: auto;
+    padding: 1rem 0.75rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--transition);
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+
+.sidebar-section { margin-bottom: 1.25rem; }
+
+.sidebar-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    margin-bottom: 0.15rem;
+    position: relative;
+}
+
+.sidebar-link:hover {
+    background: var(--bg-hover);
+    color: var(--tech-blue);
+    transform: translateX(-3px);
+}
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.12), rgba(20, 184, 166, 0.08));
+    color: var(--tech-blue);
+    font-weight: 700;
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: var(--tech-blue);
+    border-radius: 4px;
+}
+
+.sidebar-link i:first-child { width: 20px; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 899;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition);
+    top: var(--navbar-height);
+}
+
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem;
+    min-height: calc(100vh - var(--navbar-height));
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header-text h1 {
+    font-size: 1.65rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.page-header-text h1 i { color: var(--tech-blue); }
+.page-header-text p { font-size: 0.9rem; color: var(--text-secondary); }
+
+.page-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn {
+    padding: 0.65rem 1.15rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4); }
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover { background: var(--bg-hover); border-color: var(--tech-blue); color: var(--tech-blue); }
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+}
+
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    color: white;
+}
+
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning), #d97706);
+    color: white;
+}
+
+.btn-warning:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); }
+
+.btn-info {
+    background: linear-gradient(135deg, var(--info), #2563eb);
+    color: white;
+}
+
+.btn-info:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
+
+.btn-sm { padding: 0.45rem 0.8rem; font-size: 0.8rem; }
+.btn-icon {
+    padding: 0.4rem;
+    min-width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+}
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* Stats Bar */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+
+.stat-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease backwards;
+}
+
+.stat-item:nth-child(1) { animation-delay: 0.05s; }
+.stat-item:nth-child(2) { animation-delay: 0.1s; }
+.stat-item:nth-child(3) { animation-delay: 0.15s; }
+.stat-item:nth-child(4) { animation-delay: 0.2s; }
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--tech-blue);
+}
+
+.stat-item-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+}
+
+.stat-item-icon.success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.stat-item-icon.warning {
+    background: linear-gradient(135deg, var(--warning), #d97706);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.stat-item-icon.purple {
+    background: linear-gradient(135deg, var(--purple), #7c3aed);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.stat-item-content { flex: 1; min-width: 0; }
+
+.stat-item-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.stat-item-value small {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.stat-item-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Toolbar */
+.toolbar {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.toolbar-search { flex: 1; min-width: 240px; position: relative; }
+
+.toolbar-search-input {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    padding-right: 2.75rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all var(--transition);
+}
+
+.toolbar-search-input:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
+
+.toolbar-search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.toolbar-select {
+    padding: 0.65rem 2.25rem 0.65rem 1rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    outline: none;
+    cursor: pointer;
+    transition: all var(--transition);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 0.75rem center;
+    min-width: 150px;
+}
+
+.toolbar-select:focus { border-color: var(--tech-blue); box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12); }
+
+/* Stock-in List */
+.stock-in-list {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.stock-in-header {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr 0.8fr 0.9fr 1fr 110px;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.stock-in-item {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr 0.8fr 0.9fr 1fr 110px;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
+    align-items: center;
+    animation: fadeInUp 0.3s ease backwards;
+}
+
+.stock-in-item:last-child { border-bottom: none; }
+.stock-in-item:hover { background: var(--bg-hover); }
+
+.stock-in-cell {
+    font-size: 0.85rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stock-in-cell small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 0.15rem;
+}
+
+.stock-in-product {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.stock-in-product-img {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.stock-in-product-img.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.stock-in-product-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.stock-in-product-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 0.1rem;
+}
+
+.stock-in-product-barcode {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stock-in-price {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--tech-blue);
+}
+
+.stock-in-total {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--success);
+}
+
+.stock-in-actions {
+    display: flex;
+    gap: 0.3rem;
+    justify-content: flex-end;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-success { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+.badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+.badge-info { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+.badge-gray { background: var(--bg-hover); color: var(--text-secondary); }
+.badge-purple { background: rgba(139, 92, 246, 0.15); color: var(--purple); }
+
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.75rem;
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.pagination-btn:hover:not(:disabled):not(.active) { border-color: var(--tech-blue); color: var(--tech-blue); }
+.pagination-btn.active {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    border-color: var(--tech-blue);
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+}
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+    overflow-y: auto;
+}
+
+.modal-overlay.show { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 720px;
+    width: 100%;
+    max-height: 92vh;
+    overflow: hidden;
+    animation: modalIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    border: 1px solid var(--border-color);
+}
+
+.modal-sm { max-width: 480px; }
+.modal-lg { max-width: 900px; }
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-shrink: 0;
+    background: var(--bg-card);
+}
+
+.modal-title { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
+.modal-title i { color: var(--tech-blue); }
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+
+.modal-close:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); transform: rotate(90deg); }
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    min-height: 0;
+    max-height: calc(92vh - 180px);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+.modal-body::-webkit-scrollbar { width: 8px; }
+.modal-body::-webkit-scrollbar-track { background: transparent; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    flex-wrap: wrap;
+}
+
+.modal-footer .btn { flex: 1; min-width: 120px; }
+
+@media (min-width: 480px) {
+    .modal-footer .btn { flex: initial; min-width: auto; }
+}
+
+/* Forms */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+
+.form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.45rem;
+}
+
+.form-label .required { color: var(--danger); }
+.form-label i { color: var(--tech-blue); margin-left: 0.35rem; font-size: 0.8rem; }
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 0.75rem 0.95rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--transition);
+    font-family: inherit;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    max-height: 200px;
+    line-height: 1.6;
+}
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 0.75rem center;
+    padding-left: 2.25rem;
+}
+
+.form-input.error, .form-select.error, .form-textarea.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+.form-hint {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    line-height: 1.5;
+}
+
+.form-error {
+    font-size: 0.75rem;
+    color: var(--danger);
+    margin-top: 0.4rem;
+    display: none;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+
+.form-error.show { display: flex; }
+
+/* Edit Info Banner */
+.edit-info-banner {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+    border: 1.5px solid var(--warning);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--warning);
+}
+
+.edit-info-banner i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Product Picker */
+.product-picker {
+    position: relative;
+}
+
+.product-picker-input {
+    width: 100%;
+    padding: 0.75rem 0.95rem;
+    padding-left: 2.5rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--transition);
+    cursor: pointer;
+}
+
+.product-picker-input:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
+
+.product-picker-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--tech-blue);
+    pointer-events: none;
+    font-size: 0.9rem;
+}
+
+.product-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0.35rem;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    z-index: 100;
+    max-height: 320px;
+    overflow-y: auto;
+    display: none;
+}
+
+.product-dropdown.show { display: block; }
+
+.product-dropdown-search {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    z-index: 2;
+}
+
+.product-dropdown-search input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    padding-right: 2rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.product-dropdown-search i {
+    position: absolute;
+    right: 1.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
+.product-option {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.product-option:last-child { border-bottom: none; }
+.product-option:hover { background: var(--bg-hover); }
+
+.product-option-img {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.product-option-img.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.product-option-info { flex: 1; min-width: 0; }
+
+.product-option-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-option-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.product-option-price {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--tech-blue);
+    flex-shrink: 0;
+}
+
+.product-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.product-empty i {
+    font-size: 1.5rem;
+    opacity: 0.3;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Selected Product */
+.selected-product {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.06), rgba(20, 184, 166, 0.03));
+    border: 1.5px solid var(--tech-blue);
+    border-radius: var(--radius-md);
+    margin-top: 0.5rem;
+}
+
+.selected-product-img {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.selected-product-img.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.selected-product-info { flex: 1; min-width: 0; }
+
+.selected-product-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+
+.selected-product-meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.selected-product-remove {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.selected-product-remove:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+
+/* Summary Box */
+.summary-box {
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.06), rgba(20, 184, 166, 0.03));
+    border: 1.5px solid var(--tech-blue);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+    margin-top: 1rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.summary-row:not(:last-child) {
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.summary-row-label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.summary-row-value {
+    font-weight: 800;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.summary-row.total {
+    padding-top: 0.85rem;
+    margin-top: 0.35rem;
+    border-top: 2px solid var(--tech-blue);
+}
+
+.summary-row.total .summary-row-label {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.summary-row.total .summary-row-value {
+    font-size: 1.35rem;
+    color: var(--tech-blue);
+}
+
+/* Toast */
+.toast-container {
+    position: fixed;
+    top: calc(var(--navbar-height) + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 400px;
+}
+
+.toast {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-right: 4px solid var(--info);
+}
+
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast i { font-size: 1.2rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+.toast.hide { animation: toastOut 0.3s ease forwards; }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastOut { to { opacity: 0; transform: translateY(-20px) scale(0.95); } }
+
+/* Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-row { height: 60px; margin-bottom: 0.5rem; border-radius: var(--radius-md); }
+
+/* Empty State */
+.empty-state {
+    padding: 4rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    opacity: 0.25;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--tech-blue);
+}
+
+.empty-state h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.empty-state p { font-size: 0.85rem; margin-bottom: 1rem; }
+
+/* Scroll Top */
+.scroll-top {
+    position: fixed;
+    bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all var(--transition);
+    z-index: 1400;
+}
+
+.scroll-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.scroll-top:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15, 118, 110, 0.5); }
+
+/* Notifications + User Dropdown */
+.notifications-panel, .user-dropdown {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem;
+    width: 360px;
+    max-width: calc(100vw - 2rem);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--transition);
+    overflow: hidden;
+}
+
+.user-dropdown { width: 240px; }
+
+.notifications-panel.show, .user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.notifications-header {
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notifications-title { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+.notifications-title i { color: var(--tech-blue); }
+
+.notifications-mark-read {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--tech-blue);
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+}
+
+.notifications-mark-read:hover { background: rgba(15, 118, 110, 0.1); }
+
+.notifications-list { max-height: 400px; overflow-y: auto; }
+
+.notification-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+}
+
+.notification-item:hover { background: var(--bg-hover); }
+.notification-item.unread { background: rgba(15, 118, 110, 0.04); }
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--tech-blue);
+    border-radius: 3px;
+}
+
+.notification-item-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.notification-item-icon.info { background: rgba(59, 130, 246, 0.12); color: var(--info); }
+.notification-item-icon.warning { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+.notification-item-icon.danger { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+.notification-item-icon.success { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+
+.notification-item-content { flex: 1; min-width: 0; }
+.notification-item-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.15rem; }
+.notification-item-message {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.notification-item-time { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.25rem; }
+
+.notifications-empty { padding: 2.5rem 1rem; text-align: center; color: var(--text-muted); }
+.notifications-empty i { font-size: 2.5rem; opacity: 0.3; margin-bottom: 0.75rem; display: block; }
+
+.user-dropdown-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-dropdown-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.user-dropdown-info strong { display: block; font-size: 0.9rem; font-weight: 700; }
+.user-dropdown-info span { font-size: 0.75rem; color: var(--text-muted); }
+.user-dropdown-menu { padding: 0.5rem; }
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+    width: 100%;
+    text-align: right;
+}
+
+.user-dropdown-item:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.user-dropdown-item.danger:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+.user-dropdown-divider { height: 1px; background: var(--border-color); margin: 0.35rem 0.5rem; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); box-shadow: var(--shadow-xl); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+    
+    .stock-in-header { display: none; }
+    .stock-in-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.85rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.5rem;
+        border: 1px solid var(--border-color);
+    }
+    .stock-in-item > *:nth-child(n+3)::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        font-weight: 700;
+        margin-bottom: 0.15rem;
+        text-transform: uppercase;
+    }
+    .stock-in-actions { grid-column: 1 / -1; justify-content: stretch; }
+    .stock-in-actions .btn { flex: 1; }
+}
+
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    
+    .notifications-panel, .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    
+    .toolbar { padding: 0.85rem; gap: 0.5rem; }
+    .toolbar-search { min-width: 0; flex: 1 1 100%; }
+    .toolbar-select { flex: 1; min-width: 0; }
+    
+    .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .stat-item { padding: 0.85rem; gap: 0.6rem; }
+    .stat-item-icon { width: 38px; height: 38px; font-size: 1rem; }
+    .stat-item-value { font-size: 1.05rem; }
+    .stat-item-label { font-size: 0.68rem; }
+    
+    .modal-body { padding: 1rem; max-height: calc(92vh - 160px); }
+    .modal-header { padding: 1rem 1.25rem; }
+    .modal-footer { padding: 0.85rem 1.25rem; gap: 0.5rem; }
+}
+
+@media (max-width: 400px) {
+    .stats-bar { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الغسالات</span>
+        </div>
+    </a>
+    
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link">
+            <i class="fas fa-house"></i>
+            <span>لوحة التحكم</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products">
+            <i class="fas fa-boxes-stacked"></i>
+            <span>الأصناف</span>
+        </a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories">
+            <i class="fas fa-tags"></i>
+            <span>الفئات</span>
+        </a>
+        <a href="stock-in.html" class="sidebar-link active" data-perm="can_view_warehouse_in">
+            <i class="fas fa-truck-ramp-box"></i>
+            <span>الوارد</span>
+        </a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers">
+            <i class="fas fa-handshake"></i>
+            <span>الموردين</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>الفواتير</span>
+        </a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers">
+            <i class="fas fa-users"></i>
+            <span>العملاء</span>
+        </a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts">
+            <i class="fas fa-hand-holding-dollar"></i>
+            <span>المديونيات</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs">
+            <i class="fas fa-screwdriver-wrench"></i>
+            <span>أوامر الصيانة</span>
+        </a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports">
+            <i class="fas fa-chart-pie"></i>
+            <span>التقارير</span>
+        </a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts">
+            <i class="fas fa-clock"></i>
+            <span>الورديات</span>
+        </a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log">
+            <i class="fas fa-clipboard-list"></i>
+            <span>سجل الحركات</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link">
+            <i class="fas fa-star"></i>
+            <span>المفضلة</span>
+        </a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;">
+            <i class="fas fa-shield-halved"></i>
+            <span>لوحة الأدمن</span>
+        </a>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1>
+                <i class="fas fa-truck-ramp-box"></i>
+                الوارد
+            </h1>
+            <p id="pageSubtitle">إدخال مخزون جديد من الموردين</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportExcelBtn">
+                <i class="fas fa-file-excel"></i>
+                تصدير
+            </button>
+            <button class="btn btn-primary" id="addStockInBtn">
+                <i class="fas fa-plus"></i>
+                وارد جديد
+            </button>
+        </div>
+    </div>
+    
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-item-icon success">
+                <i class="fas fa-arrow-down"></i>
+            </div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalOperations">0</div>
+                <div class="stat-item-label">إجمالي عمليات الوارد</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalCost">0 <small>ج.م</small></div>
+                <div class="stat-item-label">إجمالي التكلفة</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon purple">
+                <i class="fas fa-boxes-stacked"></i>
+            </div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalQuantity">0</div>
+                <div class="stat-item-label">إجمالي الكمية</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon warning">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="topSupplier">—</div>
+                <div class="stat-item-label">أكثر مورد تعاملًا</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-search">
+            <input type="text" class="toolbar-search-input" id="searchInput" placeholder="ابحث بالصنف، المورد، الباركود..." autocomplete="off">
+            <i class="fas fa-magnifying-glass toolbar-search-icon"></i>
+        </div>
+        
+        <select class="toolbar-select" id="supplierFilter">
+            <option value="">كل الموردين</option>
+        </select>
+        
+        <select class="toolbar-select" id="sortFilter">
+            <option value="newest">الأحدث</option>
+            <option value="oldest">الأقدم</option>
+            <option value="cost_high">التكلفة (الأعلى)</option>
+            <option value="cost_low">التكلفة (الأقل)</option>
+            <option value="qty_high">الكمية (الأعلى)</option>
+        </select>
+    </div>
+    
+    <!-- Stock-in List -->
+    <div id="stockInContainer">
+        <div class="stock-in-list">
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+        </div>
+    </div>
+    
+    <div class="pagination" id="pagination" style="display: none;"></div>
+    
+</main>
+
+<!-- Add/Edit Stock-in Modal -->
+<div class="modal-overlay" id="stockInModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-truck-ramp-box" id="modalIcon"></i>
+                <span id="modalTitle">وارد جديد</span>
+            </h3>
+            <button class="modal-close" id="closeModal" aria-label="إغلاق">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="stockInForm" autocomplete="off">
+            <div class="modal-body">
+                
+                <!-- Edit Mode Banner -->
+                <div class="edit-info-banner" id="editBanner" style="display: none;">
+                    <i class="fas fa-edit"></i>
+                    <span>وضع التعديل — يمكنك تغيير أي بيانات في عملية الوارد</span>
+                </div>
+                
+                <div class="form-grid">
+                    
+                    <!-- Product Picker -->
+                    <div class="form-group full">
+                        <label class="form-label">
+                            <i class="fas fa-box"></i>
+                            الصنف <span class="required">*</span>
+                        </label>
+                        <div class="product-picker" id="productPicker">
+                            <input type="text" class="product-picker-input" id="productSearch" placeholder="اضغط لاختيار صنف..." readonly>
+                            <i class="fas fa-box product-picker-icon"></i>
+                            <div class="product-dropdown" id="productDropdown">
+                                <div class="product-dropdown-search" style="position: relative;">
+                                    <input type="text" id="productDropdownSearch" placeholder="ابحث عن صنف..." autocomplete="off">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                </div>
+                                <div id="productOptionsList"></div>
+                            </div>
+                        </div>
+                        <div id="selectedProductContainer"></div>
+                        <div class="form-error" id="productError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء اختيار صنف</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Supplier -->
+                    <div class="form-group">
+                        <label class="form-label" for="supplierSelect">
+                            <i class="fas fa-handshake"></i>
+                            المورد <span class="required">*</span>
+                        </label>
+                        <select class="form-select" id="supplierSelect" required>
+                            <option value="">-- اختر المورد --</option>
+                        </select>
+                        <div class="form-error" id="supplierError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء اختيار مورد</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Purchase Order (Optional) -->
+                    <div class="form-group">
+                        <label class="form-label" for="poNumber">
+                            <i class="fas fa-file-invoice"></i>
+                            رقم أمر الشراء (اختياري)
+                        </label>
+                        <input type="text" class="form-input" id="poNumber" placeholder="PO-XXXXXX" maxlength="50">
+                    </div>
+                    
+                    <!-- Quantity -->
+                    <div class="form-group">
+                        <label class="form-label" for="quantityInput">
+                            <i class="fas fa-cubes"></i>
+                            الكمية <span class="required">*</span>
+                        </label>
+                        <input type="number" class="form-input" id="quantityInput" placeholder="0" min="1" step="1" value="1" required>
+                        <div class="form-error" id="quantityError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال كمية صحيحة</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Cost Price -->
+                    <div class="form-group">
+                        <label class="form-label" for="costPriceInput">
+                            <i class="fas fa-money-bill-wave"></i>
+                            سعر الشراء للوحدة <span class="required">*</span>
+                        </label>
+                        <input type="number" class="form-input" id="costPriceInput" placeholder="0.00" min="0" step="0.01" required>
+                        <div class="form-error" id="costPriceError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال سعر صحيح</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div class="form-group full">
+                        <label class="form-label" for="notesInput">
+                            <i class="fas fa-align-right"></i>
+                            ملاحظات (اختياري)
+                        </label>
+                        <textarea class="form-textarea" id="notesInput" placeholder="أي ملاحظات عن عملية الوارد..." maxlength="500"></textarea>
+                    </div>
+                    
+                </div>
+                
+                <!-- Summary -->
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-row">
+                        <span class="summary-row-label">
+                            <i class="fas fa-hashtag"></i>
+                            الكمية
+                        </span>
+                        <span class="summary-row-value" id="summaryQty">1</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-row-label">
+                            <i class="fas fa-tag"></i>
+                            سعر الوحدة
+                        </span>
+                        <span class="summary-row-value" id="summaryUnitPrice">0.00 ج.م</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span class="summary-row-label">
+                            <i class="fas fa-calculator"></i>
+                            الإجمالي
+                        </span>
+                        <span class="summary-row-value" id="summaryTotal">0.00 ج.م</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="submit" class="btn btn-success" id="saveBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="saveText">حفظ الوارد</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--danger);"></i>
+                تأكيد الحذف
+            </h3>
+            <button class="modal-close" id="closeDeleteModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                هل أنت متأكد من حذف عملية الوارد هذه؟
+            </p>
+            <div style="padding: 0.75rem 1rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md); color: var(--warning); font-size: 0.85rem; font-weight: 600;">
+                <i class="fas fa-exclamation-triangle"></i>
+                سيتم خصم الكمية من المخزون
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> حذف نهائي
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications Panel -->
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title">
+            <i class="fas fa-bell"></i>
+            الإشعارات
+        </h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+</div>
+
+<!-- User Dropdown -->
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item">
+            <i class="fas fa-star"></i>
+            <span>المفضلة</span>
+        </a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;">
+            <i class="fas fa-shield-halved"></i>
+            <span>لوحة الأدمن</span>
+        </a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn">
+            <i class="fas fa-right-from-bracket"></i>
+            <span>تسجيل الخروج</span>
+        </button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+var DB_NAME = 'electronic_db';
+var DB_VERSION = 4;
+var PAGE_SIZE = 20;
+
+// ═══════════════════════════════════════════════════════════════
+// 🗄️ Supabase
+// ═══════════════════════════════════════════════════════════════
+var supabaseClient = null;
+
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) {
+        console.error('Supabase init failed:', e);
+        return null;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function isValidUUID(uuid) {
+    if (!uuid || typeof uuid !== 'string') return false;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
+}
+
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try {
+        return num.toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ج.م';
+    } catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatCurrencyShort(amount) {
+    var num = parseFloat(amount) || 0;
+    try {
+        return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م';
+    } catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+
+function formatDate(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', { 
+            year: 'numeric', month: 'short', day: 'numeric' 
+        });
+    } catch (e) { return '—'; }
+}
+
+function formatDateTime(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', { 
+            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+    } catch (e) { return '—'; }
+}
+
+function formatTimeAgo(date) {
+    if (!date) return '';
+    try {
+        var seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        if (seconds < 60) return 'الآن';
+        if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+        if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+        if (seconds < 604800) return 'منذ ' + Math.floor(seconds / 86400) + ' يوم';
+        return formatDate(date);
+    } catch (e) { return ''; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    var icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+    };
+    
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🌐 Online
+// ═══════════════════════════════════════════════════════════════
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    if (!dot) return;
+    dot.classList.toggle('offline', !navigator.onLine);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 Session
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⏱️ Inactivity
+// ═══════════════════════════════════════════════════════════════
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+var inactivityTimer = null;
+
+function resetInactivity() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+
+function startInactivityMonitor() {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📦 IndexedDB
+// ═══════════════════════════════════════════════════════════════
+var dbInstance = null;
+var dbPromise = null;
+var dbFailed = false;
+
+function openDB() {
+    if (dbFailed) return Promise.resolve(null);
+    if (dbInstance) return Promise.resolve(dbInstance);
+    if (dbPromise) return dbPromise;
+    
+    dbPromise = new Promise(function(resolve) {
+        try {
+            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                var stores = ['accounts', 'cache', 'settings', 'products', 'categories', 'customers', 'invoices', 'repairs', 'suppliers', 'stock_movements'];
+                stores.forEach(function(name) {
+                    if (!db.objectStoreNames.contains(name)) {
+                        db.createObjectStore(name, { keyPath: 'id' });
+                    }
+                });
+                if (!db.objectStoreNames.contains('outbox')) {
+                    var s = db.createObjectStore('outbox', { keyPath: 'id', autoIncrement: true });
+                    s.createIndex('status', 'status');
+                }
+            };
+            
+            req.onsuccess = function() {
+                dbInstance = req.result;
+                dbInstance.onversionchange = function() {
+                    try { dbInstance.close(); } catch(e) {}
+                    dbInstance = null;
+                    dbPromise = null;
+                };
+                resolve(dbInstance);
+            };
+            
+            req.onerror = function() {
+                dbFailed = true;
+                dbPromise = null;
+                resolve(null);
+            };
+            
+            req.onblocked = function() {
+                setTimeout(function() {
+                    dbFailed = true;
+                    dbPromise = null;
+                    resolve(null);
+                }, 500);
+            };
+        } catch (e) {
+            dbFailed = true;
+            resolve(null);
+        }
+    });
+    
+    return dbPromise;
+}
+
+function dbPut(store, data) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).put(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+function dbGetAll(store) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return [];
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readonly');
+                var r = tx.objectStore(store).getAll();
+                r.onsuccess = function() { resolve(r.result || []); };
+                r.onerror = function() { resolve([]); };
+            } catch (e) { resolve([]); }
+        });
+    });
+}
+
+function dbDelete(store, key) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).delete(key);
+                r.onsuccess = function() { resolve(); };
+                r.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+
+function addToOutbox(action) {
+    return openDB().then(function(db) {
+        if (!db) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction('outbox', 'readwrite');
+                var data = Object.assign({}, action, { status: 'pending', created_at: Date.now() });
+                var r = tx.objectStore('outbox').add(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    stockMovements: [],
+    products: [],
+    suppliers: [],
+    filtered: [],
+    searchQuery: '',
+    supplierFilter: '',
+    sortFilter: 'newest',
+    currentPage: 1,
+    selectedProduct: null,
+    editingMovement: null,
+    deletingMovement: null
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Data
+// ═══════════════════════════════════════════════════════════════
+function loadData() {
+    var sb = getSupabaseClient();
+    
+    if (sb && navigator.onLine) {
+        return Promise.all([
+            sb.from('stock_movements')
+                .select('*, product:products(id, name, barcode, image_url, cost_price), supplier:suppliers(id, name, phone)')
+                .eq('type', 'in')
+                .order('created_at', { ascending: false })
+                .limit(500),
+            sb.from('products').select('id, name, barcode, image_url, cost_price, quantity, sell_price').order('name'),
+            sb.from('suppliers').select('id, name, phone, quality_rating').order('name')
+        ]).then(function(results) {
+            state.stockMovements = results[0].data || [];
+            state.products = results[1].data || [];
+            state.suppliers = results[2].data || [];
+            
+            // Cache
+            return Promise.all([
+                Promise.all(state.stockMovements.map(function(m) { return dbPut('stock_movements', m); })),
+                Promise.all(state.products.map(function(p) { return dbPut('products', p); })),
+                Promise.all(state.suppliers.map(function(s) { return dbPut('suppliers', s); }))
+            ]);
+        }).catch(function(err) {
+            console.warn('Load failed, using cache:', err);
+            return Promise.all([
+                dbGetAll('stock_movements'),
+                dbGetAll('products'),
+                dbGetAll('suppliers')
+            ]).then(function(cached) {
+                state.stockMovements = (cached[0] || []).filter(function(m) { return m.type === 'in'; });
+                state.products = cached[1] || [];
+                state.suppliers = cached[2] || [];
+            });
+        }).then(function() {
+            updateStats();
+            populateSupplierSelects();
+            applyFilters();
+        });
+    } else {
+        return Promise.all([
+            dbGetAll('stock_movements'),
+            dbGetAll('products'),
+            dbGetAll('suppliers')
+        ]).then(function(cached) {
+            state.stockMovements = (cached[0] || []).filter(function(m) { return m.type === 'in'; });
+            state.products = cached[1] || [];
+            state.suppliers = cached[2] || [];
+            updateStats();
+            populateSupplierSelects();
+            applyFilters();
+        });
+    }
+}
+
+function updateStats() {
+    var totalOps = state.stockMovements.length;
+    var totalCost = 0;
+    var totalQty = 0;
+    var supplierCounts = {};
+    
+    state.stockMovements.forEach(function(m) {
+        totalCost += (parseFloat(m.cost_price) || 0) * (parseInt(m.quantity) || 0);
+        totalQty += parseInt(m.quantity) || 0;
+        
+        if (m.supplier_id) {
+            if (!supplierCounts[m.supplier_id]) {
+                supplierCounts[m.supplier_id] = { count: 0, name: '' };
+            }
+            supplierCounts[m.supplier_id].count++;
+            if (m.supplier && m.supplier.name) {
+                supplierCounts[m.supplier_id].name = m.supplier.name;
+            }
+        }
+    });
+    
+    var topSupplier = '—';
+    var maxCount = 0;
+    Object.keys(supplierCounts).forEach(function(id) {
+        if (supplierCounts[id].count > maxCount) {
+            maxCount = supplierCounts[id].count;
+            topSupplier = supplierCounts[id].name || '—';
+        }
+    });
+    
+    var setEl = function(id, html) {
+        var el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    };
+    
+    setEl('totalOperations', formatNumber(totalOps));
+    setEl('totalCost', formatCurrencyShort(totalCost) + ' <small>ج.م</small>');
+    setEl('totalQuantity', formatNumber(totalQty));
+    setEl('topSupplier', escapeHtml(topSupplier));
+    
+    var subtitle = document.getElementById('pageSubtitle');
+    if (subtitle) subtitle.textContent = totalOps + ' عملية وارد • ' + formatNumber(totalQty) + ' قطعة';
+}
+
+function populateSupplierSelects() {
+    var select = document.getElementById('supplierFilter');
+    var modalSelect = document.getElementById('supplierSelect');
+    
+    if (select) {
+        select.innerHTML = '<option value="">كل الموردين</option>' + 
+            state.suppliers.map(function(s) {
+                return '<option value="' + s.id + '">' + escapeHtml(s.name) + '</option>';
+            }).join('');
+    }
+    
+    if (modalSelect) {
+        modalSelect.innerHTML = '<option value="">-- اختر المورد --</option>' + 
+            state.suppliers.map(function(s) {
+                return '<option value="' + s.id + '">' + escapeHtml(s.name) + '</option>';
+            }).join('');
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 Filters
+// ═══════════════════════════════════════════════════════════════
+function applyFilters() {
+    var list = state.stockMovements.slice();
+    var q = (state.searchQuery || '').trim().toLowerCase();
+    
+    if (q) {
+        list = list.filter(function(m) {
+            var pName = (m.product && m.product.name) || '';
+            var pBarcode = (m.product && m.product.barcode) || '';
+            var sName = (m.supplier && m.supplier.name) || '';
+            var poNumber = m.po_number || '';
+            return pName.toLowerCase().indexOf(q) !== -1 ||
+                   pBarcode.toLowerCase().indexOf(q) !== -1 ||
+                   sName.toLowerCase().indexOf(q) !== -1 ||
+                   poNumber.toLowerCase().indexOf(q) !== -1;
+        });
+    }
+    
+    if (state.supplierFilter) {
+        list = list.filter(function(m) { return m.supplier_id === state.supplierFilter; });
+    }
+    
+    switch (state.sortFilter) {
+        case 'oldest':
+            list.sort(function(a, b) { return new Date(a.created_at || 0) - new Date(b.created_at || 0); });
+            break;
+        case 'cost_high':
+            list.sort(function(a, b) {
+                var aTotal = (parseFloat(a.cost_price) || 0) * (parseInt(a.quantity) || 0);
+                var bTotal = (parseFloat(b.cost_price) || 0) * (parseInt(b.quantity) || 0);
+                return bTotal - aTotal;
+            });
+            break;
+        case 'cost_low':
+            list.sort(function(a, b) {
+                var aTotal = (parseFloat(a.cost_price) || 0) * (parseInt(a.quantity) || 0);
+                var bTotal = (parseFloat(b.cost_price) || 0) * (parseInt(b.quantity) || 0);
+                return aTotal - bTotal;
+            });
+            break;
+        case 'qty_high':
+            list.sort(function(a, b) { return (parseInt(b.quantity) || 0) - (parseInt(a.quantity) || 0); });
+            break;
+        case 'newest':
+        default:
+            list.sort(function(a, b) {
+                return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+            });
+    }
+    
+    state.filtered = list;
+    state.currentPage = 1;
+    render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render
+// ═══════════════════════════════════════════════════════════════
+function render() {
+    var container = document.getElementById('stockInContainer');
+    var pagination = document.getElementById('pagination');
+    if (!container) return;
+    
+    if (!state.filtered.length) {
+        container.innerHTML = getEmptyState();
+        bindEmptyStateBtn();
+        if (pagination) pagination.style.display = 'none';
+        return;
+    }
+    
+    var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+    var start = (state.currentPage - 1) * PAGE_SIZE;
+    var pageItems = state.filtered.slice(start, start + PAGE_SIZE);
+    
+    container.innerHTML = '<div class="stock-in-list">' +
+        '<div class="stock-in-header">' +
+            '<div>التاريخ</div>' +
+            '<div>الصنف</div>' +
+            '<div>المورد</div>' +
+            '<div>الكمية</div>' +
+            '<div>سعر الوحدة</div>' +
+            '<div>الإجمالي</div>' +
+            '<div></div>' +
+        '</div>' +
+        pageItems.map(renderMovementRow).join('') +
+    '</div>';
+    
+    if (totalPages > 1 && pagination) {
+        pagination.style.display = 'flex';
+        pagination.innerHTML = renderPagination(totalPages);
+        bindPaginationEvents();
+    } else if (pagination) {
+        pagination.style.display = 'none';
+    }
+    
+    bindMovementEvents();
+}
+
+function getEmptyState() {
+    if (state.searchQuery || state.supplierFilter) {
+        return '<div class="empty-state">' +
+            '<i class="fas fa-magnifying-glass"></i>' +
+            '<h3>لا توجد نتائج</h3>' +
+            '<p>لم نجد عمليات وارد تطابق بحثك</p>' +
+        '</div>';
+    }
+    
+    return '<div class="empty-state">' +
+        '<i class="fas fa-truck-ramp-box"></i>' +
+        '<h3>لا توجد عمليات وارد بعد</h3>' +
+        '<p>ابدأ بإضافة أول عملية وارد من مورد</p>' +
+        '<button class="btn btn-primary" id="emptyAddBtn"><i class="fas fa-plus"></i> وارد جديد</button>' +
+    '</div>';
+}
+
+function bindEmptyStateBtn() {
+    var btn = document.getElementById('emptyAddBtn');
+    if (btn) btn.addEventListener('click', openAddModal);
+}
+
+function renderMovementRow(m) {
+    var p = m.product || {};
+    var s = m.supplier || {};
+    var qty = parseInt(m.quantity) || 0;
+    var unitPrice = parseFloat(m.cost_price) || 0;
+    var total = qty * unitPrice;
+    
+    var productImg = p.image_url 
+        ? '<img src="' + escapeHtml(p.image_url) + '" alt="" class="stock-in-product-img" loading="lazy" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">' +
+          '<div class="stock-in-product-img placeholder" style="display:none;"><i class="fas fa-image"></i></div>'
+        : '<div class="stock-in-product-img placeholder"><i class="fas fa-image"></i></div>';
+    
+    return '<div class="stock-in-item" data-id="' + m.id + '">' +
+        '<div class="stock-in-cell" data-label="التاريخ">' +
+            '<div>' + formatDate(m.created_at) + '</div>' +
+            '<small>' + (m.po_number ? 'PO: ' + escapeHtml(m.po_number) : '—') + '</small>' +
+        '</div>' +
+        
+        '<div class="stock-in-product" data-label="الصنف">' +
+            productImg +
+            '<div class="stock-in-product-info">' +
+                '<div class="stock-in-product-name">' + escapeHtml(p.name || 'صنف محذوف') + '</div>' +
+                '<div class="stock-in-product-barcode">' + escapeHtml(p.barcode || '—') + '</div>' +
+            '</div>' +
+        '</div>' +
+        
+        '<div class="stock-in-cell" data-label="المورد">' +
+            '<div>' + escapeHtml(s.name || '—') + '</div>' +
+            '<small>' + escapeHtml(s.phone || '') + '</small>' +
+        '</div>' +
+        
+        '<div class="stock-in-cell" data-label="الكمية">' +
+            '<span class="badge badge-success">+' + formatNumber(qty) + '</span>' +
+        '</div>' +
+        
+        '<div class="stock-in-cell stock-in-price" data-label="سعر الوحدة">' +
+            formatCurrency(unitPrice) +
+        '</div>' +
+        
+        '<div class="stock-in-cell stock-in-total" data-label="الإجمالي">' +
+            formatCurrency(total) +
+        '</div>' +
+        
+        '<div class="stock-in-actions">' +
+            '<button class="btn btn-sm btn-info btn-icon" data-action="edit" data-id="' + m.id + '" title="تعديل">' +
+                '<i class="fas fa-pen"></i>' +
+            '</button>' +
+            '<button class="btn btn-sm btn-danger btn-icon" data-action="delete" data-id="' + m.id + '" title="حذف">' +
+                '<i class="fas fa-trash"></i>' +
+            '</button>' +
+        '</div>' +
+    '</div>';
+}
+
+function renderPagination(totalPages) {
+    var current = state.currentPage;
+    var pages = [];
+    pages.push('<button class="pagination-btn" data-page="' + (current - 1) + '" ' + (current === 1 ? 'disabled' : '') + '><i class="fas fa-chevron-right"></i></button>');
+    var start = Math.max(1, current - 2);
+    var end = Math.min(totalPages, current + 2);
+    if (start > 1) {
+        pages.push('<button class="pagination-btn" data-page="1">1</button>');
+        if (start > 2) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+    }
+    for (var i = start; i <= end; i++) {
+        pages.push('<button class="pagination-btn ' + (i === current ? 'active' : '') + '" data-page="' + i + '">' + i + '</button>');
+    }
+    if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+        pages.push('<button class="pagination-btn" data-page="' + totalPages + '">' + totalPages + '</button>');
+    }
+    pages.push('<button class="pagination-btn" data-page="' + (current + 1) + '" ' + (current === totalPages ? 'disabled' : '') + '><i class="fas fa-chevron-left"></i></button>');
+    return pages.join('');
+}
+
+function bindPaginationEvents() {
+    var btns = document.querySelectorAll('.pagination-btn[data-page]');
+    for (var i = 0; i < btns.length; i++) {
+        (function(btn) {
+            btn.addEventListener('click', function() {
+                var page = parseInt(btn.dataset.page);
+                var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+                if (page >= 1 && page <= totalPages) {
+                    state.currentPage = page;
+                    render();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        })(btns[i]);
+    }
+}
+
+function bindMovementEvents() {
+    document.querySelectorAll('[data-action="delete"]').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openDeleteModal(el.dataset.id);
+        });
+    });
+    
+    document.querySelectorAll('[data-action="edit"]').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openEditModal(el.dataset.id);
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Modal - Add Mode
+// ═══════════════════════════════════════════════════════════════
+function openAddModal() {
+    state.selectedProduct = null;
+    state.editingMovement = null;
+    
+    document.getElementById('modalTitle').textContent = 'وارد جديد';
+    document.getElementById('modalIcon').className = 'fas fa-truck-ramp-box';
+    document.getElementById('saveText').textContent = 'حفظ الوارد';
+    document.getElementById('editBanner').style.display = 'none';
+    
+    document.getElementById('stockInForm').reset();
+    document.getElementById('quantityInput').value = '1';
+    document.getElementById('productSearch').value = '';
+    document.getElementById('selectedProductContainer').innerHTML = '';
+    document.getElementById('poNumber').value = '';
+    document.getElementById('notesInput').value = '';
+    document.getElementById('costPriceInput').value = '';
+    
+    clearFormErrors();
+    updateSummary();
+    populateSupplierSelects();
+    
+    document.getElementById('stockInModal').classList.add('show');
+    setTimeout(function() {
+        document.getElementById('productSearch').focus();
+    }, 300);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Modal - Edit Mode
+// ═══════════════════════════════════════════════════════════════
+function openEditModal(id) {
+    var m = null;
+    for (var i = 0; i < state.stockMovements.length; i++) {
+        if (state.stockMovements[i].id === id) { m = state.stockMovements[i]; break; }
+    }
+    if (!m) return;
+    
+    state.editingMovement = m;
+    state.selectedProduct = m.product || null;
+    
+    document.getElementById('modalTitle').textContent = 'تعديل الوارد';
+    document.getElementById('modalIcon').className = 'fas fa-pen';
+    document.getElementById('saveText').textContent = 'حفظ التعديلات';
+    document.getElementById('editBanner').style.display = 'flex';
+    
+    // Fill the form
+    document.getElementById('quantityInput').value = parseInt(m.quantity) || 1;
+    document.getElementById('costPriceInput').value = parseFloat(m.cost_price) || 0;
+    document.getElementById('poNumber').value = m.po_number || '';
+    document.getElementById('notesInput').value = m.notes || '';
+    
+    // Product display
+    var productSearch = document.getElementById('productSearch');
+    if (m.product) {
+        productSearch.value = m.product.name || '';
+        renderSelectedProduct(m.product);
+    } else {
+        productSearch.value = '';
+        document.getElementById('selectedProductContainer').innerHTML = '';
+    }
+    
+    // Supplier
+    populateSupplierSelects();
+    setTimeout(function() {
+        document.getElementById('supplierSelect').value = m.supplier_id || '';
+    }, 50);
+    
+    clearFormErrors();
+    updateSummary();
+    
+    document.getElementById('stockInModal').classList.add('show');
+}
+
+function closeModal() {
+    document.getElementById('stockInModal').classList.remove('show');
+    document.getElementById('productDropdown').classList.remove('show');
+    state.selectedProduct = null;
+    state.editingMovement = null;
+}
+
+function clearFormErrors() {
+    document.querySelectorAll('.form-error').forEach(function(el) { el.classList.remove('show'); });
+    document.querySelectorAll('.form-input.error, .form-select.error, .form-textarea.error').forEach(function(el) {
+        el.classList.remove('error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔍 Product Picker
+// ═══════════════════════════════════════════════════════════════
+function initProductPicker() {
+    var input = document.getElementById('productSearch');
+    var dropdown = document.getElementById('productDropdown');
+    var searchInput = document.getElementById('productDropdownSearch');
+    
+    if (input) {
+        input.addEventListener('click', function() {
+            dropdown.classList.add('show');
+            renderProductOptions('');
+            setTimeout(function() {
+                if (searchInput) searchInput.focus();
+            }, 100);
+        });
+    }
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            renderProductOptions(e.target.value);
+        });
+    }
+    
+    document.addEventListener('click', function(e) {
+        if (!dropdown || !input) return;
+        if (!dropdown.contains(e.target) && !input.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+}
+
+function renderProductOptions(search) {
+    var list = document.getElementById('productOptionsList');
+    if (!list) return;
+    
+    var q = (search || '').trim().toLowerCase();
+    var products = state.products;
+    
+    if (q) {
+        products = products.filter(function(p) {
+            return (p.name || '').toLowerCase().indexOf(q) !== -1 ||
+                   (p.barcode || '').toLowerCase().indexOf(q) !== -1;
+        });
+    }
+    
+    if (!products.length) {
+        list.innerHTML = '<div class="product-empty"><i class="fas fa-box-open"></i><p>لا توجد أصناف</p></div>';
+        return;
+    }
+    
+    list.innerHTML = products.slice(0, 50).map(function(p) {
+        var img = p.image_url 
+            ? '<img src="' + escapeHtml(p.image_url) + '" alt="" class="product-option-img" loading="lazy">'
+            : '<div class="product-option-img placeholder"><i class="fas fa-image"></i></div>';
+        
+        return '<div class="product-option" data-product-id="' + p.id + '">' +
+            img +
+            '<div class="product-option-info">' +
+                '<div class="product-option-name">' + escapeHtml(p.name) + '</div>' +
+                '<div class="product-option-meta">' +
+                    '<span><i class="fas fa-barcode"></i> ' + escapeHtml(p.barcode || '—') + '</span>' +
+                    '<span><i class="fas fa-cubes"></i> ' + (p.quantity || 0) + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="product-option-price">' + formatCurrency(p.cost_price || 0) + '</div>' +
+        '</div>';
+    }).join('');
+    
+    list.querySelectorAll('.product-option').forEach(function(el) {
+        el.addEventListener('click', function() {
+            var id = el.dataset.productId;
+            selectProduct(id);
+        });
+    });
+}
+
+function selectProduct(id) {
+    var p = null;
+    for (var i = 0; i < state.products.length; i++) {
+        if (state.products[i].id === id) { p = state.products[i]; break; }
+    }
+    if (!p) return;
+    
+    state.selectedProduct = p;
+    document.getElementById('productDropdown').classList.remove('show');
+    document.getElementById('productSearch').value = p.name;
+    
+    renderSelectedProduct(p);
+    
+    // Prefill cost price (only in add mode)
+    var costInput = document.getElementById('costPriceInput');
+    if (costInput && !state.editingMovement && !costInput.value && p.cost_price) {
+        costInput.value = parseFloat(p.cost_price).toFixed(2);
+    }
+    
+    updateSummary();
+}
+
+function renderSelectedProduct(p) {
+    var container = document.getElementById('selectedProductContainer');
+    if (!container) return;
+    
+    var img = p.image_url 
+        ? '<img src="' + escapeHtml(p.image_url) + '" alt="" class="selected-product-img">'
+        : '<div class="selected-product-img placeholder"><i class="fas fa-image"></i></div>';
+    
+    container.innerHTML = '<div class="selected-product">' +
+        img +
+        '<div class="selected-product-info">' +
+            '<div class="selected-product-name">' + escapeHtml(p.name) + '</div>' +
+            '<div class="selected-product-meta">' +
+                '<span><i class="fas fa-barcode"></i> ' + escapeHtml(p.barcode || '—') + '</span>' +
+                '<span><i class="fas fa-cubes"></i> متبقي: ' + (p.quantity || 0) + '</span>' +
+            '</div>' +
+        '</div>' +
+        '<button type="button" class="selected-product-remove" id="removeSelectedProduct">' +
+            '<i class="fas fa-times"></i>' +
+        '</button>' +
+    '</div>';
+    
+    var removeBtn = document.getElementById('removeSelectedProduct');
+    if (removeBtn) {
+        removeBtn.addEventListener('click', function() {
+            state.selectedProduct = null;
+            document.getElementById('productSearch').value = '';
+            container.innerHTML = '';
+            updateSummary();
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 Summary
+// ═══════════════════════════════════════════════════════════════
+function updateSummary() {
+    var qty = parseInt(document.getElementById('quantityInput').value) || 0;
+    var unitPrice = parseFloat(document.getElementById('costPriceInput').value) || 0;
+    var total = qty * unitPrice;
+    
+    document.getElementById('summaryQty').textContent = formatNumber(qty);
+    document.getElementById('summaryUnitPrice').textContent = formatCurrency(unitPrice);
+    document.getElementById('summaryTotal').textContent = formatCurrency(total);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 💾 Save Stock-in (Add or Update)
+// ═══════════════════════════════════════════════════════════════
+function saveStockIn(e) {
+    e.preventDefault();
+    clearFormErrors();
+    
+    var isEditing = !!state.editingMovement;
+    var originalMovement = state.editingMovement;
+    
+    var productId = state.selectedProduct && state.selectedProduct.id;
+    var supplierId = document.getElementById('supplierSelect').value;
+    var poNumber = document.getElementById('poNumber').value.trim() || null;
+    var quantity = parseInt(document.getElementById('quantityInput').value) || 0;
+    var costPrice = parseFloat(document.getElementById('costPriceInput').value) || 0;
+    var notes = document.getElementById('notesInput').value.trim() || null;
+    
+    // Validation
+    var hasError = false;
+    
+    if (!productId) {
+        document.getElementById('productError').classList.add('show');
+        hasError = true;
+    }
+    
+    if (!supplierId) {
+        document.getElementById('supplierSelect').classList.add('error');
+        document.getElementById('supplierError').classList.add('show');
+        hasError = true;
+    }
+    
+    if (quantity <= 0) {
+        document.getElementById('quantityInput').classList.add('error');
+        document.getElementById('quantityError').classList.add('show');
+        hasError = true;
+    }
+    
+    if (costPrice < 0) {
+        document.getElementById('costPriceInput').classList.add('error');
+        document.getElementById('costPriceError').classList.add('show');
+        hasError = true;
+    }
+    
+    if (hasError) return;
+    
+    var btn = document.getElementById('saveBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveText');
+    
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    
+    var movementData = {
+        product_id: productId,
+        supplier_id: supplierId,
+        type: 'in',
+        quantity: quantity,
+        cost_price: costPrice,
+        reason: 'وارد من مورد',
+        reference_id: poNumber,
+        po_number: poNumber,
+        notes: notes,
+        created_by: session && session.user ? session.user.id : null
+    };
+    
+    if (isEditing) {
+        // ═══════════════ UPDATE MODE ═══════════════
+        var oldProductId = originalMovement.product_id;
+        var oldQuantity = parseInt(originalMovement.quantity) || 0;
+        var oldProductName = (originalMovement.product && originalMovement.product.name) || '';
+        var newProductName = (state.selectedProduct && state.selectedProduct.name) || '';
+        
+        var doLocalUpdate = function() {
+            // Update state
+            for (var i = 0; i < state.stockMovements.length; i++) {
+                if (state.stockMovements[i].id === originalMovement.id) {
+                    state.stockMovements[i] = Object.assign({}, state.stockMovements[i], movementData);
+                    
+                    // Update display product/supplier
+                    var newProduct = null;
+                    for (var pi = 0; pi < state.products.length; pi++) {
+                        if (state.products[pi].id === productId) { newProduct = state.products[pi]; break; }
+                    }
+                    var newSupplier = null;
+                    for (var si = 0; si < state.suppliers.length; si++) {
+                        if (state.suppliers[si].id === supplierId) { newSupplier = state.suppliers[si]; break; }
+                    }
+                    if (newProduct) state.stockMovements[i].product = newProduct;
+                    if (newSupplier) state.stockMovements[i].supplier = newSupplier;
+                    
+                    dbPut('stock_movements', state.stockMovements[i]);
+                    break;
+                }
+            }
+            
+            showToast('✅ تم تحديث عملية الوارد بنجاح', 'success');
+            closeModal();
+            updateStats();
+            applyFilters();
+        };
+        
+        if (sb && navigator.onLine && isValidUUID(originalMovement.id)) {
+            sb.from('stock_movements').update(movementData).eq('id', originalMovement.id)
+                .select('*, product:products(id, name, barcode, image_url), supplier:suppliers(id, name, phone)')
+                .single()
+                .then(function(result) {
+                    if (result.error) throw result.error;
+                    
+                    // Adjust product quantities
+                    var adjustPromises = [];
+                    
+                    // If product changed
+                    if (oldProductId !== productId) {
+                        // Decrease old product quantity
+                        adjustPromises.push(
+                            sb.from('products').select('quantity').eq('id', oldProductId).single()
+                                .then(function(pr) {
+                                    if (pr.data) {
+                                        var newQty = Math.max(0, (parseInt(pr.data.quantity) || 0) - oldQuantity);
+                                        return sb.from('products').update({ quantity: newQty }).eq('id', oldProductId);
+                                    }
+                                })
+                        );
+                        
+                        // Increase new product quantity
+                        adjustPromises.push(
+                            sb.from('products').select('quantity').eq('id', productId).single()
+                                .then(function(pr) {
+                                    if (pr.data) {
+                                        var newQty = (parseInt(pr.data.quantity) || 0) + quantity;
+                                        return sb.from('products').update({ quantity: newQty }).eq('id', productId);
+                                    }
+                                })
+                        );
+                    } else if (oldQuantity !== quantity) {
+                        // Same product - adjust by difference
+                        var diff = quantity - oldQuantity;
+                        adjustPromises.push(
+                            sb.from('products').select('quantity').eq('id', productId).single()
+                                .then(function(pr) {
+                                    if (pr.data) {
+                                        var newQty = Math.max(0, (parseInt(pr.data.quantity) || 0) + diff);
+                                        return sb.from('products').update({ quantity: newQty }).eq('id', productId);
+                                    }
+                                })
+                        );
+                    }
+                    
+                    return Promise.all(adjustPromises).then(function() { return result.data; });
+                })
+                .then(function(data) {
+                    // Audit log
+                    sb.from('audit_log').insert({
+                        user_id: session && session.user ? session.user.id : null,
+                        action: 'UPDATE',
+                        table_name: 'stock_movements',
+                        record_id: data.id,
+                        old_data: originalMovement,
+                        new_data: data
+                    }).then(function(){}, function(){});
+                    
+                    doLocalUpdate();
+                })
+                .catch(function(err) {
+                    console.error('Update error:', err);
+                    showToast((err && err.message) || 'حدث خطأ أثناء التحديث', 'error');
+                })
+                .then(function() {
+                    btn.disabled = false;
+                    spinner.style.display = 'none';
+                    icon.style.display = '';
+                    text.textContent = 'حفظ التعديلات';
+                });
+        } else {
+            // Offline update
+            addToOutbox({
+                type: 'update',
+                table: 'stock_movements',
+                id: originalMovement.id,
+                data: movementData
+            }).then(function() {
+                doLocalUpdate();
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                icon.style.display = '';
+                text.textContent = 'حفظ التعديلات';
+            });
+        }
+        
+    } else {
+        // ═══════════════ ADD MODE ═══════════════
+        var tempId = 'temp_' + Date.now();
+        var savePromise;
+        
+        if (sb && navigator.onLine) {
+            savePromise = sb.from('stock_movements').insert(movementData).select('*, product:products(id, name, barcode, image_url), supplier:suppliers(id, name, phone)').single()
+                .then(function(result) {
+                    if (result.error) throw result.error;
+                    return result.data;
+                })
+                .then(function(data) {
+                    // Update product quantity
+                    if (state.selectedProduct) {
+                        var newQty = (parseInt(state.selectedProduct.quantity) || 0) + quantity;
+                        return sb.from('products').update({ quantity: newQty }).eq('id', productId)
+                            .then(function() {
+                                state.selectedProduct.quantity = newQty;
+                                return dbPut('products', state.selectedProduct);
+                            })
+                            .then(function() { return data; });
+                    }
+                    return data;
+                })
+                .then(function(data) {
+                    sb.from('audit_log').insert({
+                        user_id: session && session.user ? session.user.id : null,
+                        action: 'INSERT',
+                        table_name: 'stock_movements',
+                        record_id: data.id,
+                        new_data: data
+                    }).then(function(){}, function(){});
+                    
+                    return data;
+                });
+        } else {
+            savePromise = addToOutbox({
+                type: 'insert',
+                table: 'stock_movements',
+                tempId: tempId,
+                data: movementData
+            }).then(function() {
+                var newMovement = Object.assign({
+                    id: tempId,
+                    created_at: new Date().toISOString()
+                }, movementData);
+                
+                for (var i = 0; i < state.products.length; i++) {
+                    if (state.products[i].id === productId) {
+                        newMovement.product = state.products[i];
+                        break;
+                    }
+                }
+                for (var j = 0; j < state.suppliers.length; j++) {
+                    if (state.suppliers[j].id === supplierId) {
+                        newMovement.supplier = state.suppliers[j];
+                        break;
+                    }
+                }
+                
+                if (state.selectedProduct) {
+                    state.selectedProduct.quantity = (parseInt(state.selectedProduct.quantity) || 0) + quantity;
+                    dbPut('products', state.selectedProduct);
+                }
+                
+                return newMovement;
+            });
+        }
+        
+        savePromise.then(function(newMovement) {
+            if (newMovement) {
+                state.stockMovements.unshift(newMovement);
+                dbPut('stock_movements', newMovement);
+            }
+            
+            showToast('✅ تم إضافة الوارد بنجاح', 'success');
+            closeModal();
+            updateStats();
+            applyFilters();
+        }).catch(function(err) {
+            console.error(err);
+            showToast((err && err.message) || 'حدث خطأ أثناء الحفظ', 'error');
+        }).then(function() {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            icon.style.display = '';
+            text.textContent = 'حفظ الوارد';
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🗑️ Delete
+// ═══════════════════════════════════════════════════════════════
+function openDeleteModal(id) {
+    var m = null;
+    for (var i = 0; i < state.stockMovements.length; i++) {
+        if (state.stockMovements[i].id === id) { m = state.stockMovements[i]; break; }
+    }
+    if (!m) return;
+    
+    state.deletingMovement = m;
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function confirmDelete() {
+    var m = state.deletingMovement;
+    if (!m) return;
+    
+    var btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="display:block;width:16px;height:16px;"></span>';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    var promise;
+    
+    if (sb && navigator.onLine && m.id.indexOf('temp_') !== 0) {
+        promise = sb.from('stock_movements').delete().eq('id', m.id)
+            .then(function(result) {
+                if (result.error) throw result.error;
+                
+                if (m.product_id) {
+                    return sb.from('products').select('quantity').eq('id', m.product_id).single()
+                        .then(function(pr) {
+                            if (pr.data) {
+                                var newQty = Math.max(0, (parseInt(pr.data.quantity) || 0) - parseInt(m.quantity || 0));
+                                return sb.from('products').update({ quantity: newQty }).eq('id', m.product_id);
+                            }
+                        });
+                }
+            })
+            .then(function() {
+                sb.from('audit_log').insert({
+                    user_id: session && session.user ? session.user.id : null,
+                    action: 'DELETE',
+                    table_name: 'stock_movements',
+                    record_id: m.id,
+                    old_data: m
+                }).then(function(){}, function(){});
+            });
+    } else {
+        promise = addToOutbox({ type: 'delete', table: 'stock_movements', id: m.id });
+    }
+    
+    promise.then(function() {
+        if (m.product_id && state.selectedProduct && state.selectedProduct.id === m.product_id) {
+            state.selectedProduct.quantity = Math.max(0, (state.selectedProduct.quantity || 0) - (parseInt(m.quantity) || 0));
+            dbPut('products', state.selectedProduct);
+        }
+        
+        state.stockMovements = state.stockMovements.filter(function(x) { return x.id !== m.id; });
+        dbDelete('stock_movements', m.id);
+        
+        showToast('✅ تم حذف عملية الوارد', 'success');
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingMovement = null;
+        
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.error(err);
+        showToast('حدث خطأ أثناء الحذف', 'error');
+    }).then(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash"></i> حذف نهائي';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📤 Export Excel
+// ═══════════════════════════════════════════════════════════════
+function exportExcel() {
+    var loadLib = Promise.resolve();
+    if (typeof XLSX === 'undefined') {
+        loadLib = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+    
+    loadLib.then(function() {
+        var data = state.filtered.map(function(m) {
+            var qty = parseInt(m.quantity) || 0;
+            var unit = parseFloat(m.cost_price) || 0;
+            return {
+                'التاريخ': formatDate(m.created_at),
+                'الصنف': (m.product && m.product.name) || '',
+                'الباركود': (m.product && m.product.barcode) || '',
+                'المورد': (m.supplier && m.supplier.name) || '',
+                'رقم أمر الشراء': m.po_number || '',
+                'الكمية': qty,
+                'سعر الوحدة': unit,
+                'الإجمالي': qty * unit,
+                'ملاحظات': m.notes || ''
+            };
+        });
+        
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'الوارد');
+        XLSX.writeFile(wb, 'stock-in_' + new Date().toISOString().split('T')[0] + '.xlsx');
+        showToast('تم التصدير بنجاح', 'success');
+    }).catch(function(err) {
+        console.error(err);
+        showToast('فشل التصدير', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔔 Notifications
+// ═══════════════════════════════════════════════════════════════
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return;
+    
+    sb.from('notifications')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
+        .limit(20)
+        .then(function(result) {
+            renderNotifications(result.data || []);
+        })
+        .catch(function(){});
+}
+
+function renderNotifications(notifications) {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+    
+    var unread = 0;
+    for (var i = 0; i < notifications.length; i++) {
+        if (!notifications[i].read) unread++;
+    }
+    
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+    
+    if (!notifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+    
+    var typeMap = {
+        'out_of_stock': { icon: 'fa-circle-xmark', cls: 'danger' },
+        'low_stock': { icon: 'fa-triangle-exclamation', cls: 'warning' },
+        'info': { icon: 'fa-circle-info', cls: 'info' }
+    };
+    
+    list.innerHTML = notifications.map(function(n) {
+        var t = typeMap[n.type] || typeMap.info;
+        return '<div class="notification-item ' + (n.read ? '' : 'unread') + '">' +
+            '<div class="notification-item-icon ' + t.cls + '"><i class="fas ' + t.icon + '"></i></div>' +
+            '<div class="notification-item-content">' +
+                '<div class="notification-item-title">' + escapeHtml(n.title) + '</div>' +
+                '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>' +
+                '<div class="notification-item-time"><i class="fas fa-clock"></i> ' + formatTimeAgo(n.created_at) + '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications').update({ read: true }).eq('user_id', session.user.id).eq('read', false)
+            .then(function() {
+                loadNotifications();
+                showToast('تم تعيين الكل كمقروء', 'success');
+            })
+            .catch(function(){});
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 User UI
+// ═══════════════════════════════════════════════════════════════
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+    
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+    
+    document.querySelectorAll('.sidebar-link[data-perm]').forEach(function(link) {
+        if (!isAdmin && !perms[link.dataset.perm]) link.style.display = 'none';
+    });
+    
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        var dal = document.getElementById('dropdownAdminLink');
+        if (al) al.style.display = 'flex';
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    
+    var session = getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    if (session.user.must_change_password) { window.location.href = 'index.html'; return; }
+    
+    initTheme();
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+    
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('وضع Offline', 'warning');
+    });
+    
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+    
+    // Sidebar
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    
+    if (menuBtn) menuBtn.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.toggle('show');
+        if (overlay) overlay.classList.toggle('show');
+    });
+    if (overlay) overlay.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.remove('show');
+        if (overlay) overlay.classList.remove('show');
+    });
+    
+    // User dropdown
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+    
+    if (userBtn) userBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (userDropdown) userDropdown.classList.toggle('show');
+        if (notifPanel) notifPanel.classList.remove('show');
+    });
+    
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+    
+    if (notifBtn) notifBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (notifPanel) notifPanel.classList.toggle('show');
+        if (userDropdown) userDropdown.classList.remove('show');
+    });
+    
+    var markAllBtn = document.getElementById('markAllReadBtn');
+    if (markAllBtn) markAllBtn.addEventListener('click', markAllRead);
+    
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+    
+    // Search
+    var searchTimeout;
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        var val = e.target.value;
+        searchTimeout = setTimeout(function() {
+            state.searchQuery = val;
+            applyFilters();
+        }, 250);
+    });
+    
+    // Supplier filter
+    var supFilter = document.getElementById('supplierFilter');
+    if (supFilter) supFilter.addEventListener('change', function(e) {
+        state.supplierFilter = e.target.value;
+        applyFilters();
+    });
+    
+    // Sort
+    var sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) sortFilter.addEventListener('change', function(e) {
+        state.sortFilter = e.target.value;
+        applyFilters();
+    });
+    
+    // Add
+    var addBtn = document.getElementById('addStockInBtn');
+    if (addBtn) addBtn.addEventListener('click', openAddModal);
+    
+    // Modal
+    var closeM = document.getElementById('closeModal');
+    var cancelM = document.getElementById('cancelBtn');
+    var form = document.getElementById('stockInForm');
+    
+    if (closeM) closeM.addEventListener('click', closeModal);
+    if (cancelM) cancelM.addEventListener('click', closeModal);
+    if (form) form.addEventListener('submit', saveStockIn);
+    
+    // Product picker
+    initProductPicker();
+    
+    // Summary live update
+    var qtyInput = document.getElementById('quantityInput');
+    var costInput = document.getElementById('costPriceInput');
+    if (qtyInput) qtyInput.addEventListener('input', updateSummary);
+    if (costInput) costInput.addEventListener('input', updateSummary);
+    
+    // Delete modal
+    var closeDel = document.getElementById('closeDeleteModal');
+    var cancelDel = document.getElementById('cancelDeleteBtn');
+    var confirmDel = document.getElementById('confirmDeleteBtn');
+    
+    if (closeDel) closeDel.addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingMovement = null;
+    });
+    if (cancelDel) cancelDel.addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingMovement = null;
+    });
+    if (confirmDel) confirmDel.addEventListener('click', confirmDelete);
+    
+    // Export
+    var expBtn = document.getElementById('exportExcelBtn');
+    if (expBtn) expBtn.addEventListener('click', exportExcel);
+    
+    // Overlay click
+    document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+        ov.addEventListener('click', function(e) {
+            if (e.target === ov) ov.classList.remove('show');
+        });
+    });
+    
+    // Keyboard
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.show').forEach(function(m) { m.classList.remove('show'); });
+            var dropdown = document.getElementById('productDropdown');
+            if (dropdown) dropdown.classList.remove('show');
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            var si = document.getElementById('searchInput');
+            if (si) si.focus();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+    
+    // Scroll
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        if (winScroll > 300) {
+            if (scrollTopBtn) scrollTopBtn.classList.add('show');
+        } else {
+            if (scrollTopBtn) scrollTopBtn.classList.remove('show');
+        }
+    }, { passive: true });
+    
+    if (scrollTopBtn) scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Permissions
+    if (session.user.role !== 'admin' && (!session.user.permissions || !session.user.permissions.can_edit_warehouse_in)) {
+        var addBtn2 = document.getElementById('addStockInBtn');
+        if (addBtn2) addBtn2.style.display = 'none';
+    }
+    
+    // Load
+    openDB().then(function() {
+        return loadData();
+    }).then(function() {
+        loadNotifications();
+        setInterval(loadNotifications, 60000);
+    }).catch(function(err) {
+        console.error('Load error:', err);
+        showToast('حدث خطأ في تحميل البيانات', 'error');
+    });
+    
+    startInactivityMonitor();
+    
+    console.log('%c📥 صفحة الوارد جاهزة - مع إمكانية التعديل الكامل ✅', 'color: #0F766E; font-size: 16px; font-weight: bold;');
+});
+
+window.StockInApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession
+};
+
+})();
+</script>
+
+</body>
+</html>

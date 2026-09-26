@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d5b8e" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a1628" media="(prefers-color-scheme: dark)">
+<meta name="description" content="عرض فاتورة - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="TopLoad">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TopLoad">
+<meta name="robots" content="noindex, nofollow">
+<title>فاتورة | TopLoad</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #1d5b8e;
+    --tech-blue-dark: #154668;
+    --tech-blue-light: #2d7ab8;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --purple: #8b5cf6;
+    --gold: #fbbf24;
+    --bg-primary: #E0F7FA;
+    --bg-card: #ffffff;
+    --bg-hover: #f1f5f9;
+    --text-primary: #0a1f33;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border-color: #e1e8f0;
+    --shadow-sm: 0 1px 3px rgba(10, 31, 51, 0.06);
+    --shadow-md: 0 4px 12px rgba(10, 31, 51, 0.08);
+    --shadow-lg: 0 12px 32px rgba(10, 31, 51, 0.12);
+    --shadow-xl: 0 24px 48px rgba(10, 31, 51, 0.16);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0a1628;
+    --bg-card: #142f4a;
+    --bg-hover: #1a3a5c;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --border-color: #1e3a5f;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.6);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+    padding: 1rem;
+    padding-top: calc(1rem + var(--safe-top));
+    padding-bottom: calc(1rem + var(--safe-bottom));
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* Top Bar */
+.top-bar {
+    max-width: 900px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.85rem 1.15rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.top-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.top-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    padding: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.top-brand-text strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.top-brand-text span {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.top-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition);
+}
+
+.icon-btn:hover {
+    background: var(--tech-blue);
+    color: white;
+    border-color: var(--tech-blue);
+    transform: translateY(-2px);
+}
+
+/* Invoice Container */
+.invoice-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.invoice-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.invoice-header {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    padding: 1.75rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.invoice-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.invoice-header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.invoice-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.invoice-brand-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-lg);
+    padding: 0.5rem;
+    border: 2px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+}
+
+.invoice-brand-text h1 {
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 0.15rem;
+}
+
+.invoice-brand-text p {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    font-weight: 500;
+}
+
+.invoice-meta {
+    text-align: left;
+}
+
+.invoice-number {
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+}
+
+.invoice-date {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    justify-content: flex-end;
+}
+
+.invoice-status-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 800;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    margin-top: 0.5rem;
+}
+
+.invoice-status-banner.paid {
+    background: rgba(16, 185, 129, 0.3);
+    border-color: rgba(16, 185, 129, 0.5);
+}
+
+.invoice-status-banner.partial {
+    background: rgba(245, 158, 11, 0.3);
+    border-color: rgba(245, 158, 11, 0.5);
+}
+
+.invoice-status-banner.unpaid {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* Body */
+.invoice-body {
+    padding: 1.75rem 1.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+.info-box {
+    padding: 1rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    border-right: 4px solid var(--tech-blue);
+}
+
+.info-box-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.info-box-label i {
+    color: var(--tech-blue);
+    font-size: 0.75rem;
+}
+
+.info-box-value {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.info-box-value.mono {
+    font-family: 'Courier New', monospace;
+    direction: ltr;
+    text-align: right;
+}
+
+.info-box-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.repair-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 800;
+    background: rgba(29, 91, 142, 0.12);
+    color: var(--tech-blue);
+    font-family: 'Courier New', monospace;
+    margin-top: 0.35rem;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.section-title i {
+    color: var(--tech-blue);
+    font-size: 0.9rem;
+}
+
+.items-table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 500px;
+}
+
+.items-table thead {
+    background: linear-gradient(135deg, rgba(29, 91, 142, 0.08), rgba(45, 122, 184, 0.04));
+}
+
+.items-table th {
+    padding: 0.85rem;
+    text-align: right;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: var(--tech-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.items-table td {
+    padding: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.items-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.items-table tbody tr:hover {
+    background: var(--bg-hover);
+}
+
+.items-table .item-name {
+    font-weight: 700;
+    min-width: 180px;
+}
+
+.items-table .item-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 0.15rem;
+}
+
+.items-table .item-barcode {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+    margin-top: 0.15rem;
+}
+
+.items-table .num {
+    font-family: 'Courier New', monospace;
+    direction: ltr;
+    text-align: right;
+    font-weight: 700;
+}
+
+.items-table .price {
+    color: var(--tech-blue);
+    font-weight: 800;
+}
+
+.items-table .total {
+    color: var(--success);
+    font-weight: 800;
+}
+
+.summary-box {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.summary-inner {
+    width: 100%;
+    max-width: 420px;
+    background: linear-gradient(135deg, rgba(29, 91, 142, 0.04), rgba(45, 122, 184, 0.02));
+    border: 1.5px solid var(--tech-blue);
+    border-radius: var(--radius-lg);
+    padding: 1.15rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.summary-row:not(:last-child) {
+    border-bottom: 1px dashed rgba(29, 91, 142, 0.2);
+}
+
+.summary-label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.summary-label i {
+    color: var(--tech-blue);
+    font-size: 0.8rem;
+    width: 16px;
+    text-align: center;
+}
+
+.summary-value {
+    font-weight: 800;
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    direction: ltr;
+}
+
+.summary-row.discount .summary-value {
+    color: var(--danger);
+}
+
+.summary-row.total {
+    padding-top: 0.85rem;
+    margin-top: 0.5rem;
+    border-top: 2px solid var(--tech-blue);
+}
+
+.summary-row.total .summary-label {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.summary-row.total .summary-value {
+    font-size: 1.4rem;
+    color: var(--tech-blue);
+    font-weight: 900;
+}
+
+.summary-row.paid .summary-value {
+    color: var(--success);
+}
+
+.summary-row.remaining {
+    padding-top: 0.65rem;
+    margin-top: 0.5rem;
+    border-top: 2px dashed var(--danger);
+}
+
+.summary-row.remaining .summary-label {
+    color: var(--danger);
+    font-weight: 800;
+}
+
+.summary-row.remaining .summary-value {
+    color: var(--danger);
+    font-size: 1.2rem;
+    font-weight: 900;
+}
+
+.notes-box {
+    padding: 1rem;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-right: 4px solid var(--warning);
+    border-radius: var(--radius-md);
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.notes-box strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+}
+
+/* Footer */
+.invoice-footer {
+    padding: 1.5rem;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.footer-contact-item i {
+    color: var(--tech-blue);
+    width: 20px;
+    text-align: center;
+}
+
+.footer-qr {
+    text-align: center;
+}
+
+.qr-container {
+    width: 130px;
+    height: 130px;
+    background: white;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--border-color);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-container canvas,
+.qr-container img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: var(--radius-sm);
+}
+
+.qr-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+/* Actions */
+.action-bar {
+    max-width: 900px;
+    margin: 1.25rem auto 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.action-btn {
+    padding: 0.75rem 1.15rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    border-color: var(--tech-blue);
+    box-shadow: 0 4px 12px rgba(29, 91, 142, 0.3);
+}
+
+.action-btn.success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+    border-color: var(--success);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.action-btn.whatsapp {
+    background: #25d366;
+    color: white;
+    border-color: #25d366;
+}
+
+.action-btn.whatsapp:hover {
+    background: #128c7e;
+}
+
+/* Loading */
+.loading-state {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    text-align: center;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.loading-spinner {
+    width: 56px;
+    height: 56px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--tech-blue);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 1.25rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-state h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.35rem;
+}
+
+.loading-state p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Error */
+.error-state {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.error-icon {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--danger);
+}
+
+.error-state h2 {
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.error-state p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.error-state .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition);
+}
+
+.error-state .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(29, 91, 142, 0.4);
+}
+
+/* Debug Panel */
+.debug-panel {
+    max-width: 900px;
+    margin: 1rem auto 0;
+    padding: 1rem 1.15rem;
+    background: #1e293b;
+    color: #cbd5e1;
+    border-radius: var(--radius-md);
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    display: none;
+}
+
+.debug-panel.show {
+    display: block;
+}
+
+.debug-panel strong {
+    color: #fbbf24;
+}
+
+/* Toast */
+.toast-container {
+    position: fixed;
+    top: calc(1rem + var(--safe-top));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 380px;
+}
+
+.toast {
+    background: var(--bg-card);
+    padding: 0.9rem 1.15rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    pointer-events: auto;
+    border-right: 4px solid var(--info);
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+
+.toast i { font-size: 1.15rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Rating Prompt */
+.rating-prompt {
+    max-width: 900px;
+    margin: 1.5rem auto 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(251, 191, 36, 0.02));
+    border: 1.5px solid rgba(251, 191, 36, 0.4);
+    border-radius: var(--radius-lg);
+    text-align: center;
+}
+
+.rating-prompt h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.rating-prompt h3 i {
+    color: var(--gold);
+}
+
+.rating-prompt p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.rating-prompt .btn {
+    padding: 0.65rem 1.25rem;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--gold), #f59e0b);
+    color: white;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition);
+}
+
+.rating-prompt .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+}
+
+@media (max-width: 640px) {
+    body { padding: 0.65rem; padding-top: calc(0.65rem + var(--safe-top)); }
+
+    .top-bar { padding: 0.75rem 0.85rem; }
+    .top-brand-text strong { font-size: 0.9rem; }
+    .top-brand-text span { font-size: 0.65rem; }
+    .top-logo { width: 38px; height: 38px; }
+    .icon-btn { width: 38px; height: 38px; font-size: 0.9rem; }
+
+    .invoice-header { padding: 1.25rem 1rem; }
+    .invoice-header-inner { flex-direction: column; align-items: flex-start; }
+    .invoice-brand-logo { width: 52px; height: 52px; }
+    .invoice-brand-text h1 { font-size: 1.1rem; }
+    .invoice-brand-text p { font-size: 0.72rem; }
+    .invoice-meta { text-align: right; width: 100%; }
+    .invoice-number { font-size: 1.2rem; }
+    .invoice-date { justify-content: flex-start; }
+
+    .invoice-body { padding: 1.25rem 1rem; }
+    .info-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+    .info-box { padding: 0.85rem; }
+    .info-box-value { font-size: 0.9rem; }
+
+    .items-table { font-size: 0.78rem; min-width: 420px; }
+    .items-table th, .items-table td { padding: 0.6rem 0.5rem; }
+
+    .summary-inner { max-width: 100%; }
+
+    .invoice-footer {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.25rem 1rem;
+    }
+
+    .footer-contact { align-items: center; }
+    .footer-qr { display: flex; flex-direction: column; align-items: center; }
+
+    .action-bar { flex-direction: column; }
+    .action-btn { width: 100%; justify-content: center; }
+}
+
+@media print {
+    body { padding: 0; background: white; }
+
+    .top-bar,
+    .action-bar,
+    .rating-prompt,
+    .toast-container,
+    .debug-panel {
+        display: none !important;
+    }
+
+    .invoice-wrapper { max-width: 100%; }
+
+    .invoice-card {
+        box-shadow: none;
+        border-radius: 0;
+        border: none;
+    }
+
+    .invoice-header,
+    .items-table,
+    .summary-inner,
+    .info-box {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="top-bar">
+    <div class="top-brand">
+        <img src="logo.png" alt="TopLoad" class="top-logo" onerror="this.style.display='none'">
+        <div class="top-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الأجهزة الإلكترونية</span>
+        </div>
+    </div>
+    <div class="top-actions">
+        <button class="icon-btn" id="debugToggle" title="معلومات التشخيص">
+            <i class="fas fa-bug"></i>
+        </button>
+        <button class="icon-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="icon-btn" id="printBtn" title="طباعة">
+            <i class="fas fa-print"></i>
+        </button>
+    </div>
+</div>
+
+<div class="debug-panel" id="debugPanel">
+    <div id="debugContent">
+        <strong>🔍 وضع التشخيص</strong><br>
+        <span id="debugUrl">URL: —</span><br>
+        <span id="debugIdentifier">Identifier: —</span><br>
+        <span id="debugStatus">Status: —</span><br>
+        <span id="debugStrategy">Strategy: —</span>
+    </div>
+</div>
+
+<div class="loading-state" id="loadingState">
+    <div class="loading-spinner"></div>
+    <h3>جاري تحميل الفاتورة...</h3>
+    <p>يرجى الانتظار قليلاً</p>
+</div>
+
+<div class="error-state" id="errorState" style="display: none;">
+    <div class="error-icon">
+        <i class="fas fa-file-circle-xmark"></i>
+    </div>
+    <h2 id="errorTitle">الفاتورة غير موجودة</h2>
+    <p id="errorMessage">
+        لا يمكن العثور على هذه الفاتورة. تأكد من صحة الرابط الذي استلمته،
+        أو تواصل مع مركز الصيانة للحصول على رابط جديد.
+    </p>
+    <a href="track.html" class="btn">
+        <i class="fas fa-magnifying-glass"></i>
+        تتبع الجهاز
+    </a>
+</div>
+
+<div class="invoice-wrapper" id="invoiceWrapper" style="display: none;">
+    <div class="invoice-card" id="invoiceCard">
+
+        <div class="invoice-header">
+            <div class="invoice-header-inner">
+                <div class="invoice-brand">
+                    <img src="logo.png" alt="TopLoad" class="invoice-brand-logo" onerror="this.style.display='none'">
+                    <div class="invoice-brand-text">
+                        <h1>TopLoad</h1>
+                        <p>لصيانة الأجهزة الإلكترونية</p>
+                    </div>
+                </div>
+                <div class="invoice-meta">
+                    <div class="invoice-number" id="invoiceNumber">—</div>
+                    <div class="invoice-date">
+                        <i class="fas fa-calendar"></i>
+                        <span id="invoiceDate">—</span>
+                    </div>
+                    <div id="statusBannerContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="invoice-body">
+
+            <div class="info-grid">
+                <div class="info-box" id="customerInfoBox">
+                    <div class="info-box-label">
+                        <i class="fas fa-user"></i>
+                        العميل
+                    </div>
+                    <div class="info-box-value" id="customerName">—</div>
+                    <div class="info-box-value mono" id="customerPhone" style="font-size: 0.85rem; color: var(--text-secondary);"></div>
+                    <div class="info-box-sub" id="customerAddress"></div>
+                </div>
+
+                <div class="info-box" id="deviceInfoBox">
+                    <div class="info-box-label">
+                        <i class="fas fa-mobile-screen"></i>
+                        الجهاز
+                    </div>
+                    <div class="info-box-value" id="deviceType">—</div>
+                    <div class="info-box-sub" id="deviceModel"></div>
+                    <div id="repairTrackingContainer"></div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-label">
+                        <i class="fas fa-credit-card"></i>
+                        طريقة الدفع
+                    </div>
+                    <div class="info-box-value" id="paymentMethod">—</div>
+                    <div class="info-box-sub" id="paymentStatusText"></div>
+                </div>
+            </div>
+
+            <h3 class="section-title">
+                <i class="fas fa-list"></i>
+                تفاصيل الفاتورة
+            </h3>
+
+            <div class="items-table-wrapper">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>الصنف / الوصف</th>
+                            <th>الكمية</th>
+                            <th>سعر الوحدة</th>
+                            <th>الإجمالي</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="summary-box">
+                <div class="summary-inner">
+                    <div class="summary-row">
+                        <span class="summary-label">
+                            <i class="fas fa-boxes-stacked"></i>
+                            تكلفة القطع
+                        </span>
+                        <span class="summary-value" id="partsTotal">0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">
+                            <i class="fas fa-screwdriver-wrench"></i>
+                            تكلفة المصنعية
+                        </span>
+                        <span class="summary-value" id="laborCost">0</span>
+                    </div>
+                    <div class="summary-row discount" id="discountRow" style="display: none;">
+                        <span class="summary-label">
+                            <i class="fas fa-tag"></i>
+                            الخصم
+                        </span>
+                        <span class="summary-value" id="discount">0</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span class="summary-label">
+                            <i class="fas fa-calculator"></i>
+                            الإجمالي
+                        </span>
+                        <span class="summary-value" id="grandTotal">0</span>
+                    </div>
+                    <div class="summary-row paid" id="paidRow" style="display: none;">
+                        <span class="summary-label">
+                            <i class="fas fa-circle-check"></i>
+                            المدفوع
+                        </span>
+                        <span class="summary-value" id="paidAmount">0</span>
+                    </div>
+                    <div class="summary-row remaining" id="remainingRow" style="display: none;">
+                        <span class="summary-label">
+                            <i class="fas fa-hand-holding-dollar"></i>
+                            المتبقي
+                        </span>
+                        <span class="summary-value" id="remainingAmount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notes-box" id="notesBox" style="display: none;">
+                <strong><i class="fas fa-sticky-note"></i> ملاحظات</strong>
+                <span id="notesText"></span>
+            </div>
+
+        </div>
+
+        <div class="invoice-footer">
+            <div class="footer-contact">
+                <div class="footer-contact-item">
+                    <i class="fas fa-location-dot"></i>
+                    <span>مركز TopLoad لصيانة الأجهزة الإلكترونية</span>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span dir="ltr">01276221969</span>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="fas fa-clock"></i>
+                    <span>يومياً من 10 ص إلى 10 م</span>
+                </div>
+            </div>
+            <div class="footer-qr">
+                <div class="qr-container" id="qrContainer"></div>
+                <div class="qr-label">امسح لمتابعة الفاتورة</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="rating-prompt" id="ratingPrompt" style="display: none;">
+    <h3>
+        <i class="fas fa-star"></i>
+        قيّم خدمتنا
+    </h3>
+    <p>رأيك يهمنا! ساعدنا في تحسين خدماتنا بتقييمك</p>
+    <button class="btn" id="rateBtn">
+        <i class="fas fa-star"></i>
+        اكتب تقييمك
+    </button>
+</div>
+
+<div class="action-bar" id="actionBar" style="display: none;">
+    <button class="action-btn primary" id="printActionBtn">
+        <i class="fas fa-print"></i>
+        طباعة
+    </button>
+    <button class="action-btn success" id="pdfActionBtn">
+        <i class="fas fa-file-pdf"></i>
+        تحميل PDF
+    </button>
+    <button class="action-btn whatsapp" id="shareWhatsappBtn">
+        <i class="fab fa-whatsapp"></i>
+        مشاركة واتساب
+    </button>
+    <button class="action-btn" id="copyLinkBtn">
+        <i class="fas fa-link"></i>
+        نسخ الرابط
+    </button>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+
+var supabaseClient = null;
+var currentInvoice = null;
+var debugInfo = { url: '', identifier: '', status: '', strategy: '' };
+
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+        console.error('Supabase library not loaded');
+        return null;
+    }
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) {
+        console.error('Supabase init failed:', e);
+        return null;
+    }
+}
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try {
+        return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م';
+    } catch (e) {
+        return num.toFixed(2) + ' ج.م';
+    }
+}
+
+function formatDate(date) {
+    if (!date) return '—';
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return '—';
+    try {
+        return d.toLocaleDateString('ar-EG', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    } catch (e) {
+        return d.toISOString().split('T')[0];
+    }
+}
+
+function formatDateTime(date) {
+    if (!date) return '—';
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return '—';
+    try {
+        return d.toLocaleDateString('ar-EG', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    } catch (e) {
+        return '—';
+    }
+}
+
+function getUrlParam(name) {
+    try {
+        return new URLSearchParams(window.location.search).get(name);
+    } catch (e) {
+        return null;
+    }
+}
+
+// ✅ التحقق من UUID بشكل صحيح
+function isValidUUID(uuid) {
+    if (!uuid || typeof uuid !== 'string') return false;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
+}
+
+function getPaymentMethodText(method) {
+    var map = {
+        'cash': 'كاش',
+        'card': 'فيزا',
+        'visa': 'فيزا',
+        'wallet': 'محفظة إلكترونية',
+        'transfer': 'تحويل بنكي',
+        'credit': 'آجل'
+    };
+    return map[method] || 'كاش';
+}
+
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+function updateDebug() {
+    var el;
+    el = document.getElementById('debugUrl');
+    if (el) el.textContent = 'URL: ' + debugInfo.url;
+    el = document.getElementById('debugIdentifier');
+    if (el) el.textContent = 'Identifier: ' + debugInfo.identifier;
+    el = document.getElementById('debugStatus');
+    if (el) el.textContent = 'Status: ' + debugInfo.status;
+    el = document.getElementById('debugStrategy');
+    if (el) el.textContent = 'Strategy: ' + debugInfo.strategy;
+}
+
+function toggleDebug() {
+    var panel = document.getElementById('debugPanel');
+    if (panel) panel.classList.toggle('show');
+}
+
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px) scale(0.95)';
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Invoice — 3-Tier Fallback Strategy
+// ═══════════════════════════════════════════════════════════════
+function loadInvoice() {
+    var invoiceId = getUrlParam('id');
+    var uuid = getUrlParam('uuid');
+    var identifier = invoiceId || uuid;
+
+    debugInfo.url = window.location.href;
+    debugInfo.identifier = identifier || '(none)';
+    debugInfo.status = 'loading';
+    debugInfo.strategy = 'starting';
+    updateDebug();
+
+    console.log('📥 Loading invoice with identifier:', identifier);
+
+    if (!identifier) {
+        debugInfo.status = 'no-identifier';
+        updateDebug();
+        showError('لم يتم تحديد فاتورة. تأكد من فتح الرابط الصحيح.');
+        return;
+    }
+
+    // ✅ تأكد إن الـ identifier UUID صحيح (uuid_link النوع uuid)
+    if (!isValidUUID(identifier)) {
+        debugInfo.status = 'invalid-uuid';
+        debugInfo.strategy = 'validation-failed';
+        updateDebug();
+        console.warn('⚠️ Identifier is not a valid UUID:', identifier);
+        // لسه بنحاول، ممكن يكون uuid_link قديم بنص
+    }
+
+    var sb = getSupabaseClient();
+    if (!sb) {
+        debugInfo.status = 'supabase-failed';
+        updateDebug();
+        showError('فشل الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى.');
+        return;
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // Strategy 1: Join Query
+    // ═══════════════════════════════════════════════════════════
+    tryLoadWithJoin(sb, identifier)
+        .then(function(invoice) {
+            if (invoice) {
+                console.log('✅ Loaded via join');
+                debugInfo.strategy = 'join';
+                debugInfo.status = 'success';
+                updateDebug();
+                return finalizeInvoice(sb, invoice);
+            }
+            throw new Error('Join returned null');
+        })
+        .catch(function(err) {
+            console.warn('⚠️ Join failed:', err.message);
+            debugInfo.strategy = 'join-failed';
+
+            // ═════════════════════════════════════════════════════
+            // Strategy 2: No-Join Query
+            // ═════════════════════════════════════════════════════
+            return tryLoadNoJoin(sb, identifier)
+                .then(function(invoice) {
+                    if (invoice) {
+                        console.log('✅ Loaded via no-join');
+                        debugInfo.strategy = 'no-join';
+                        debugInfo.status = 'success';
+                        updateDebug();
+                        return finalizeInvoice(sb, invoice);
+                    }
+                    throw new Error('No-join returned null');
+                });
+        })
+        .catch(function(err) {
+            console.warn('⚠️ No-join failed:', err.message);
+
+            // ═════════════════════════════════════════════════════
+            // Strategy 3: Separate Queries + Manual Merge
+            // ═════════════════════════════════════════════════════
+            return tryLoadSeparate(sb, identifier)
+                .then(function(invoice) {
+                    if (invoice) {
+                        console.log('✅ Loaded via separate');
+                        debugInfo.strategy = 'separate';
+                        debugInfo.status = 'success';
+                        updateDebug();
+                        return finalizeInvoice(sb, invoice);
+                    }
+                    throw new Error('Separate returned null');
+                });
+        })
+        .catch(function(err) {
+            console.error('❌ All strategies failed:', err);
+            debugInfo.strategy = 'all-failed';
+            debugInfo.status = 'not-found';
+            updateDebug();
+            showError(
+                'لم نتمكن من العثور على هذه الفاتورة. ' +
+                'تأكد من صحة الرابط أو تواصل مع المركز.'
+            );
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Strategy 1: Join Query
+// ═══════════════════════════════════════════════════════════════
+function tryLoadWithJoin(sb, identifier) {
+    var selectStr = '*, customer:customers(id, name, phone, address), repair:repair_orders(id, tracking_code, device_type, device_model, serial_number, status)';
+
+    // ✅ جرّب في id الأول (لو UUID صحيح)
+    if (!isValidUUID(identifier)) return Promise.resolve(null);
+
+    return sb.from('invoices').select(selectStr).eq('id', identifier).maybeSingle()
+        .then(function(result) {
+            if (result.error) {
+                console.warn('Join query error (id):', result.error.message);
+                return null;
+            }
+            return result.data || null;
+        })
+        .catch(function(err) {
+            console.warn('Join query failed (id):', err.message);
+            return null;
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Strategy 2: No Join — بـ id ثم uuid_link
+// ═══════════════════════════════════════════════════════════════
+function tryLoadNoJoin(sb, identifier) {
+    if (!isValidUUID(identifier)) return Promise.resolve(null);
+
+    // 1) جرّب id
+    return sb.from('invoices').select('*').eq('id', identifier).maybeSingle()
+        .then(function(result) {
+            if (result.error) {
+                console.warn('No-join error (id):', result.error.message);
+                return null;
+            }
+            if (result.data) return result.data;
+
+            // 2) جرّب uuid_link (UUID النوع نفسه)
+            return sb.from('invoices').select('*').eq('uuid_link', identifier).maybeSingle()
+                .then(function(r2) {
+                    if (r2.error) {
+                        console.warn('No-join error (uuid_link):', r2.error.message);
+                        return null;
+                    }
+                    return r2.data || null;
+                })
+                .catch(function() { return null; });
+        })
+        .catch(function(err) {
+            console.warn('No-join failed:', err.message);
+            return null;
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Strategy 3: Separate Queries
+// ═══════════════════════════════════════════════════════════════
+function tryLoadSeparate(sb, identifier) {
+    if (!isValidUUID(identifier)) return Promise.resolve(null);
+
+    // 1) اجلب الفاتورة بـ id
+    return sb.from('invoices').select('*').eq('id', identifier).maybeSingle()
+        .then(function(r1) {
+            if (r1.data) return r1.data;
+            // 2) جرّب uuid_link
+            return sb.from('invoices').select('*').eq('uuid_link', identifier).maybeSingle()
+                .then(function(r2) { return r2.data || null; })
+                .catch(function() { return null; });
+        })
+        .then(function(invoice) {
+            if (!invoice) return null;
+
+            var promises = [];
+
+            if (invoice.customer_id && isValidUUID(invoice.customer_id)) {
+                promises.push(
+                    sb.from('customers').select('id, name, phone, address')
+                        .eq('id', invoice.customer_id).maybeSingle()
+                        .then(function(r) { invoice.customer = r.data || null; })
+                        .catch(function() { invoice.customer = null; })
+                );
+            } else {
+                invoice.customer = null;
+                promises.push(Promise.resolve());
+            }
+
+            if (invoice.repair_order_id && isValidUUID(invoice.repair_order_id)) {
+                promises.push(
+                    sb.from('repair_orders')
+                        .select('id, tracking_code, device_type, device_model, serial_number, status')
+                        .eq('id', invoice.repair_order_id).maybeSingle()
+                        .then(function(r) { invoice.repair = r.data || null; })
+                        .catch(function() { invoice.repair = null; })
+                );
+            } else {
+                invoice.repair = null;
+                promises.push(Promise.resolve());
+            }
+
+            return Promise.all(promises).then(function() {
+                return invoice;
+            });
+        })
+        .catch(function(err) {
+            console.warn('Separate failed:', err.message);
+            return null;
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Finalize — Load Items + Render
+// ═══════════════════════════════════════════════════════════════
+function finalizeInvoice(sb, invoice) {
+    console.log('📄 Invoice loaded:', invoice);
+
+    return sb.from('invoice_items')
+        .select('*')
+        .eq('invoice_id', invoice.id)
+        .then(function(itemsResult) {
+            var items = itemsResult.data || [];
+
+            // اجلب المنتجات منفصلة لو موجودة
+            var productIds = [];
+            items.forEach(function(item) {
+                if (item.product_id && isValidUUID(item.product_id) && productIds.indexOf(item.product_id) === -1) {
+                    productIds.push(item.product_id);
+                }
+            });
+
+            if (!productIds.length) {
+                invoice.items = items;
+                return invoice;
+            }
+
+            return sb.from('products')
+                .select('id, name, barcode')
+                .in('id', productIds)
+                .then(function(prodResult) {
+                    var productMap = {};
+                    (prodResult.data || []).forEach(function(p) {
+                        productMap[p.id] = p;
+                    });
+
+                    items.forEach(function(item) {
+                        if (item.product_id && productMap[item.product_id]) {
+                            item.product = productMap[item.product_id];
+                        }
+                    });
+
+                    invoice.items = items;
+                    return invoice;
+                })
+                .catch(function() {
+                    invoice.items = items;
+                    return invoice;
+                });
+        })
+        .catch(function(err) {
+            console.warn('Items load failed:', err);
+            invoice.items = [];
+            return invoice;
+        })
+        .then(function(finalInvoice) {
+            currentInvoice = finalInvoice;
+            renderInvoice(finalInvoice);
+            hideLoading();
+            showInvoice();
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render
+// ═══════════════════════════════════════════════════════════════
+function renderInvoice(invoice) {
+    var customer = invoice.customer || {};
+    var repair = invoice.repair || {};
+
+    document.getElementById('invoiceNumber').textContent =
+        invoice.invoice_number || ('INV-' + String(invoice.id).substring(0, 8).toUpperCase());
+    document.getElementById('invoiceDate').textContent = formatDate(invoice.created_at);
+
+    document.getElementById('statusBannerContainer').innerHTML = getStatusBanner(invoice);
+
+    document.getElementById('customerName').textContent = customer.name || 'عميل';
+    document.getElementById('customerPhone').textContent = customer.phone ? '📱 ' + customer.phone : '';
+    document.getElementById('customerAddress').textContent = customer.address || '';
+
+    if (!customer.name && !customer.phone) {
+        document.getElementById('customerInfoBox').style.display = 'none';
+    }
+
+    var deviceType = repair.device_type || '';
+    var deviceModel = repair.device_model || '';
+    var trackingCode = repair.tracking_code || '';
+
+    if (deviceType || deviceModel || trackingCode) {
+        document.getElementById('deviceType').textContent = deviceType || 'جهاز';
+        document.getElementById('deviceModel').textContent = deviceModel || '';
+
+        if (trackingCode) {
+            document.getElementById('repairTrackingContainer').innerHTML =
+                '<span class="repair-badge"><i class="fas fa-barcode"></i> ' + escapeHtml(trackingCode) + '</span>';
+        }
+    } else {
+        document.getElementById('deviceInfoBox').style.display = 'none';
+    }
+
+    document.getElementById('paymentMethod').textContent = getPaymentMethodText(invoice.payment_method);
+
+    var paidAmount = parseFloat(invoice.paid_amount) || 0;
+    var totalAmount = parseFloat(invoice.total) || 0;
+    var isPaid = invoice.paid === true || paidAmount >= totalAmount - 0.01;
+    var isPartial = paidAmount > 0 && !isPaid;
+
+    var statusTextEl = document.getElementById('paymentStatusText');
+    if (isPaid) {
+        statusTextEl.textContent = '✓ تم السداد بالكامل';
+        statusTextEl.style.color = 'var(--success)';
+    } else if (isPartial) {
+        statusTextEl.textContent = '◐ مدفوع جزئياً';
+        statusTextEl.style.color = 'var(--warning)';
+    } else {
+        statusTextEl.textContent = '✗ غير مدفوع';
+        statusTextEl.style.color = 'var(--danger)';
+    }
+
+    renderItems(invoice.items || []);
+
+    var partsTotal = parseFloat(invoice.parts_total) || 0;
+    var laborCost = parseFloat(invoice.labor_cost) || 0;
+    var discount = parseFloat(invoice.discount) || 0;
+
+    document.getElementById('partsTotal').textContent = formatCurrency(partsTotal);
+    document.getElementById('laborCost').textContent = formatCurrency(laborCost);
+
+    if (discount > 0) {
+        var discountText = invoice.discount_type === 'percent'
+            ? discount + '%'
+            : formatCurrency(discount);
+        document.getElementById('discount').textContent = '- ' + discountText;
+        document.getElementById('discountRow').style.display = 'flex';
+    } else {
+        document.getElementById('discountRow').style.display = 'none';
+    }
+
+    document.getElementById('grandTotal').textContent = formatCurrency(totalAmount);
+
+    if (paidAmount > 0) {
+        document.getElementById('paidAmount').textContent = formatCurrency(paidAmount);
+        document.getElementById('paidRow').style.display = 'flex';
+
+        var remaining = Math.max(0, totalAmount - paidAmount);
+        if (remaining > 0.01) {
+            document.getElementById('remainingAmount').textContent = formatCurrency(remaining);
+            document.getElementById('remainingRow').style.display = 'flex';
+        } else {
+            document.getElementById('remainingRow').style.display = 'none';
+        }
+    } else {
+        document.getElementById('paidRow').style.display = 'none';
+        document.getElementById('remainingRow').style.display = 'none';
+    }
+
+    if (invoice.notes) {
+        document.getElementById('notesText').textContent = invoice.notes;
+        document.getElementById('notesBox').style.display = 'block';
+    }
+
+    renderQRCode(invoice.id);
+
+    if (repair.status === 'delivered' && repair.id) {
+        document.getElementById('ratingPrompt').style.display = 'block';
+        var rateBtn = document.getElementById('rateBtn');
+        if (rateBtn) {
+            rateBtn.onclick = function() {
+                var url = 'rate.html?repair_id=' + repair.id;
+                if (customer.id) url += '&customer_id=' + customer.id;
+                window.location.href = url;
+            };
+        }
+    }
+}
+
+function getStatusBanner(invoice) {
+    var paidAmount = parseFloat(invoice.paid_amount) || 0;
+    var totalAmount = parseFloat(invoice.total) || 0;
+    var isPaid = invoice.paid === true || paidAmount >= totalAmount - 0.01;
+    var isPartial = paidAmount > 0 && !isPaid;
+
+    if (isPaid) {
+        return '<div class="invoice-status-banner paid"><i class="fas fa-circle-check"></i> مدفوعة بالكامل</div>';
+    }
+    if (isPartial) {
+        return '<div class="invoice-status-banner partial"><i class="fas fa-circle-half-stroke"></i> مدفوعة جزئياً</div>';
+    }
+    return '<div class="invoice-status-banner unpaid"><i class="fas fa-clock"></i> غير مدفوعة</div>';
+}
+
+function renderItems(items) {
+    var tbody = document.getElementById('itemsTableBody');
+    if (!tbody) return;
+
+    if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-muted);">لا توجد بنود في الفاتورة</td></tr>';
+        return;
+    }
+
+    var html = '';
+    items.forEach(function(item) {
+        var product = item.product || {};
+        var productName = product.name || item.product_name || item.description || 'بند';
+        var barcode = product.barcode || '';
+        var qty = parseInt(item.quantity) || 0;
+        var unitPrice = parseFloat(item.unit_price) || 0;
+        var total = parseFloat(item.total) || 0;
+
+        html += '<tr>';
+        html += '<td>';
+        html += '<div class="item-name">' + escapeHtml(productName) + '</div>';
+        if (item.description && item.description !== productName) {
+            html += '<div class="item-desc">' + escapeHtml(item.description) + '</div>';
+        }
+        if (barcode) {
+            html += '<div class="item-barcode"><i class="fas fa-barcode"></i> ' + escapeHtml(barcode) + '</div>';
+        }
+        html += '</td>';
+        html += '<td class="num">' + qty + '</td>';
+        html += '<td class="num price">' + formatCurrency(unitPrice) + '</td>';
+        html += '<td class="num total">' + formatCurrency(total) + '</td>';
+        html += '</tr>';
+    });
+
+    tbody.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔗 QR Code
+// ═══════════════════════════════════════════════════════════════
+function renderQRCode(invoiceId) {
+    var container = document.getElementById('qrContainer');
+    if (!container) return;
+
+    var url = window.location.href;
+
+    if (typeof QRCode === 'undefined') {
+        container.innerHTML = '<i class="fas fa-qrcode" style="font-size: 2rem; color: var(--text-muted);"></i>';
+        return;
+    }
+
+    QRCode.toCanvas(url, {
+        width: 240,
+        margin: 1,
+        color: { dark: '#1d5b8e', light: '#ffffff' },
+        errorCorrectionLevel: 'M'
+    }, function(err, canvas) {
+        if (err) {
+            container.innerHTML = '<i class="fas fa-qrcode" style="font-size: 2rem; color: var(--text-muted);"></i>';
+            return;
+        }
+        container.innerHTML = '';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.borderRadius = '8px';
+        container.appendChild(canvas);
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 UI States
+// ═══════════════════════════════════════════════════════════════
+function hideLoading() {
+    var el = document.getElementById('loadingState');
+    if (el) el.style.display = 'none';
+}
+
+function showError(message) {
+    hideLoading();
+    var errorState = document.getElementById('errorState');
+    var invoiceWrapper = document.getElementById('invoiceWrapper');
+    var actionBar = document.getElementById('actionBar');
+
+    if (errorState) {
+        errorState.style.display = 'block';
+        if (message) {
+            document.getElementById('errorMessage').textContent = message;
+        }
+    }
+    if (invoiceWrapper) invoiceWrapper.style.display = 'none';
+    if (actionBar) actionBar.style.display = 'none';
+}
+
+function showInvoice() {
+    var invoiceWrapper = document.getElementById('invoiceWrapper');
+    var actionBar = document.getElementById('actionBar');
+
+    if (invoiceWrapper) invoiceWrapper.style.display = 'block';
+    if (actionBar) actionBar.style.display = 'flex';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🖨️ Print
+// ═══════════════════════════════════════════════════════════════
+function printInvoice() {
+    window.print();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📄 Download PDF
+// ═══════════════════════════════════════════════════════════════
+function downloadPDF() {
+    if (typeof html2pdf === 'undefined') {
+        showToast('مكتبة PDF غير محملة', 'error');
+        return;
+    }
+
+    var element = document.getElementById('invoiceCard');
+    if (!element) return;
+
+    showToast('جاري تحضير الملف...', 'info', 2000);
+
+    var invoiceNumber = (currentInvoice && currentInvoice.invoice_number) || 'invoice';
+    var fileName = 'invoice_' + invoiceNumber + '_' + Date.now() + '.pdf';
+
+    var opt = {
+        margin: [10, 8, 10, 8],
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            allowTaint: true
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(element).save().then(function() {
+        showToast('تم تحميل الفاتورة بنجاح', 'success');
+    }).catch(function(err) {
+        console.error('PDF error:', err);
+        showToast('فشل تحميل الفاتورة', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📱 Share WhatsApp
+// ═══════════════════════════════════════════════════════════════
+function shareWhatsApp() {
+    if (!currentInvoice) return;
+
+    var customer = currentInvoice.customer || {};
+    var invoiceNumber = currentInvoice.invoice_number || 'INV';
+    var total = formatCurrency(currentInvoice.total);
+
+    var message = 'مرحباً ' + (customer.name || '') + '،\n\n';
+    message += 'فاتورتك رقم ' + invoiceNumber + '\n';
+    message += 'بإجمالي: ' + total + '\n\n';
+    message += 'يمكنك عرض الفاتورة كاملة من الرابط التالي:\n';
+    message += window.location.href;
+
+    var encoded = encodeURIComponent(message);
+    var phone = customer.phone ? String(customer.phone).replace(/^0/, '') : '';
+
+    var waUrl;
+    if (phone) {
+        waUrl = 'https://wa.me/2' + phone + '?text=' + encoded;
+    } else {
+        waUrl = 'https://wa.me/?text=' + encoded;
+    }
+
+    window.open(waUrl, '_blank');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔗 Copy Link
+// ═══════════════════════════════════════════════════════════════
+function copyLink() {
+    var url = window.location.href;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+            showToast('تم نسخ الرابط', 'success');
+        }).catch(function() {
+            fallbackCopy(url);
+        });
+    } else {
+        fallbackCopy(url);
+    }
+}
+
+function fallbackCopy(text) {
+    try {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('تم نسخ الرابط', 'success');
+    } catch (e) {
+        showToast('فشل نسخ الرابط', 'error');
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    initTheme();
+
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+    var debugToggle = document.getElementById('debugToggle');
+    if (debugToggle) debugToggle.addEventListener('click', toggleDebug);
+
+    var printBtn = document.getElementById('printBtn');
+    if (printBtn) printBtn.addEventListener('click', printInvoice);
+    var printActionBtn = document.getElementById('printActionBtn');
+    if (printActionBtn) printActionBtn.addEventListener('click', printInvoice);
+
+    var pdfActionBtn = document.getElementById('pdfActionBtn');
+    if (pdfActionBtn) pdfActionBtn.addEventListener('click', downloadPDF);
+
+    var shareWhatsappBtn = document.getElementById('shareWhatsappBtn');
+    if (shareWhatsappBtn) shareWhatsappBtn.addEventListener('click', shareWhatsApp);
+
+    var copyLinkBtn = document.getElementById('copyLinkBtn');
+    if (copyLinkBtn) copyLinkBtn.addEventListener('click', copyLink);
+
+    loadInvoice();
+});
+
+window.addEventListener('error', function(e) {
+    console.error('Global error:', e.error);
+});
+
+})();
+</script>
+
+</body>
+</html>

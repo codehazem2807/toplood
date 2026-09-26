@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0F766E">
+<title>غير متصل | TopLoad</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+<style>
+:root {
+    --primary: #0F766E;
+    --primary-dark: #115E59;
+    --primary-light: #14B8A6;
+    --bg: #E0F7FA;
+    --text: #0F172A;
+    --muted: #475569;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #E0F7FA 0%, #CCFBF1 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+.container { max-width: 500px; animation: fadeIn 0.6s ease; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.icon-wrapper {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 2rem;
+    border-radius: 50%;
+    background: rgba(20, 184, 166, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(94, 234, 212, 0.3);
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(20, 184, 166, 0); }
+}
+.icon-wrapper i {
+    font-size: 4rem;
+    color: #5EEAD4;
+}
+h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #0F172A, #0F766E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+p {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    font-weight: 600;
+}
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 2rem;
+    background: linear-gradient(135deg, #0F766E, #115E59);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(15, 118, 110, 0.4);
+}
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(15, 118, 110, 0.5);
+}
+.status {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.status .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #EF4444;
+    animation: blink 1.5s infinite;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="icon-wrapper">
+        <i class="fas fa-wifi"></i>
+    </div>
+    <h1>لا يوجد اتصال بالإنترنت</h1>
+    <p>يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى. بعض الميزات قد تعمل بدون اتصال.</p>
+    <button class="btn" onclick="location.reload()">
+        <i class="fas fa-rotate"></i>
+        إعادة المحاولة
+    </button>
+    <div class="status">
+        <span class="dot"></span>
+        <span>غير متصل</span>
+    </div>
+</div>
+
+<script>
+window.addEventListener('online', function() {
+    location.reload();
+});
+</script>
+</body>
+</html>

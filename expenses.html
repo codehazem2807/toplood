@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F766E" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+<meta name="description" content="المصروفات - TopLoad لصيانة الغسالات">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>المصروفات | TopLoad - لصيانة الغسالات</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+:root {
+    --primary: #0F766E;
+    --primary-dark: #115E59;
+    --primary-light: #14B8A6;
+    --primary-glow: rgba(15, 118, 110, 0.25);
+    --primary-soft: rgba(15, 118, 110, 0.08);
+    --accent: #F59E0B;
+    --accent-dark: #D97706;
+    --success: #10B981;
+    --success-dark: #059669;
+    --success-soft: rgba(16, 185, 129, 0.12);
+    --danger: #EF4444;
+    --danger-dark: #DC2626;
+    --danger-soft: rgba(239, 68, 68, 0.12);
+    --warning: #F59E0B;
+    --warning-dark: #D97706;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+    --info: #3B82F6;
+    --info-soft: rgba(59, 130, 246, 0.12);
+    --purple: #8B5CF6;
+    --purple-soft: rgba(139, 92, 246, 0.12);
+    --bg-primary: #E0F7FA;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F0FDFA;
+    --bg-subtle: #F8FAFC;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --border-color: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+    --shadow-primary: 0 8px 24px rgba(15, 118, 110, 0.25);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    --navbar-height: 68px;
+    --sidebar-width: 268px;
+    --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --t-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0F172A;
+    --bg-card: #1E293B;
+    --bg-hover: #334155;
+    --bg-subtle: #1A2332;
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+    --border-color: #334155;
+    --border-strong: #475569;
+    --primary: #14B8A6;
+    --primary-dark: #0F766E;
+    --primary-glow: rgba(20, 184, 166, 0.3);
+    --primary-soft: rgba(20, 184, 166, 0.12);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--t), color var(--t);
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ═══ Navbar ═══ */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-height);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar-menu-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    transition: all var(--t);
+    flex-shrink: 0;
+}
+
+.navbar-menu-btn:hover { background: var(--bg-hover); color: var(--primary); transform: scale(1.05); }
+
+.navbar-brand { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+.navbar-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    transition: transform var(--t);
+}
+
+.navbar-brand:hover .navbar-logo { transform: scale(1.05); }
+
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+
+.navbar-brand-text strong {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+.navbar-brand-text span { font-size: 0.7rem; color: var(--primary); font-weight: 700; }
+
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-right: auto; }
+
+.navbar-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--t);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.navbar-btn:hover { background: var(--bg-hover); color: var(--primary); transform: scale(1.05); }
+
+.online-dot {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 2px solid var(--bg-card);
+    animation: pulse-online 2s infinite;
+}
+
+.online-dot.offline { background: var(--danger); animation: none; }
+
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--t);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.navbar-user:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.navbar-user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+
+.navbar-user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--primary); font-weight: 700; }
+
+/* ═══ Sidebar ═══ */
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    right: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900;
+    overflow-y: auto;
+    padding: 1.25rem 0.85rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--t);
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+.sidebar-section { margin-bottom: 1.4rem; }
+
+.sidebar-section-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0 0.85rem;
+    margin-bottom: 0.6rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all var(--t-fast);
+    margin-bottom: 0.2rem;
+    position: relative;
+}
+
+.sidebar-link:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+    transform: translateX(-3px);
+}
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    font-weight: 700;
+    box-shadow: var(--shadow-primary);
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    right: -0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: var(--accent);
+    border-radius: 4px;
+}
+
+.sidebar-link i:first-child { width: 20px; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 899;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--t);
+    top: var(--navbar-height);
+}
+
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem;
+    min-height: calc(100vh - var(--navbar-height));
+    transition: margin var(--t);
+}
+
+/* ═══ Page Header ═══ */
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header-text h1 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: -0.5px;
+}
+
+.page-header-text h1 i {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-primary);
+}
+
+.page-header-text p { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
+.page-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+/* ═══ Buttons ═══ */
+.btn {
+    padding: 0.7rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all var(--t);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px var(--primary-glow);
+    filter: brightness(1.05);
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+    color: white;
+}
+
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(239, 68, 68, 0.35); }
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success), var(--success-dark));
+    color: white;
+}
+
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(16, 185, 129, 0.4); }
+
+.btn-sm { padding: 0.5rem 0.85rem; font-size: 0.8rem; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* ═══ Stats Bar ═══ */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: all var(--t);
+    box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.4s ease backwards;
+}
+
+.stat-item:nth-child(1) { animation-delay: 0.05s; }
+.stat-item:nth-child(2) { animation-delay: 0.1s; }
+.stat-item:nth-child(3) { animation-delay: 0.15s; }
+
+.stat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+
+.stat-item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    box-shadow: var(--shadow-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-item-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 60%);
+    pointer-events: none;
+}
+
+.stat-item-icon.success {
+    background: linear-gradient(135deg, var(--success), var(--success-dark));
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.stat-item-icon.warning {
+    background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+}
+
+.stat-item-icon.danger {
+    background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+}
+
+.stat-item-content { flex: 1; min-width: 0; }
+
+.stat-item-value {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.stat-item-value small {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.stat-item-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+/* ═══ Toolbar ═══ */
+.toolbar {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.15rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow-sm);
+}
+
+.toolbar-search { flex: 1; min-width: 240px; position: relative; }
+
+.toolbar-search-input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    padding-right: 2.75rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all var(--t);
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.toolbar-search-input:focus {
+    border-color: var(--primary);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.toolbar-search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.toolbar-input {
+    padding: 0.7rem 1rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--t);
+    min-width: 160px;
+    cursor: pointer;
+}
+
+.toolbar-input:focus {
+    border-color: var(--primary);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+/* ═══ Table ═══ */
+.table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.table-wrap thead {
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-wrap th {
+    text-align: right;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.table-wrap td {
+    text-align: right;
+    padding: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.table-wrap tbody tr:last-child td { border-bottom: none; }
+.table-wrap tbody tr { transition: background var(--t-fast); }
+.table-wrap tbody tr:hover { background: var(--bg-hover); }
+
+.table-wrap .expense-title {
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.table-wrap .expense-title .notes {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.category-badge.تشغيل { background: var(--primary-soft); color: var(--primary-dark); }
+.category-badge.إيجار { background: var(--purple-soft); color: #7C3AED; }
+.category-badge.مرافق { background: var(--info-soft); color: #2563EB; }
+.category-badge.رواتب { background: var(--success-soft); color: var(--success-dark); }
+.category-badge.مشتريات { background: var(--warning-soft); color: var(--warning-dark); }
+.category-badge.نقل { background: var(--info-soft); color: #2563EB; }
+.category-badge.صيانة { background: var(--danger-soft); color: var(--danger-dark); }
+.category-badge.أخرى { background: rgba(100, 116, 139, 0.12); color: #475569; }
+
+.amount {
+    font-weight: 900;
+    color: var(--danger-dark);
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+}
+
+.actions { display: flex; gap: 0.35rem; justify-content: flex-end; }
+
+.actions .btn-sm {
+    padding: 0.45rem;
+    min-width: 34px;
+    height: 34px;
+}
+
+/* ═══ Empty State ═══ */
+.empty-state {
+    padding: 4rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-xl);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    opacity: 0.25;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--primary);
+}
+
+.empty-state h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.empty-state p { font-size: 0.85rem; margin-bottom: 1rem; font-weight: 600; }
+
+/* ═══ Loading Skeleton ═══ */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-row { height: 64px; margin-bottom: 0.5rem; border-radius: var(--radius-md); }
+
+/* ═══ Modal ═══ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+    overflow-y: auto;
+}
+
+.modal-overlay.show { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 640px;
+    width: 100%;
+    max-height: 92vh;
+    overflow: hidden;
+    animation: modalIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    border: 1px solid var(--border-color);
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+    padding: 1.35rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-shrink: 0;
+    background: var(--bg-subtle);
+}
+
+.modal-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.modal-title i { color: var(--primary); }
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--t);
+    flex-shrink: 0;
+}
+
+.modal-close:hover { background: var(--danger-soft); color: var(--danger); transform: rotate(90deg); }
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    min-height: 0;
+    max-height: calc(92vh - 180px);
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    background: var(--bg-subtle);
+    flex-wrap: wrap;
+}
+
+.modal-footer .btn { flex: 1; min-width: 120px; }
+@media (min-width: 480px) { .modal-footer .btn { flex: initial; min-width: auto; } }
+
+/* ═══ Forms ═══ */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+
+.form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.form-label .required { color: var(--danger); }
+.form-label i { color: var(--primary); margin-left: 0.35rem; font-size: 0.8rem; }
+
+.form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--t);
+    font-family: inherit;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--primary);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.form-textarea { resize: vertical; min-height: 90px; max-height: 200px; line-height: 1.6; }
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 0.85rem center;
+    padding-left: 2.5rem;
+}
+
+.form-error {
+    font-size: 0.75rem;
+    color: var(--danger);
+    margin-top: 0.45rem;
+    display: none;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 700;
+}
+
+.form-error.show { display: flex; }
+
+/* ═══ Toast ═══ */
+.toast-container {
+    position: fixed;
+    top: calc(var(--navbar-height) + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 420px;
+}
+
+.toast {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-right: 4px solid var(--info);
+}
+
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+
+.toast i { font-size: 1.25rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+
+.toast.hide { animation: toastOut 0.3s ease forwards; }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastOut { to { opacity: 0; transform: translateY(-20px) scale(0.95); } }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══ User Dropdown ═══ */
+.user-dropdown {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem;
+    width: 250px;
+    max-width: calc(100vw - 2rem);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--t);
+    overflow: hidden;
+}
+
+.user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.user-dropdown-header {
+    padding: 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-subtle);
+}
+
+.user-dropdown-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+
+.user-dropdown-info strong { display: block; font-size: 0.9rem; font-weight: 800; margin-bottom: 0.15rem; }
+.user-dropdown-info span { font-size: 0.75rem; color: var(--primary); font-weight: 700; }
+
+.user-dropdown-menu { padding: 0.5rem; }
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t-fast);
+    width: 100%;
+    text-align: right;
+}
+
+.user-dropdown-item:hover { background: var(--primary-soft); color: var(--primary); }
+.user-dropdown-item.danger:hover { background: var(--danger-soft); color: var(--danger); }
+
+/* ═══ Spinner ═══ */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* ═══ Responsive ═══ */
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); box-shadow: var(--shadow-xl); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+}
+
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    .toolbar { padding: 0.85rem; gap: 0.5rem; }
+    .toolbar-search { min-width: 0; flex: 1 1 100%; }
+    .toolbar-input { flex: 1; min-width: 0; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .stat-item { padding: 0.85rem; gap: 0.6rem; }
+    .stat-item-icon { width: 40px; height: 40px; font-size: 1.05rem; }
+    .stat-item-value { font-size: 1.15rem; }
+    .stat-item-label { font-size: 0.68rem; }
+    .modal-body { padding: 1rem; max-height: calc(92vh - 160px); }
+    .modal-header { padding: 1rem 1.25rem; }
+    .modal-footer { padding: 0.85rem 1.25rem; gap: 0.5rem; }
+}
+
+@media (max-width: 400px) {
+    .stats-bar { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الغسالات</span>
+        </div>
+    </a>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-house"></i><span>لوحة التحكم</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products"><i class="fas fa-boxes-stacked"></i><span>الأصناف</span></a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories"><i class="fas fa-tags"></i><span>الفئات</span></a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in"><i class="fas fa-truck-ramp-box"></i><span>الوارد</span></a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers"><i class="fas fa-handshake"></i><span>الموردين</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers"><i class="fas fa-users"></i><span>العملاء</span></a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts"><i class="fas fa-hand-holding-dollar"></i><span>المديونيات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span></a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-chart-pie"></i><span>التقارير</span></a>
+        <a href="expenses.html" class="sidebar-link active" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts"><i class="fas fa-clock"></i><span>الورديات</span></a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log"><i class="fas fa-clipboard-list"></i><span>سجل الحركات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1><i class="fas fa-receipt"></i> المصروفات</h1>
+            <p id="pageSubtitle">سجل المصروفات التشغيلية واحتسابها ضمن صافي الأرباح</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportBtn">
+                <i class="fas fa-file-excel"></i> تصدير
+            </button>
+            <button class="btn btn-primary" id="addExpenseBtn">
+                <i class="fas fa-plus"></i> إضافة مصروف
+            </button>
+        </div>
+    </div>
+    
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-item-icon"><i class="fas fa-filter-circle-dollar"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalShown">0 <small>ج.م</small></div>
+                <div class="stat-item-label">إجمالي الفترة المعروضة</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon warning"><i class="fas fa-calendar-days"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="monthTotal">0 <small>ج.م</small></div>
+                <div class="stat-item-label">مصروفات الشهر الحالي</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon success"><i class="fas fa-receipt"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="expenseCount">0</div>
+                <div class="stat-item-label">عدد المصروفات</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toolbar">
+        <input type="date" class="toolbar-input" id="fromDate" aria-label="من تاريخ">
+        <input type="date" class="toolbar-input" id="toDate" aria-label="إلى تاريخ">
+        <div class="toolbar-search">
+            <input type="text" class="toolbar-search-input" id="searchInput" placeholder="بحث بالبيان أو التصنيف..." autocomplete="off">
+            <i class="fas fa-magnifying-glass toolbar-search-icon"></i>
+        </div>
+        <select class="toolbar-input" id="categoryFilter">
+            <option value="">كل التصنيفات</option>
+            <option value="تشغيل">تشغيل</option>
+            <option value="إيجار">إيجار</option>
+            <option value="مرافق">مرافق</option>
+            <option value="رواتب">رواتب</option>
+            <option value="مشتريات">مشتريات</option>
+            <option value="نقل">نقل</option>
+            <option value="صيانة">صيانة</option>
+            <option value="أخرى">أخرى</option>
+        </select>
+        <button class="btn btn-secondary" id="applyFilterBtn">
+            <i class="fas fa-filter"></i> تطبيق
+        </button>
+    </div>
+    
+    <div id="expensesContainer">
+        <div class="table-wrap">
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+            <div class="skeleton skeleton-row"></div>
+        </div>
+    </div>
+    
+</main>
+
+<!-- Add/Edit Expense Modal -->
+<div class="modal-overlay" id="expenseModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-receipt" id="expenseModalIcon"></i>
+                <span id="expenseModalTitle">إضافة مصروف</span>
+            </h3>
+            <button class="modal-close" id="closeExpenseModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="expenseForm" autocomplete="off">
+            <div class="modal-body">
+                <input type="hidden" id="expenseId">
+                
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label class="form-label" for="title">
+                            <i class="fas fa-file-lines"></i> بيان المصروف <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="title" maxlength="160" required placeholder="مثال: فاتورة كهرباء الورشة">
+                        <div class="form-error" id="titleError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال بيان المصروف</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="amount">
+                            <i class="fas fa-money-bill-wave"></i> المبلغ (ج.م) <span class="required">*</span>
+                        </label>
+                        <input type="number" class="form-input" id="amount" min="0.01" step="0.01" required placeholder="0.00">
+                        <div class="form-error" id="amountError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال مبلغ صحيح</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="category">
+                            <i class="fas fa-tags"></i> التصنيف
+                        </label>
+                        <select class="form-select" id="category">
+                            <option value="تشغيل">تشغيل</option>
+                            <option value="إيجار">إيجار</option>
+                            <option value="مرافق">مرافق</option>
+                            <option value="رواتب">رواتب</option>
+                            <option value="مشتريات">مشتريات</option>
+                            <option value="نقل">نقل</option>
+                            <option value="صيانة">صيانة</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="expenseDate">
+                            <i class="fas fa-calendar"></i> التاريخ <span class="required">*</span>
+                        </label>
+                        <input type="date" class="form-input" id="expenseDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="paymentMethod">
+                            <i class="fas fa-credit-card"></i> طريقة الدفع
+                        </label>
+                        <select class="form-select" id="paymentMethod">
+                            <option value="cash">نقدي</option>
+                            <option value="bank_transfer">تحويل بنكي</option>
+                            <option value="card">بطاقة</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full">
+                        <label class="form-label" for="notes">
+                            <i class="fas fa-align-right"></i> ملاحظات
+                        </label>
+                        <textarea class="form-textarea" id="notes" maxlength="1000" placeholder="ملاحظات إضافية عن المصروف..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelExpenseBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="submit" class="btn btn-primary" id="saveExpenseBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="saveExpenseText">حفظ المصروف</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width: 480px;">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--danger);"></i>
+                تأكيد الحذف
+            </h3>
+            <button class="modal-close" id="closeDeleteModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                هل أنت متأكد من حذف المصروف
+                <strong id="deleteExpenseTitle" style="color: var(--danger);"></strong>؟
+            </p>
+            <div style="padding: 0.85rem 1rem; background: var(--warning-soft); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); color: var(--warning-dark); font-size: 0.85rem; font-weight: 700;">
+                <i class="fas fa-exclamation-triangle"></i>
+                تنبيه: لا يمكن التراجع عن عملية الحذف
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> حذف نهائي
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+        <button class="user-dropdown-item danger" id="logoutBtn" style="border-top: 1px solid var(--border-color); margin-top: 0.35rem; padding-top: 0.85rem; border-radius: 0 0 var(--radius-sm) var(--radius-sm);"><i class="fas fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config - نفس الإعدادات المستخدمة في باقي الصفحات
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+
+var supabaseClient = null;
+var sb = null;
+
+// ═══════════════════════════════════════════════════════════════
+// 🔌 Supabase Client
+// ═══════════════════════════════════════════════════════════════
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+        console.warn('⚠️ Supabase library not loaded');
+        return null;
+    }
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) {
+        console.error('❌ Failed to create Supabase client:', e);
+        return null;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try {
+        return num.toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ج.م';
+    } catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatCurrencyShort(amount) {
+    var num = parseFloat(amount) || 0;
+    try {
+        return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م';
+    } catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+
+function formatDate(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date + 'T00:00:00').toLocaleDateString('ar-EG', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+    } catch (e) { return '—'; }
+}
+
+function todayISO() {
+    var d = new Date();
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
+function firstOfMonthISO() {
+    var today = new Date();
+    var first = new Date(today.getFullYear(), today.getMonth(), 1);
+    return new Date(first.getTime() - first.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+
+function getInitials(name) {
+    if (!name) return '؟';
+    var parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+function getPaymentMethodText(method) {
+    var map = {
+        'cash': 'نقدي',
+        'bank_transfer': 'تحويل بنكي',
+        'card': 'بطاقة',
+        'other': 'أخرى'
+    };
+    return map[method] || '—';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📶 Online Status
+// ═══════════════════════════════════════════════════════════════
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    if (!dot) return;
+    dot.classList.toggle('offline', !navigator.onLine);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 Session Management
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    expenses: [],
+    filtered: [],
+    searchQuery: '',
+    categoryFilter: '',
+    fromDate: '',
+    toDate: '',
+    currentMonthTotal: 0,
+    editingExpense: null,
+    deletingExpense: null,
+    isLoading: true,
+    hasError: false,
+    errorMessage: ''
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 🔄 Retry Helper
+// ═══════════════════════════════════════════════════════════════
+function retryPromise(fn, retries, delay) {
+    retries = retries || 3;
+    delay = delay || 1000;
+    return new Promise(function(resolve, reject) {
+        var attempt = 0;
+        function tryOnce() {
+            attempt++;
+            Promise.resolve()
+                .then(fn)
+                .then(resolve)
+                .catch(function(err) {
+                    if (attempt < retries) {
+                        setTimeout(tryOnce, delay * attempt);
+                    } else {
+                        reject(err);
+                    }
+                });
+        }
+        tryOnce();
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Expenses
+// ═══════════════════════════════════════════════════════════════
+function loadExpenses() {
+    state.isLoading = true;
+    state.hasError = false;
+    render();
+
+    if (!sb) {
+        state.isLoading = false;
+        state.hasError = true;
+        state.errorMessage = 'تعذر الاتصال بقاعدة البيانات. تأكد من إعدادات Supabase.';
+        render();
+        showToast('❌ فشل الاتصال بقاعدة البيانات', 'error', 5000);
+        return;
+    }
+
+    if (!navigator.onLine) {
+        state.isLoading = false;
+        state.hasError = true;
+        state.errorMessage = 'لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة.';
+        render();
+        showToast('⚠️ وضع Offline - لا يوجد اتصال', 'warning', 4000);
+        return;
+    }
+
+    var from = state.fromDate;
+    var to = state.toDate;
+    var monthStart = firstOfMonthISO();
+    var today = todayISO();
+
+    // Query 1: الفترة المحددة
+    var q1 = sb.from('expenses').select('id, title, amount, category, expense_date, payment_method, notes, created_at').order('expense_date', { ascending: false }).limit(5000);
+    if (from) q1 = q1.gte('expense_date', from);
+    if (to) q1 = q1.lte('expense_date', to);
+
+    // Query 2: مصروفات الشهر الحالي
+    var q2 = sb.from('expenses').select('amount').gte('expense_date', monthStart).lte('expense_date', today);
+
+    Promise.all([q1, q2])
+        .then(function(results) {
+            var err1 = results[0].error;
+            var err2 = results[1].error;
+
+            if (err1) {
+                console.error('❌ Query 1 error:', err1);
+                throw new Error(getErrorMessage(err1));
+            }
+            if (err2) {
+                console.warn('⚠️ Query 2 warning:', err2);
+            }
+
+            state.expenses = results[0].data || [];
+            state.currentMonthTotal = (results[1].data || []).reduce(function(sum, item) {
+                return sum + (parseFloat(item.amount) || 0);
+            }, 0);
+
+            console.log('✅ Expenses loaded:', state.expenses.length);
+        })
+        .then(function() {
+            state.isLoading = false;
+            applyFilters();
+            updateStats();
+        })
+        .catch(function(error) {
+            console.error('❌ Load failed:', error);
+            state.isLoading = false;
+            state.hasError = true;
+            state.errorMessage = getErrorMessage(error);
+            render();
+            showToast('❌ ' + state.errorMessage, 'error', 6000);
+        });
+}
+
+function getErrorMessage(error) {
+    if (!error) return 'حدث خطأ غير متوقع';
+    
+    var code = error.code || '';
+    var message = error.message || '';
+    
+    if (code === 'PGRST205') {
+        return 'جدول المصروفات غير موجود أو غير مصرح بالوصول إليه. تأكد من إنشاء الجدول في Supabase.';
+    }
+    if (code === 'PGRST116') {
+        return 'الجدول فارغ أو غير موجود.';
+    }
+    if (code === '42P01') {
+        return 'الجدول غير موجود. يرجى تنفيذ SQL إنشاء الجدول.';
+    }
+    if (code === '42501' || code === 'PGRST301') {
+        return 'لا يوجد صلاحية للوصول إلى جدول المصروفات.';
+    }
+    if (message.indexOf('Failed to fetch') !== -1 || message.indexOf('network') !== -1) {
+        return 'فشل الاتصال بالشبكة. تحقق من الإنترنت أو من إعدادات Supabase.';
+    }
+    if (message) return message;
+    return 'حدث خطأ أثناء تحميل المصروفات';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 Filter & Render
+// ═══════════════════════════════════════════════════════════════
+function applyFilters() {
+    var list = state.expenses.slice();
+    var q = (state.searchQuery || '').trim().toLowerCase();
+    var cat = state.categoryFilter;
+
+    if (q) {
+        list = list.filter(function(item) {
+            var text = ((item.title || '') + ' ' + (item.category || '') + ' ' + (item.notes || '')).toLowerCase();
+            return text.indexOf(q) !== -1;
+        });
+    }
+
+    if (cat) {
+        list = list.filter(function(item) {
+            return (item.category || '') === cat;
+        });
+    }
+
+    state.filtered = list;
+    render();
+    updateStats();
+}
+
+function updateStats() {
+    var total = state.filtered.reduce(function(sum, item) {
+        return sum + (parseFloat(item.amount) || 0);
+    }, 0);
+
+    var setEl = function(id, html) {
+        var el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    };
+
+    setEl('totalShown', formatCurrencyShort(total) + ' <small>ج.م</small>');
+    setEl('monthTotal', formatCurrencyShort(state.currentMonthTotal) + ' <small>ج.م</small>');
+    setEl('expenseCount', formatNumber(state.filtered.length));
+
+    var subtitle = document.getElementById('pageSubtitle');
+    if (subtitle) subtitle.textContent = state.filtered.length + ' مصروف';
+}
+
+function render() {
+    var container = document.getElementById('expensesContainer');
+    if (!container) return;
+
+    if (state.isLoading) {
+        container.innerHTML = '<div class="table-wrap">' +
+            '<div class="skeleton skeleton-row"></div>'.repeat(5) + '</div>';
+        return;
+    }
+
+    if (state.hasError) {
+        container.innerHTML = '<div class="empty-state">' +
+            '<i class="fas fa-triangle-exclamation" style="color: var(--danger);"></i>' +
+            '<h3>تعذر تحميل البيانات</h3>' +
+            '<p>' + escapeHtml(state.errorMessage) + '</p>' +
+            '<button class="btn btn-primary" onclick="location.reload()">' +
+                '<i class="fas fa-rotate"></i> إعادة المحاولة' +
+            '</button>' +
+        '</div>';
+        return;
+    }
+
+    if (!state.filtered.length) {
+        var msg = (state.searchQuery || state.categoryFilter) ? 
+            'لا توجد نتائج مطابقة للبحث' : 
+            'لا توجد مصروفات مسجلة';
+        container.innerHTML = '<div class="empty-state">' +
+            '<i class="fas fa-receipt"></i>' +
+            '<h3>' + msg + '</h3>' +
+            '<p>ابدأ بإضافة أول مصروف</p>' +
+            '<button class="btn btn-primary" id="emptyAddBtn">' +
+                '<i class="fas fa-plus"></i> إضافة مصروف' +
+            '</button>' +
+        '</div>';
+        var emptyBtn = document.getElementById('emptyAddBtn');
+        if (emptyBtn) emptyBtn.addEventListener('click', function() { openModal(null); });
+        return;
+    }
+
+    var rows = state.filtered.map(function(item) {
+        var category = item.category || 'أخرى';
+        return '<tr data-id="' + escapeHtml(item.id) + '">' +
+            '<td>' +
+                '<div class="expense-title">' +
+                    '<span>' + escapeHtml(item.title) + '</span>' +
+                    (item.notes ? '<span class="notes">' + escapeHtml(item.notes) + '</span>' : '') +
+                '</div>' +
+            '</td>' +
+            '<td><span class="category-badge ' + escapeHtml(category) + '">' +
+                escapeHtml(category) +
+            '</span></td>' +
+            '<td>' + formatDate(item.expense_date) + '</td>' +
+            '<td>' + getPaymentMethodText(item.payment_method) + '</td>' +
+            '<td class="amount">' + formatCurrency(item.amount) + '</td>' +
+            '<td>' +
+                '<div class="actions">' +
+                    '<button class="btn btn-sm btn-secondary" data-action="edit" data-id="' + escapeHtml(item.id) + '" title="تعديل">' +
+                        '<i class="fas fa-pen"></i>' +
+                    '</button>' +
+                    '<button class="btn btn-sm btn-danger" data-action="delete" data-id="' + escapeHtml(item.id) + '" title="حذف">' +
+                        '<i class="fas fa-trash"></i>' +
+                    '</button>' +
+                '</div>' +
+            '</td>' +
+        '</tr>';
+    }).join('');
+
+    container.innerHTML = '<div class="table-wrap">' +
+        '<table>' +
+            '<thead>' +
+                '<tr>' +
+                    '<th>البيان</th>' +
+                    '<th>التصنيف</th>' +
+                    '<th>التاريخ</th>' +
+                    '<th>طريقة الدفع</th>' +
+                    '<th>المبلغ</th>' +
+                    '<th style="text-align: left;">إجراءات</th>' +
+                '</tr>' +
+            '</thead>' +
+            '<tbody>' + rows + '</tbody>' +
+        '</table>' +
+    '</div>';
+
+    bindTableEvents();
+}
+
+function bindTableEvents() {
+    var container = document.getElementById('expensesContainer');
+    if (!container) return;
+
+    container.querySelectorAll('[data-action]').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var action = btn.dataset.action;
+            var id = btn.dataset.id;
+            if (action === 'edit') openModal(id);
+            else if (action === 'delete') openDeleteModal(id);
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Modal - Add/Edit
+// ═══════════════════════════════════════════════════════════════
+function openModal(id) {
+    var item = null;
+    if (id) {
+        for (var i = 0; i < state.expenses.length; i++) {
+            if (state.expenses[i].id === id) { item = state.expenses[i]; break; }
+        }
+    }
+    if (id && !item) {
+        showToast('لم يتم العثور على المصروف', 'error');
+        return;
+    }
+
+    state.editingExpense = item;
+
+    document.getElementById('expenseForm').reset();
+    document.getElementById('expenseId').value = item ? item.id : '';
+    document.getElementById('title').value = item ? item.title : '';
+    document.getElementById('amount').value = item ? item.amount : '';
+    document.getElementById('category').value = item ? (item.category || 'أخرى') : 'تشغيل';
+    document.getElementById('expenseDate').value = item ? item.expense_date : todayISO();
+    document.getElementById('paymentMethod').value = item ? (item.payment_method || 'cash') : 'cash';
+    document.getElementById('notes').value = item ? (item.notes || '') : '';
+
+    document.getElementById('expenseModalTitle').textContent = item ? 'تعديل مصروف' : 'إضافة مصروف';
+    document.getElementById('expenseModalIcon').className = item ? 'fas fa-pen' : 'fas fa-plus';
+    document.getElementById('saveExpenseText').textContent = item ? 'حفظ التعديلات' : 'حفظ المصروف';
+
+    clearFormErrors();
+    document.getElementById('expenseModal').classList.add('show');
+    setTimeout(function() { document.getElementById('title').focus(); }, 300);
+}
+
+function closeModal() {
+    document.getElementById('expenseModal').classList.remove('show');
+    state.editingExpense = null;
+}
+
+function clearFormErrors() {
+    document.querySelectorAll('.form-error').forEach(function(el) { el.classList.remove('show'); });
+    document.querySelectorAll('.form-input.error, .form-textarea.error, .form-select.error').forEach(function(el) {
+        el.classList.remove('error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 💾 Save Expense
+// ═══════════════════════════════════════════════════════════════
+function saveExpense(e) {
+    e.preventDefault();
+    clearFormErrors();
+
+    var id = document.getElementById('expenseId').value;
+    var title = document.getElementById('title').value.trim();
+    var amount = parseFloat(document.getElementById('amount').value) || 0;
+    var category = document.getElementById('category').value;
+    var expenseDate = document.getElementById('expenseDate').value;
+    var paymentMethod = document.getElementById('paymentMethod').value;
+    var notes = document.getElementById('notes').value.trim() || null;
+
+    // Validation
+    var hasError = false;
+    if (!title) {
+        document.getElementById('titleError').classList.add('show');
+        document.getElementById('title').classList.add('error');
+        hasError = true;
+    }
+    if (amount <= 0) {
+        document.getElementById('amountError').classList.add('show');
+        document.getElementById('amount').classList.add('error');
+        hasError = true;
+    }
+    if (!expenseDate) {
+        showToast('الرجاء إدخال التاريخ', 'error');
+        hasError = true;
+    }
+
+    if (hasError) return;
+
+    var btn = document.getElementById('saveExpenseBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveExpenseText');
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+
+    var session = getSession();
+    var record = {
+        title: title,
+        amount: amount,
+        category: category,
+        expense_date: expenseDate,
+        payment_method: paymentMethod,
+        notes: notes
+    };
+
+    if (!id && session && session.user) {
+        record.created_by = session.user.id;
+    }
+
+    var promise;
+
+    if (!sb) {
+        showToast('❌ لا يمكن الحفظ - لا يوجد اتصال بقاعدة البيانات', 'error');
+        resetSaveButton();
+        return;
+    }
+
+    if (id) {
+        // Update
+        promise = sb.from('expenses').update(record).eq('id', id).select().single();
+    } else {
+        // Insert
+        promise = sb.from('expenses').insert(record).select().single();
+    }
+
+    promise
+        .then(function(result) {
+            if (result.error) {
+                console.error('❌ Save error:', result.error);
+                throw result.error;
+            }
+            document.getElementById('expenseModal').classList.remove('show');
+            state.editingExpense = null;
+            showToast(id ? '✅ تم تحديث المصروف' : '✅ تمت إضافة المصروف', 'success');
+            return loadExpenses();
+        })
+        .catch(function(error) {
+            console.error('❌ Save failed:', error);
+            var msg = getErrorMessage(error);
+            showToast('❌ ' + msg, 'error', 6000);
+        })
+        .then(function() {
+            resetSaveButton();
+        });
+
+    function resetSaveButton() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = state.editingExpense ? 'حفظ التعديلات' : 'حفظ المصروف';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🗑️ Delete
+// ═══════════════════════════════════════════════════════════════
+function openDeleteModal(id) {
+    var item = null;
+    for (var i = 0; i < state.expenses.length; i++) {
+        if (state.expenses[i].id === id) { item = state.expenses[i]; break; }
+    }
+    if (!item) return;
+
+    state.deletingExpense = item;
+    document.getElementById('deleteExpenseTitle').textContent = item.title;
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+    state.deletingExpense = null;
+}
+
+function confirmDelete() {
+    var item = state.deletingExpense;
+    if (!item) return;
+
+    var btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="display:inline-block;width:16px;height:16px;vertical-align:middle;"></span>';
+
+    if (!sb) {
+        showToast('❌ لا يمكن الحذف - لا يوجد اتصال بقاعدة البيانات', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash"></i> حذف نهائي';
+        return;
+    }
+
+    sb.from('expenses').delete().eq('id', item.id)
+        .then(function(result) {
+            if (result.error) {
+                console.error('❌ Delete error:', result.error);
+                throw result.error;
+            }
+            showToast('✅ تم حذف المصروف', 'success');
+            closeDeleteModal();
+            return loadExpenses();
+        })
+        .catch(function(error) {
+            console.error('❌ Delete failed:', error);
+            showToast('❌ ' + getErrorMessage(error), 'error', 6000);
+        })
+        .then(function() {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-trash"></i> حذف نهائي';
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📤 Export Excel
+// ═══════════════════════════════════════════════════════════════
+function exportExcel() {
+    var loadLib = Promise.resolve();
+    if (typeof XLSX === 'undefined') {
+        loadLib = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    loadLib.then(function() {
+        var data = state.filtered.map(function(item) {
+            return {
+                'البيان': item.title || '',
+                'التصنيف': item.category || '',
+                'التاريخ': item.expense_date || '',
+                'طريقة الدفع': getPaymentMethodText(item.payment_method),
+                'المبلغ': parseFloat(item.amount) || 0,
+                'ملاحظات': item.notes || ''
+            };
+        });
+
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'المصروفات');
+        XLSX.writeFile(wb, 'expenses_' + new Date().toISOString().split('T')[0] + '.xlsx');
+        showToast('✅ تم التصدير بنجاح', 'success');
+    }).catch(function(err) {
+        console.error('Export error:', err);
+        showToast('❌ فشل التصدير', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 User UI
+// ═══════════════════════════════════════════════════════════════
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+    document.querySelectorAll('.sidebar-link[data-perm]').forEach(function(link) {
+        if (!isAdmin && !perms[link.dataset.perm]) link.style.display = 'none';
+    });
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        var dal = document.getElementById('dropdownAdminLink');
+        if (al) al.style.display = 'flex';
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Session check
+    var session = getSession();
+    if (!session) {
+        window.location.href = 'index.html';
+        return;
+    }
+    if (session.user.must_change_password) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // Theme
+    initTheme();
+    var tt = document.getElementById('themeToggle');
+    if (tt) tt.addEventListener('click', toggleTheme);
+
+    // Online status
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('✅ تم استعادة الاتصال', 'success');
+        loadExpenses();
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('⚠️ وضع Offline', 'warning');
+    });
+
+    // User UI
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+
+    // Sidebar
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (menuBtn) menuBtn.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.toggle('show');
+        if (overlay) overlay.classList.toggle('show');
+    });
+    if (overlay) overlay.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.remove('show');
+        if (overlay) overlay.classList.remove('show');
+    });
+
+    // User dropdown
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    if (userBtn) userBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (userDropdown) userDropdown.classList.toggle('show');
+    });
+
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+    });
+
+    // Set default dates
+    var fromDate = document.getElementById('fromDate');
+    var toDate = document.getElementById('toDate');
+    if (fromDate) fromDate.value = firstOfMonthISO();
+    if (toDate) toDate.value = todayISO();
+    state.fromDate = fromDate ? fromDate.value : '';
+    state.toDate = toDate ? toDate.value : '';
+
+    // Filter events
+    var searchTimeout;
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        var val = e.target.value;
+        searchTimeout = setTimeout(function() {
+            state.searchQuery = val;
+            applyFilters();
+        }, 250);
+    });
+
+    var categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) categoryFilter.addEventListener('change', function(e) {
+        state.categoryFilter = e.target.value;
+        applyFilters();
+    });
+
+    var applyFilterBtn = document.getElementById('applyFilterBtn');
+    if (applyFilterBtn) applyFilterBtn.addEventListener('click', function() {
+        state.fromDate = fromDate ? fromDate.value : '';
+        state.toDate = toDate ? toDate.value : '';
+        loadExpenses();
+    });
+
+    // Add expense
+    var addBtn = document.getElementById('addExpenseBtn');
+    if (addBtn) addBtn.addEventListener('click', function() { openModal(null); });
+
+    // Export
+    var exportBtn = document.getElementById('exportBtn');
+    if (exportBtn) exportBtn.addEventListener('click', exportExcel);
+
+    // Modal events
+    var closeModalBtn = document.getElementById('closeExpenseModal');
+    var cancelBtn = document.getElementById('cancelExpenseBtn');
+    var form = document.getElementById('expenseForm');
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    if (form) form.addEventListener('submit', saveExpense);
+
+    // Delete modal events
+    var closeDelBtn = document.getElementById('closeDeleteModal');
+    var cancelDelBtn = document.getElementById('cancelDeleteBtn');
+    var confirmDelBtn = document.getElementById('confirmDeleteBtn');
+    if (closeDelBtn) closeDelBtn.addEventListener('click', closeDeleteModal);
+    if (cancelDelBtn) cancelDelBtn.addEventListener('click', closeDeleteModal);
+    if (confirmDelBtn) confirmDelBtn.addEventListener('click', confirmDelete);
+
+    // Modal overlay click
+    document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+        ov.addEventListener('click', function(e) {
+            if (e.target === ov) {
+                ov.classList.remove('show');
+                if (ov.id === 'expenseModal') state.editingExpense = null;
+                if (ov.id === 'deleteModal') state.deletingExpense = null;
+            }
+        });
+    });
+
+    // ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.show').forEach(function(m) {
+                m.classList.remove('show');
+            });
+            state.editingExpense = null;
+            state.deletingExpense = null;
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            var si = document.getElementById('searchInput');
+            if (si) si.focus();
+        }
+    });
+
+    // Initialize Supabase client
+    sb = getSupabaseClient();
+    
+    if (!sb) {
+        console.error('❌ Failed to initialize Supabase client');
+        state.isLoading = false;
+        state.hasError = true;
+        state.errorMessage = 'تعذر تهيئة الاتصال بـ Supabase. يرجى تحديث الصفحة.';
+        render();
+        showToast('❌ فشل تهيئة الاتصال بقاعدة البيانات', 'error', 6000);
+        return;
+    }
+
+    // Test connection and load data
+    console.log('🔌 Supabase client ready, loading expenses...');
+    
+    // Simple connection test first
+    sb.from('expenses').select('id').limit(1)
+        .then(function(result) {
+            if (result.error) {
+                console.warn('⚠️ Connection test warning:', result.error);
+            } else {
+                console.log('✅ Database connection OK');
+            }
+            loadExpenses();
+        })
+        .catch(function(err) {
+            console.warn('⚠️ Connection test failed:', err);
+            loadExpenses();
+        });
+
+    console.log('%c💰 صفحة المصروفات جاهزة ✅', 'color: #0F766E; font-size: 16px; font-weight: bold;');
+    console.log('%c📊 إدارة كاملة للمصروفات مع إحصائيات وتصدير Excel', 'color: #F59E0B; font-size: 12px;');
+});
+
+window.ExpensesApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession,
+    reload: function() { return loadExpenses(); }
+};
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d5b8e">
+<meta name="description" content="قيّم خدمة الصيانة - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>تقييم الخدمة | TopLoad</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #1d5b8e;
+    --tech-blue-dark: #154668;
+    --tech-blue-light: #2d7ab8;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --star: #fbbf24;
+    --star-empty: #cbd5e1;
+    
+    --bg-primary: #E0F7FA;
+    --bg-card: #ffffff;
+    --text-primary: #0a1f33;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border-color: #e1e8f0;
+    
+    --shadow-sm: 0 1px 3px rgba(10, 31, 51, 0.06);
+    --shadow-md: 0 4px 12px rgba(10, 31, 51, 0.08);
+    --shadow-lg: 0 12px 32px rgba(10, 31, 51, 0.12);
+    --shadow-xl: 0 24px 48px rgba(10, 31, 51, 0.16);
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+}
+
+*, *::before, *::after {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: linear-gradient(135deg, #E0F7FA 0%, #CCFBF1 50%, #D9F2F5 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 1rem;
+    padding-top: calc(1rem + var(--safe-top));
+    padding-bottom: calc(2rem + var(--safe-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(29, 91, 142, 0.06) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+.page-wrapper {
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Header */
+/* ═══════════════════════════════════════════════════════════════ */
+.brand-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 0.5s ease;
+}
+.brand-logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    margin: 0 auto 0.75rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 8px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+.brand-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--tech-blue);
+    margin-bottom: 0.15rem;
+}
+.brand-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Card */
+/* ═══════════════════════════════════════════════════════════════ */
+.rate-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* States */
+/* ═══════════════════════════════════════════════════════════════ */
+.state-container {
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+.state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.25rem;
+}
+.state-icon.loading {
+    background: rgba(29, 91, 142, 0.1);
+    color: var(--tech-blue);
+}
+.state-icon.loading i {
+    animation: spin 1s linear infinite;
+}
+.state-icon.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+}
+.state-icon.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+.state-icon.warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.state-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+.state-message {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    max-width: 340px;
+    margin: 0 auto 1.5rem;
+}
+.state-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all var(--transition);
+    box-shadow: 0 4px 12px rgba(29, 91, 142, 0.3);
+    text-decoration: none;
+}
+.state-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(29, 91, 142, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Header Section */
+/* ═══════════════════════════════════════════════════════════════ */
+.rate-header {
+    background: linear-gradient(135deg, var(--tech-blue) 0%, var(--tech-blue-dark) 100%);
+    color: white;
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.rate-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 50%);
+    pointer-events: none;
+}
+.rate-header-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 0.75rem;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+.rate-header h1 {
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+    position: relative;
+    z-index: 1;
+}
+.rate-header p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Order Info */
+/* ═══════════════════════════════════════════════════════════════ */
+.order-info {
+    background: var(--bg-primary);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.order-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(29, 91, 142, 0.25);
+}
+.order-info-text {
+    flex: 1;
+    min-width: 0;
+}
+.order-info-text strong {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+    color: var(--text-primary);
+}
+.order-info-text span {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    direction: ltr;
+    text-align: right;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Form */
+/* ═══════════════════════════════════════════════════════════════ */
+.rate-form-body {
+    padding: 1.75rem 1.5rem;
+}
+
+.rating-section {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+.rating-question {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+}
+
+/* ═══ Star Rating ═══ */
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    direction: ltr;
+    margin-bottom: 0.75rem;
+}
+.star-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: var(--star-empty);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+}
+.star-btn:hover,
+.star-btn.active,
+.star-btn.hovered {
+    color: var(--star);
+    transform: scale(1.15);
+}
+.star-btn:hover i,
+.star-btn.active i,
+.star-btn.hovered i {
+    animation: starPop 0.35s ease;
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.5));
+}
+@keyframes starPop {
+    0% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.35) rotate(-15deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+.rating-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    min-height: 1.5rem;
+    transition: all var(--transition);
+}
+.rating-label.has-value {
+    color: var(--star);
+    font-size: 1.1rem;
+}
+
+/* ═══ Comment ═══ */
+.comment-section {
+    margin-bottom: 1.5rem;
+}
+.comment-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+.comment-label .optional {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.75rem;
+    margin-right: 0.35rem;
+}
+.comment-label i {
+    color: var(--tech-blue);
+    margin-left: 0.35rem;
+}
+.comment-textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--transition);
+    font-family: inherit;
+    resize: vertical;
+    min-height: 110px;
+    max-height: 220px;
+    line-height: 1.6;
+}
+.comment-textarea:focus {
+    border-color: var(--tech-blue);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29, 91, 142, 0.12);
+}
+.comment-textarea::placeholder {
+    color: var(--text-muted);
+}
+.comment-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+.comment-footer .char-count.warning {
+    color: var(--warning);
+    font-weight: 700;
+}
+
+/* ═══ Submit Button ═══ */
+.submit-btn {
+    width: 100%;
+    padding: 0.95rem 1.5rem;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    transition: all var(--transition);
+    box-shadow: 0 4px 12px rgba(29, 91, 142, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.5s ease;
+}
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(29, 91, 142, 0.4);
+}
+.submit-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+.submit-btn.success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Footer */
+/* ═══════════════════════════════════════════════════════════════ */
+.brand-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.brand-footer i {
+    color: var(--tech-blue);
+    margin: 0 0.15rem;
+}
+.brand-footer a {
+    color: var(--tech-blue);
+    font-weight: 700;
+    text-decoration: none;
+}
+.brand-footer a:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Toast */
+/* ═══════════════════════════════════════════════════════════════ */
+.toast-container {
+    position: fixed;
+    top: calc(1rem + var(--safe-top));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 380px;
+}
+.toast {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 0.9rem 1.15rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-right: 4px solid var(--info);
+}
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast i { font-size: 1.1rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+.toast.hide {
+    animation: toastOut 0.3s ease forwards;
+}
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut {
+    to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Success Card */
+/* ═══════════════════════════════════════════════════════════════ */
+.success-card {
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.02));
+}
+.success-icon {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35);
+    animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+@keyframes successPop {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    60% { transform: scale(1.1) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.success-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--success);
+    margin-bottom: 0.5rem;
+}
+.success-message {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+}
+.success-stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.35rem;
+    direction: ltr;
+    margin-bottom: 1.5rem;
+}
+.success-stars i {
+    font-size: 2rem;
+    color: var(--star-empty);
+}
+.success-stars i.filled {
+    color: var(--star);
+    animation: starPop 0.4s ease;
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.5));
+}
+.success-footer {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1.5rem;
+}
+.success-footer a {
+    color: var(--tech-blue);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Responsive */
+/* ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    body { padding: 0.75rem; }
+    .brand-logo { width: 60px; height: 60px; }
+    .brand-title { font-size: 1.25rem; }
+    .brand-subtitle { font-size: 0.8rem; }
+    .rate-header { padding: 1.5rem 1.25rem; }
+    .rate-header h1 { font-size: 1.15rem; }
+    .rate-form-body { padding: 1.5rem 1.25rem; }
+    .stars { gap: 0.35rem; }
+    .star-btn { width: 42px; height: 42px; font-size: 1.5rem; }
+    .state-container { padding: 2.5rem 1.25rem; }
+    .order-info { padding: 0.85rem 1.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="page-wrapper">
+
+    <!-- Brand Header -->
+    <div class="brand-header">
+        <img src="logo.png" alt="TopLoad" class="brand-logo" onerror="this.style.display='none'">
+        <div class="brand-title">TopLoad</div>
+        <div class="brand-subtitle">لصيانة الأجهزة الإلكترونية</div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="rate-card" id="rateCard">
+        <!-- Loading State -->
+        <div class="state-container" id="loadingState">
+            <div class="state-icon loading">
+                <i class="fas fa-spinner"></i>
+            </div>
+            <div class="state-title">جاري التحميل...</div>
+            <div class="state-message">يتم جلب بيانات أمر الصيانة</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="brand-footer">
+        <i class="fas fa-shield-halved"></i>
+        جميع البيانات محمية لدى <a href="index.html">TopLoad</a>
+        <i class="fas fa-heart" style="color: var(--danger);"></i>
+    </div>
+
+</div>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+
+var supabaseClient = null;
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function getUrlParam(name) {
+    try { return new URLSearchParams(window.location.search).get(name); }
+    catch (e) { return null; }
+}
+
+function getInitials(name) {
+    if (!name) return '؟';
+    var parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check', error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation', info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    repairOrder: null,
+    customer: null,
+    rating: 0,
+    hoverRating: 0,
+    submitting: false,
+    alreadyRated: false
+};
+
+var RATING_LABELS = {
+    0: 'اختر عدد النجوم',
+    1: '😞 سيء جدًا',
+    2: '😐 ضعيف',
+    3: '🙂 مقبول',
+    4: '😊 جيد جدًا',
+    5: '🤩 ممتاز'
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 🖼️ Render Functions
+// ═══════════════════════════════════════════════════════════════
+function renderLoading() {
+    document.getElementById('rateCard').innerHTML =
+        '<div class="state-container">' +
+            '<div class="state-icon loading"><i class="fas fa-spinner"></i></div>' +
+            '<div class="state-title">جاري التحميل...</div>' +
+            '<div class="state-message">يتم جلب بيانات أمر الصيانة</div>' +
+        '</div>';
+}
+
+function renderError(title, message, icon) {
+    icon = icon || 'error';
+    document.getElementById('rateCard').innerHTML =
+        '<div class="state-container">' +
+            '<div class="state-icon ' + icon + '"><i class="fas ' + (icon === 'error' ? 'fa-circle-xmark' : 'fa-triangle-exclamation') + '"></i></div>' +
+            '<div class="state-title">' + escapeHtml(title) + '</div>' +
+            '<div class="state-message">' + escapeHtml(message) + '</div>' +
+            '<a href="index.html" class="state-btn">' +
+                '<i class="fas fa-home"></i> العودة للرئيسية' +
+            '</a>' +
+        '</div>';
+}
+
+function renderAlreadyRated() {
+    document.getElementById('rateCard').innerHTML =
+        '<div class="state-container">' +
+            '<div class="state-icon success"><i class="fas fa-check-circle"></i></div>' +
+            '<div class="state-title">تم التقييم بالفعل</div>' +
+            '<div class="state-message">شكرًا لك! هذا الأمر تم تقييمه من قبل. نقدر لك اهتمامك برأيك.</div>' +
+            '<a href="index.html" class="state-btn">' +
+                '<i class="fas fa-home"></i> العودة للرئيسية' +
+            '</a>' +
+        '</div>';
+}
+
+function renderForm() {
+    var r = state.repairOrder;
+    var customer = state.customer || {};
+    var customerName = customer.name || 'عميل';
+    var device = (r.device_type || '') + (r.device_model ? ' - ' + r.device_model : '');
+    var initials = getInitials(customerName);
+
+    var starsHtml = '';
+    for (var i = 1; i <= 5; i++) {
+        starsHtml +=
+            '<button type="button" class="star-btn" data-value="' + i + '" aria-label="' + i + ' نجوم">' +
+                '<i class="far fa-star"></i>' +
+            '</button>';
+    }
+
+    document.getElementById('rateCard').innerHTML =
+        '<div class="rate-header">' +
+            '<div class="rate-header-icon"><i class="fas fa-star"></i></div>' +
+            '<h1>قيّم خدمتنا</h1>' +
+            '<p>رأيك يهمنا لتقديم خدمة أفضل</p>' +
+        '</div>' +
+
+        '<div class="order-info">' +
+            '<div class="order-avatar">' + escapeHtml(initials) + '</div>' +
+            '<div class="order-info-text">' +
+                '<strong>' + escapeHtml(customerName) + '</strong>' +
+                '<span>' + escapeHtml(r.tracking_code || '') + (device ? ' • ' + escapeHtml(device) : '') + '</span>' +
+            '</div>' +
+        '</div>' +
+
+        '<div class="rate-form-body">' +
+            '<div class="rating-section">' +
+                '<div class="rating-question">كيف كانت تجربتك مع خدمتنا؟</div>' +
+                '<div class="stars" id="starsContainer">' + starsHtml + '</div>' +
+                '<div class="rating-label" id="ratingLabel">' + RATING_LABELS[0] + '</div>' +
+            '</div>' +
+
+            '<div class="comment-section">' +
+                '<label class="comment-label" for="commentInput">' +
+                    '<i class="fas fa-comment-dots"></i> ملاحظات إضافية ' +
+                    '<span class="optional">(اختياري)</span>' +
+                '</label>' +
+                '<textarea class="comment-textarea" id="commentInput" placeholder="شاركنا رأيك في الخدمة..." maxlength="500"></textarea>' +
+                '<div class="comment-footer">' +
+                    '<span>ساعدنا في تحسين خدمتنا</span>' +
+                    '<span class="char-count" id="charCount">0 / 500</span>' +
+                '</div>' +
+            '</div>' +
+
+            '<button type="button" class="submit-btn" id="submitBtn" disabled>' +
+                '<i class="fas fa-paper-plane"></i>' +
+                '<span>إرسال التقييم</span>' +
+            '</button>' +
+        '</div>';
+
+    bindFormEvents();
+}
+
+function renderSuccess() {
+    var starsHtml = '';
+    for (var i = 1; i <= 5; i++) {
+        starsHtml += '<i class="fas fa-star ' + (i <= state.rating ? 'filled' : '') + '"></i>';
+    }
+
+    document.getElementById('rateCard').innerHTML =
+        '<div class="success-card">' +
+            '<div class="success-icon"><i class="fas fa-check"></i></div>' +
+            '<div class="success-title">شكرًا لك! 🎉</div>' +
+            '<div class="success-message">تم استلام تقييمك بنجاح. رأيك يساعدنا في تقديم خدمة أفضل لك ولعملائنا.</div>' +
+            '<div class="success-stars">' + starsHtml + '</div>' +
+            '<div class="success-footer">' +
+                'نتشرف بخدمتك مرة أخرى في <a href="index.html">TopLoad</a> 💙' +
+            '</div>' +
+        '</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 Star Rating
+// ═══════════════════════════════════════════════════════════════
+function bindFormEvents() {
+    var starsContainer = document.getElementById('starsContainer');
+    var stars = starsContainer.querySelectorAll('.star-btn');
+    var ratingLabel = document.getElementById('ratingLabel');
+    var commentInput = document.getElementById('commentInput');
+    var charCount = document.getElementById('charCount');
+    var submitBtn = document.getElementById('submitBtn');
+
+    // Stars: click
+    stars.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var value = parseInt(btn.dataset.value);
+            state.rating = value;
+            updateStarsVisual(value);
+            ratingLabel.textContent = RATING_LABELS[value] || RATING_LABELS[0];
+            ratingLabel.classList.add('has-value');
+            submitBtn.disabled = false;
+        });
+
+        // Stars: hover
+        btn.addEventListener('mouseenter', function() {
+            var value = parseInt(btn.dataset.value);
+            updateStarsVisual(value, true);
+            ratingLabel.textContent = RATING_LABELS[value] || RATING_LABELS[0];
+        });
+
+        // Stars: leave
+        btn.addEventListener('mouseleave', function() {
+            updateStarsVisual(state.rating);
+            ratingLabel.textContent = RATING_LABELS[state.rating] || RATING_LABELS[0];
+            if (state.rating > 0) ratingLabel.classList.add('has-value');
+            else ratingLabel.classList.remove('has-value');
+        });
+    });
+
+    // Touch support (mobile)
+    stars.forEach(function(btn) {
+        btn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            var value = parseInt(btn.dataset.value);
+            state.rating = value;
+            updateStarsVisual(value);
+            ratingLabel.textContent = RATING_LABELS[value] || RATING_LABELS[0];
+            ratingLabel.classList.add('has-value');
+            submitBtn.disabled = false;
+        }, { passive: false });
+    });
+
+    // Comment counter
+    if (commentInput && charCount) {
+        commentInput.addEventListener('input', function() {
+            var len = commentInput.value.length;
+            charCount.textContent = len + ' / 500';
+            if (len > 450) charCount.classList.add('warning');
+            else charCount.classList.remove('warning');
+        });
+    }
+
+    // Submit
+    if (submitBtn) {
+        submitBtn.addEventListener('click', submitRating);
+    }
+}
+
+function updateStarsVisual(value, isHover) {
+    var stars = document.querySelectorAll('#starsContainer .star-btn');
+    stars.forEach(function(btn, idx) {
+        var starValue = idx + 1;
+        var icon = btn.querySelector('i');
+        var isActive = starValue <= value;
+
+        btn.classList.toggle('active', isActive && !isHover);
+        btn.classList.toggle('hovered', isActive && isHover);
+
+        if (isActive) {
+            icon.className = 'fas fa-star';
+        } else {
+            icon.className = 'far fa-star';
+        }
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 💾 Submit Rating
+// ═══════════════════════════════════════════════════════════════
+function submitRating() {
+    if (state.submitting) return;
+    if (state.rating < 1 || state.rating > 5) {
+        showToast('الرجاء اختيار عدد النجوم أولاً', 'warning');
+        return;
+    }
+
+    state.submitting = true;
+
+    var comment = (document.getElementById('commentInput').value || '').trim();
+    var submitBtn = document.getElementById('submitBtn');
+    var originalHtml = submitBtn.innerHTML;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span><span>جاري الإرسال...</span>';
+
+    var sb = getSupabaseClient();
+    if (!sb) {
+        showToast('لا يمكن الاتصال بالخدمة', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHtml;
+        state.submitting = false;
+        return;
+    }
+
+    var ratingData = {
+        repair_order_id: state.repairOrder.id,
+        customer_id: state.customer ? state.customer.id : null,
+        rating: state.rating,
+        comment: comment || null
+    };
+
+    sb.from('service_ratings').insert(ratingData).then(function(result) {
+        if (result.error) {
+            console.error('Rating insert error:', result.error);
+
+            // لو التقييم موجود بالفعل
+            if (result.error.code === '23505') {
+                state.alreadyRated = true;
+                renderAlreadyRated();
+                return;
+            }
+            throw result.error;
+        }
+
+        // نجاح
+        submitBtn.classList.add('success');
+        submitBtn.innerHTML = '<i class="fas fa-check"></i><span>تم الإرسال</span>';
+
+        setTimeout(function() {
+            renderSuccess();
+        }, 500);
+
+    }).catch(function(err) {
+        console.error('Submit error:', err);
+        var msg = 'حدث خطأ أثناء الإرسال';
+        if (err && err.message) msg = err.message;
+        showToast(msg, 'error', 5000);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHtml;
+    }).then(function() {
+        state.submitting = false;
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Repair Order
+// ═══════════════════════════════════════════════════════════════
+function loadRepairOrder() {
+    var code = getUrlParam('code');
+
+    if (!code) {
+        renderError(
+            'رابط غير صحيح',
+            'الرابط لا يحتوي على كود أمر الصيانة. تأكد من الرابط الذي وصلك.',
+            'error'
+        );
+        return;
+    }
+
+    var sb = getSupabaseClient();
+    if (!sb) {
+        renderError(
+            'خطأ في الاتصال',
+            'لا يمكن الاتصال بالخدمة. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.',
+            'error'
+        );
+        return;
+    }
+
+    // جلب أمر الصيانة + العميل
+    sb.from('repair_orders')
+        .select('id, tracking_code, device_type, device_model, customer_id, status, created_at, customer:customers(id, name, phone)')
+        .eq('tracking_code', code)
+        .maybeSingle()
+        .then(function(result) {
+            if (result.error) {
+                console.error('Load error:', result.error);
+                renderError(
+                    'خطأ في التحميل',
+                    'حدث خطأ أثناء جلب بيانات أمر الصيانة. حاول مرة أخرى.',
+                    'error'
+                );
+                return;
+            }
+
+            if (!result.data) {
+                renderError(
+                    'أمر صيانة غير موجود',
+                    'لم نجد أمر صيانة بالكود: ' + code + '. تأكد من الكود وحاول مرة أخرى.',
+                    'error'
+                );
+                return;
+            }
+
+            state.repairOrder = result.data;
+            state.customer = result.data.customer || null;
+
+            // فحص إذا كان الأمر مقيّم من قبل
+            return sb.from('service_ratings')
+                .select('id')
+                .eq('repair_order_id', result.data.id)
+                .maybeSingle()
+                .then(function(ratingResult) {
+                    if (ratingResult.data) {
+                        state.alreadyRated = true;
+                        renderAlreadyRated();
+                    } else {
+                        renderForm();
+                    }
+                });
+        })
+        .catch(function(err) {
+            console.error('Load error:', err);
+            renderError(
+                'خطأ غير متوقع',
+                'حدث خطأ أثناء التحميل. حاول مرة أخرى لاحقًا.',
+                'error'
+            );
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('%c⭐ صفحة التقييم جاهزة', 'color: #1d5b8e; font-size: 16px; font-weight: bold;');
+    loadRepairOrder();
+});
+
+})();
+</script>
+
+</body>
+</html>

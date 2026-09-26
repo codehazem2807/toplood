@@ -1,0 +1,2804 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d5b8e">
+<meta name="description" content="العملاء - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>العملاء | TopLoad</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #1d5b8e; --tech-blue-dark: #154668; --tech-blue-light: #2d7ab8;
+    --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
+    --purple: #8b5cf6; --pink: #ec4899;
+    --whatsapp: #25d366;
+    --bg-primary: #E0F7FA; --bg-card: #ffffff; --bg-hover: #f1f5f9;
+    --text-primary: #0a1f33; --text-secondary: #475569; --text-muted: #94a3b8;
+    --border-color: #e1e8f0;
+    --shadow-sm: 0 1px 3px rgba(10,31,51,0.06);
+    --shadow-md: 0 4px 12px rgba(10,31,51,0.08);
+    --shadow-lg: 0 12px 32px rgba(10,31,51,0.12);
+    --shadow-xl: 0 24px 48px rgba(10,31,51,0.16);
+    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px; --radius-full: 9999px;
+    --navbar-height: 64px; --sidebar-width: 260px;
+    --transition-fast: 0.15s ease; --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    --safe-top: env(safe-area-inset-top,0); --safe-bottom: env(safe-area-inset-bottom,0);
+    --safe-left: env(safe-area-inset-left,0); --safe-right: env(safe-area-inset-right,0);
+}
+[data-theme="dark"] {
+    --bg-primary: #0a1628; --bg-card: #142f4a; --bg-hover: #1a3a5c;
+    --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b;
+    --border-color: #1e3a5f;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    --shadow-xl: 0 24px 48px rgba(0,0,0,0.6);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: var(--bg-primary); color: var(--text-primary);
+    min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+.reading-progress {
+    position: fixed; top: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-blue-light), var(--success));
+    width: 0%; z-index: 10000; transition: width 0.1s linear;
+    box-shadow: 0 0 10px rgba(29,91,142,0.6);
+}
+
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--navbar-height); background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000; display: flex; align-items: center;
+    padding: 0 1rem; padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem; box-shadow: var(--shadow-sm);
+}
+.navbar-menu-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1.1rem;
+    transition: all var(--transition); flex-shrink: 0;
+}
+.navbar-menu-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.navbar-brand { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.navbar-logo {
+    width: 40px; height: 40px; object-fit: contain;
+    border-radius: var(--radius-md); background: var(--bg-primary);
+    padding: 4px; border: 1px solid var(--border-color);
+}
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-brand-text strong { font-size: 1rem; font-weight: 800; }
+.navbar-brand-text span { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-right: auto; }
+.navbar-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1rem;
+    transition: all var(--transition); position: relative; flex-shrink: 0;
+}
+.navbar-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.navbar-badge {
+    position: absolute; top: 4px; left: 4px;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 9px; background: var(--danger); color: white;
+    font-size: 0.65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--bg-card);
+}
+.online-dot {
+    position: absolute; top: 6px; left: 6px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--success); border: 2px solid var(--bg-card);
+    animation: pulse-online 2s infinite;
+}
+.online-dot.offline { background: var(--danger); animation: none; }
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+    100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+.navbar-user {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary); border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition); cursor: pointer; flex-shrink: 0;
+}
+.navbar-user:hover { background: var(--bg-hover); border-color: var(--tech-blue); }
+.navbar-user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
+}
+.navbar-user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--text-muted); }
+
+.sidebar {
+    position: fixed; top: var(--navbar-height); right: 0; bottom: 0;
+    width: var(--sidebar-width); background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900; overflow-y: auto;
+    padding: 1rem 0.75rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--transition);
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+.sidebar-section { margin-bottom: 1.25rem; }
+.sidebar-section-title {
+    font-size: 0.7rem; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 0 0.75rem; margin-bottom: 0.5rem;
+}
+.sidebar-link {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 0.85rem; border-radius: var(--radius-md);
+    color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
+    transition: all var(--transition-fast);
+    margin-bottom: 0.15rem; position: relative;
+}
+.sidebar-link:hover { background: var(--bg-hover); color: var(--tech-blue); transform: translateX(-3px); }
+.sidebar-link.active {
+    background: linear-gradient(135deg, rgba(29,91,142,0.12), rgba(45,122,184,0.08));
+    color: var(--tech-blue); font-weight: 700;
+}
+.sidebar-link.active::before {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 4px; height: 60%;
+    background: var(--tech-blue); border-radius: 4px;
+}
+.sidebar-link i:first-child { width: 20px; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+.sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(10,31,51,0.5);
+    backdrop-filter: blur(4px); z-index: 899;
+    opacity: 0; visibility: hidden;
+    transition: all var(--transition); top: var(--navbar-height);
+}
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem; min-height: calc(100vh - var(--navbar-height));
+}
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+}
+.page-header-text h1 {
+    font-size: 1.65rem; font-weight: 800; margin-bottom: 0.25rem;
+    display: flex; align-items: center; gap: 0.6rem;
+}
+.page-header-text h1 i { color: var(--tech-blue); }
+.page-header-text p { font-size: 0.9rem; color: var(--text-secondary); }
+.page-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn {
+    padding: 0.65rem 1.15rem; border-radius: var(--radius-md);
+    font-size: 0.9rem; font-weight: 600;
+    transition: all var(--transition);
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    justify-content: center; white-space: nowrap;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,91,142,0.4); }
+.btn-secondary {
+    background: var(--bg-card); color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover { background: var(--bg-hover); border-color: var(--tech-blue); color: var(--tech-blue); }
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    color: white;
+}
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239,68,68,0.4); }
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+}
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,0.4); }
+.btn-whatsapp {
+    background: linear-gradient(135deg, var(--whatsapp), #128c7e);
+    color: white;
+}
+.btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.4); }
+.btn-sm { padding: 0.45rem 0.8rem; font-size: 0.8rem; }
+.btn-icon {
+    width: 38px; height: 38px; padding: 0;
+    border-radius: var(--radius-md);
+    display: inline-flex; align-items: center; justify-content: center;
+}
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+.stats-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem; margin-bottom: 1.25rem;
+}
+.stat-item {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 1.15rem;
+    display: flex; align-items: center; gap: 0.85rem;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease backwards;
+}
+.stat-item:nth-child(1) { animation-delay: 0.05s; }
+.stat-item:nth-child(2) { animation-delay: 0.1s; }
+.stat-item:nth-child(3) { animation-delay: 0.15s; }
+.stat-item:nth-child(4) { animation-delay: 0.2s; }
+.stat-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--tech-blue); }
+.stat-item-icon {
+    width: 46px; height: 46px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: white; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.stat-item-icon.success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+.stat-item-icon.warning { background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+.stat-item-icon.purple { background: linear-gradient(135deg, var(--purple), #7c3aed); box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
+.stat-item-content { flex: 1; min-width: 0; }
+.stat-item-value { font-size: 1.35rem; font-weight: 800; color: var(--text-primary); line-height: 1.2; }
+.stat-item-value small { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+.stat-item-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+
+.toolbar {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 1rem;
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+}
+.toolbar-search { flex: 1; min-width: 240px; position: relative; }
+.toolbar-search-input {
+    width: 100%; padding: 0.65rem 1rem; padding-right: 2.75rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem;
+    outline: none; transition: all var(--transition);
+}
+.toolbar-search-input:focus {
+    border-color: var(--tech-blue); background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29,91,142,0.12);
+}
+.toolbar-search-icon {
+    position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none;
+}
+.toolbar-select {
+    padding: 0.65rem 2.25rem 0.65rem 1rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 500;
+    color: var(--text-primary); outline: none; cursor: pointer;
+    transition: all var(--transition); appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: left 0.75rem center;
+    min-width: 150px;
+}
+.toolbar-select:focus { border-color: var(--tech-blue); box-shadow: 0 0 0 4px rgba(29,91,142,0.12); }
+
+.customers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 1rem;
+}
+.customer-card {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 1.15rem;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease backwards;
+    position: relative; overflow: hidden;
+    cursor: pointer;
+}
+.customer-card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, var(--tech-blue) 0%, transparent 70%);
+    opacity: 0.05; border-radius: 50%;
+    transform: translate(30%, -30%);
+    transition: opacity var(--transition);
+}
+.customer-card:hover {
+    transform: translateY(-4px); box-shadow: var(--shadow-lg);
+    border-color: var(--tech-blue);
+}
+.customer-card:hover::before { opacity: 0.12; }
+.customer-card-header {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    margin-bottom: 0.85rem; position: relative; z-index: 1;
+}
+.customer-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.35rem; font-weight: 800; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+    transition: transform var(--transition);
+}
+.customer-card:hover .customer-avatar { transform: scale(1.08); }
+.customer-info { flex: 1; min-width: 0; }
+.customer-name {
+    font-size: 1rem; font-weight: 800; color: var(--text-primary);
+    margin-bottom: 0.2rem; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.customer-phone {
+    font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;
+    display: flex; align-items: center; gap: 0.35rem;
+    font-family: 'Courier New', monospace;
+    direction: ltr;
+    justify-content: flex-end;
+}
+.customer-card-menu {
+    display: flex; gap: 0.25rem;
+    opacity: 0; transition: opacity var(--transition);
+}
+.customer-card:hover .customer-card-menu,
+.customer-card:focus-within .customer-card-menu { opacity: 1; }
+.customer-menu-btn {
+    width: 30px; height: 30px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 0.75rem;
+    transition: all var(--transition-fast);
+    background: var(--bg-primary); border: 1px solid var(--border-color);
+}
+.customer-menu-btn:hover {
+    background: var(--tech-blue); color: white;
+    border-color: var(--tech-blue); transform: scale(1.05);
+}
+.customer-menu-btn.danger:hover { background: var(--danger); border-color: var(--danger); }
+
+.customer-meta {
+    display: flex; flex-direction: column; gap: 0.35rem;
+    padding: 0.75rem 0; margin-bottom: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    position: relative; z-index: 1;
+}
+.customer-meta-row {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.78rem; gap: 0.5rem;
+}
+.customer-meta-label {
+    color: var(--text-muted); font-weight: 600;
+    display: flex; align-items: center; gap: 0.35rem;
+}
+.customer-meta-label i { width: 14px; text-align: center; font-size: 0.7rem; }
+.customer-meta-value {
+    color: var(--text-primary); font-weight: 700;
+    text-align: left;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 60%;
+}
+.customer-meta-value.danger { color: var(--danger); }
+.customer-meta-value.success { color: var(--success); }
+.customer-meta-value.warning { color: var(--warning); }
+
+.customer-stats {
+    display: flex; gap: 0.35rem; flex-wrap: wrap;
+    position: relative; z-index: 1;
+}
+.customer-stat-badge {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.25rem 0.6rem; border-radius: var(--radius-full);
+    font-size: 0.7rem; font-weight: 700;
+    background: var(--bg-primary); color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+.customer-stat-badge i { font-size: 0.65rem; color: var(--tech-blue); }
+.customer-stat-badge.danger {
+    background: rgba(239,68,68,0.1); color: var(--danger);
+    border-color: rgba(239,68,68,0.2);
+}
+.customer-stat-badge.danger i { color: var(--danger); }
+.customer-stat-badge.success {
+    background: rgba(16,185,129,0.1); color: var(--success);
+    border-color: rgba(16,185,129,0.2);
+}
+.customer-stat-badge.success i { color: var(--success); }
+
+.customer-actions {
+    display: flex; gap: 0.35rem; margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    position: relative; z-index: 1;
+}
+.customer-actions .btn {
+    flex: 1; padding: 0.4rem 0.5rem; font-size: 0.72rem;
+    border-radius: var(--radius-sm);
+}
+
+/* Customer Modal (Details) */
+.customer-profile-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(29,91,142,0.08), rgba(45,122,184,0.04));
+    border-radius: var(--radius-lg); margin-bottom: 1.25rem;
+    border: 1.5px solid rgba(29,91,142,0.2);
+}
+.customer-profile-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; font-weight: 800; flex-shrink: 0;
+    box-shadow: 0 8px 24px rgba(29,91,142,0.4);
+}
+.customer-profile-info { flex: 1; min-width: 0; }
+.customer-profile-name {
+    font-size: 1.35rem; font-weight: 800; margin-bottom: 0.35rem;
+    color: var(--text-primary);
+}
+.customer-profile-phone {
+    font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;
+    font-family: 'Courier New', monospace;
+    direction: ltr; display: inline-block;
+}
+
+.customer-contact-buttons {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem; margin-bottom: 1.25rem;
+}
+
+.tabs-nav {
+    display: flex; gap: 0.25rem;
+    background: var(--bg-primary); padding: 0.25rem;
+    border-radius: var(--radius-md); margin-bottom: 1rem;
+    overflow-x: auto;
+}
+.tab-btn {
+    flex: 1; padding: 0.6rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    white-space: nowrap;
+}
+.tab-btn.active {
+    background: var(--bg-card); color: var(--tech-blue);
+    box-shadow: var(--shadow-sm);
+}
+.tab-btn:hover:not(.active) { color: var(--tech-blue); }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+.empty-tab {
+    padding: 2.5rem 1rem; text-align: center;
+    color: var(--text-muted);
+    background: var(--bg-primary); border-radius: var(--radius-md);
+    border: 2px dashed var(--border-color);
+}
+.empty-tab i {
+    font-size: 2.5rem; opacity: 0.3;
+    margin-bottom: 0.75rem; display: block; color: var(--tech-blue);
+}
+.empty-tab p { font-size: 0.85rem; font-weight: 600; }
+
+/* Item list in tabs */
+.item-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 0.85rem;
+    background: var(--bg-primary); border-radius: var(--radius-md);
+    margin-bottom: 0.5rem;
+    transition: all var(--transition-fast);
+}
+.item-row:hover { background: var(--bg-hover); }
+.item-row-icon {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: white; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.item-row-icon.success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+.item-row-icon.warning { background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+.item-row-icon.danger { background: linear-gradient(135deg, var(--danger), #dc2626); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+.item-row-content { flex: 1; min-width: 0; }
+.item-row-title {
+    font-size: 0.85rem; font-weight: 700;
+    margin-bottom: 0.15rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.item-row-meta {
+    font-size: 0.72rem; color: var(--text-muted);
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    align-items: center;
+}
+.item-row-value {
+    font-size: 0.9rem; font-weight: 800;
+    text-align: left; flex-shrink: 0;
+}
+.item-row-value.success { color: var(--success); }
+.item-row-value.danger { color: var(--danger); }
+.item-row-value.tech-blue { color: var(--tech-blue); }
+
+/* Modal */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(10,31,51,0.7);
+    backdrop-filter: blur(8px); display: none;
+    align-items: center; justify-content: center;
+    z-index: 2000; padding: 1rem;
+    animation: fadeIn 0.3s ease; overflow-y: auto;
+}
+.modal-overlay.show { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+    background: var(--bg-card); border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 540px; width: 100%; max-height: 92vh;
+    overflow: hidden;
+    animation: modalIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    display: flex; flex-direction: column; margin: auto;
+    border: 1px solid var(--border-color);
+}
+.modal-sm { max-width: 440px; }
+.modal-lg { max-width: 780px; }
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-shrink: 0; background: var(--bg-card);
+}
+.modal-title { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
+.modal-title i { color: var(--tech-blue); }
+.modal-close {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all var(--transition);
+    flex-shrink: 0;
+}
+.modal-close:hover { background: rgba(239,68,68,0.1); color: var(--danger); transform: rotate(90deg); }
+.modal-body {
+    padding: 1.5rem; overflow-y: auto; overflow-x: hidden;
+    flex: 1; min-height: 0; max-height: calc(92vh - 180px);
+    scrollbar-width: thin; scrollbar-color: var(--border-color) transparent;
+}
+.modal-body::-webkit-scrollbar { width: 8px; }
+.modal-body::-webkit-scrollbar-track { background: transparent; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex; gap: 0.75rem; justify-content: flex-end;
+    flex-shrink: 0; background: var(--bg-primary); flex-wrap: wrap;
+}
+.modal-footer .btn { flex: 1; min-width: 120px; }
+@media (min-width: 480px) { .modal-footer .btn { flex: initial; min-width: auto; } }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 1.15rem; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group:last-child { margin-bottom: 0; }
+.form-label {
+    display: block; font-size: 0.85rem; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 0.5rem;
+}
+.form-label .required { color: var(--danger); }
+.form-label i { color: var(--tech-blue); margin-left: 0.35rem; font-size: 0.8rem; }
+.form-input, .form-textarea, .form-select {
+    width: 100%; padding: 0.75rem 0.95rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 500;
+    color: var(--text-primary); outline: none;
+    transition: all var(--transition); font-family: inherit;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--tech-blue); background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29,91,142,0.12);
+}
+.form-textarea { resize: vertical; min-height: 80px; max-height: 200px; line-height: 1.6; }
+.form-input.error, .form-textarea.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(239,68,68,0.12);
+    animation: shake 0.4s ease;
+}
+.form-input[type="tel"] {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+.form-error {
+    font-size: 0.75rem; color: var(--danger); margin-top: 0.4rem;
+    display: none; align-items: center; gap: 0.35rem; font-weight: 600;
+}
+.form-error.show { display: flex; }
+.form-hint {
+    font-size: 0.72rem; color: var(--text-muted); margin-top: 0.4rem;
+    display: flex; align-items: center; gap: 0.35rem; line-height: 1.5;
+}
+
+.toast-container {
+    position: fixed; top: calc(var(--navbar-height) + 1rem);
+    left: 50%; transform: translateX(-50%);
+    z-index: 3000; display: flex; flex-direction: column;
+    gap: 0.75rem; pointer-events: none;
+    max-width: 90vw; width: 400px;
+}
+.toast {
+    background: var(--bg-card); color: var(--text-primary);
+    padding: 1rem 1.25rem; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl); border: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.9rem; font-weight: 500; pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    border-right: 4px solid var(--info);
+}
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast i { font-size: 1.2rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+.toast.hide { animation: toastOut 0.3s ease forwards; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut { to { opacity: 0; transform: translateY(-20px) scale(0.95); } }
+
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-lg);
+}
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.skeleton-card { height: 220px; }
+
+.empty-state {
+    padding: 4rem 1rem; text-align: center; color: var(--text-muted);
+    grid-column: 1 / -1; background: var(--bg-card);
+    border: 2px dashed var(--border-color); border-radius: var(--radius-lg);
+}
+.empty-state i {
+    font-size: 4rem; opacity: 0.25; margin-bottom: 1rem;
+    display: block; color: var(--tech-blue);
+}
+.empty-state h3 {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--text-secondary); margin-bottom: 0.35rem;
+}
+.empty-state p { font-size: 0.85rem; margin-bottom: 1rem; }
+
+.pagination {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.35rem; margin-top: 1.5rem; flex-wrap: wrap;
+}
+.pagination-btn {
+    min-width: 40px; height: 40px; padding: 0 0.75rem;
+    border-radius: var(--radius-md);
+    background: var(--bg-card); border: 1.5px solid var(--border-color);
+    color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+}
+.pagination-btn:hover:not(:disabled):not(.active) { border-color: var(--tech-blue); color: var(--tech-blue); }
+.pagination-btn.active {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; border-color: var(--tech-blue);
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.scroll-top {
+    position: fixed; bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; box-shadow: var(--shadow-lg);
+    opacity: 0; visibility: hidden; transform: translateY(20px);
+    transition: all var(--transition); z-index: 1400;
+}
+.scroll-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.scroll-top:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(29,91,142,0.5); }
+
+.notifications-panel, .user-dropdown {
+    position: fixed; top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem; width: 360px; max-width: calc(100vw - 2rem);
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+    z-index: 1200; opacity: 0; visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--transition); overflow: hidden;
+}
+.user-dropdown { width: 240px; }
+.notifications-panel.show, .user-dropdown.show {
+    opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+}
+.notifications-header {
+    padding: 1rem 1.15rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.notifications-title { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+.notifications-title i { color: var(--tech-blue); }
+.notifications-mark-read {
+    font-size: 0.75rem; font-weight: 600; color: var(--tech-blue);
+    padding: 0.35rem 0.65rem; border-radius: var(--radius-sm);
+    transition: all var(--transition);
+}
+.notifications-mark-read:hover { background: rgba(29,91,142,0.1); }
+.notifications-list { max-height: 400px; overflow-y: auto; }
+.notification-item {
+    display: flex; gap: 0.75rem; padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--transition-fast); cursor: pointer; position: relative;
+}
+.notification-item:hover { background: var(--bg-hover); }
+.notification-item.unread { background: rgba(29,91,142,0.04); }
+.notification-item.unread::before {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 3px; height: 60%;
+    background: var(--tech-blue); border-radius: 3px;
+}
+.notification-item-icon {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+}
+.notification-item-icon.info { background: rgba(59,130,246,0.12); color: var(--info); }
+.notification-item-icon.warning { background: rgba(245,158,11,0.12); color: var(--warning); }
+.notification-item-icon.danger { background: rgba(239,68,68,0.12); color: var(--danger); }
+.notification-item-icon.success { background: rgba(16,185,129,0.12); color: var(--success); }
+.notification-item-content { flex: 1; min-width: 0; }
+.notification-item-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.15rem; }
+.notification-item-message {
+    font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.notification-item-time { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.25rem; }
+.notifications-empty { padding: 2.5rem 1rem; text-align: center; color: var(--text-muted); }
+.notifications-empty i { font-size: 2.5rem; opacity: 0.3; margin-bottom: 0.75rem; display: block; }
+.user-dropdown-header {
+    padding: 1rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+}
+.user-dropdown-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
+}
+.user-dropdown-info strong { display: block; font-size: 0.9rem; font-weight: 700; }
+.user-dropdown-info span { font-size: 0.75rem; color: var(--text-muted); }
+.user-dropdown-menu { padding: 0.5rem; }
+.user-dropdown-item {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.65rem 0.75rem; border-radius: var(--radius-sm);
+    font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);
+    transition: all var(--transition-fast); width: 100%; text-align: right;
+}
+.user-dropdown-item:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.user-dropdown-item.danger:hover { background: rgba(239,68,68,0.1); color: var(--danger); }
+.user-dropdown-divider { height: 1px; background: var(--border-color); margin: 0.35rem 0.5rem; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); box-shadow: var(--shadow-xl); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+}
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    .customers-grid { grid-template-columns: 1fr; gap: 0.65rem; }
+    .customer-card { padding: 1rem; }
+    .customer-avatar { width: 44px; height: 44px; font-size: 1.1rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .notifications-panel, .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    .toolbar { padding: 0.85rem; gap: 0.5rem; }
+    .toolbar-search { min-width: 0; flex: 1 1 100%; }
+    .toolbar-select { flex: 1; min-width: 0; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .stat-item { padding: 0.85rem; gap: 0.6rem; }
+    .stat-item-icon { width: 38px; height: 38px; font-size: 1rem; }
+    .stat-item-value { font-size: 1.05rem; }
+    .stat-item-label { font-size: 0.68rem; }
+    .modal-body { padding: 1rem; max-height: calc(92vh - 160px); }
+    .modal-header { padding: 1rem 1.25rem; }
+    .modal-footer { padding: 0.85rem 1.25rem; gap: 0.5rem; }
+    .customer-profile-header { padding: 1rem; flex-direction: column; text-align: center; }
+    .customer-profile-avatar { width: 64px; height: 64px; font-size: 1.5rem; }
+    .customer-profile-name { font-size: 1.15rem; }
+    .customer-contact-buttons { grid-template-columns: 1fr; }
+}
+@media (max-width: 400px) {
+    .stats-bar { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الأجهزة الإلكترونية</span>
+        </div>
+    </a>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-house"></i><span>لوحة التحكم</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products"><i class="fas fa-boxes-stacked"></i><span>الأصناف</span></a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories"><i class="fas fa-tags"></i><span>الفئات</span></a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in"><i class="fas fa-truck-ramp-box"></i><span>الوارد</span></a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers"><i class="fas fa-handshake"></i><span>الموردين</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></a>
+        <a href="customers.html" class="sidebar-link active" data-perm="can_view_customers"><i class="fas fa-users"></i><span>العملاء</span></a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts"><i class="fas fa-hand-holding-dollar"></i><span>المديونيات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span></a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-chart-pie"></i><span>التقارير</span></a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts"><i class="fas fa-clock"></i><span>الورديات</span></a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log"><i class="fas fa-clipboard-list"></i><span>سجل الحركات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1><i class="fas fa-users"></i> العملاء</h1>
+            <p id="pageSubtitle">إدارة عملاء المركز</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportExcelBtn">
+                <i class="fas fa-file-excel"></i> تصدير
+            </button>
+            <button class="btn btn-primary" id="addCustomerBtn">
+                <i class="fas fa-user-plus"></i> عميل جديد
+            </button>
+        </div>
+    </div>
+    
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-item-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalCustomers">0</div>
+                <div class="stat-item-label">إجمالي العملاء</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon danger" style="background: linear-gradient(135deg, var(--danger), #dc2626); box-shadow: 0 4px 12px rgba(239,68,68,0.3);">
+                <i class="fas fa-hand-holding-dollar"></i>
+            </div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="customersWithDebt">0</div>
+                <div class="stat-item-label">عملاء عليهم ديون</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon success"><i class="fas fa-crown"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="topCustomer">—</div>
+                <div class="stat-item-label">أكثر عميل شراءً</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon purple"><i class="fas fa-coins"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalRevenue">0 <small>ج.م</small></div>
+                <div class="stat-item-label">إجمالي المبيعات</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toolbar">
+        <div class="toolbar-search">
+            <input type="text" class="toolbar-search-input" id="searchInput" placeholder="ابحث بالاسم أو رقم الموبايل..." autocomplete="off">
+            <i class="fas fa-magnifying-glass toolbar-search-icon"></i>
+        </div>
+        <select class="toolbar-select" id="sortFilter">
+            <option value="newest">الأحدث</option>
+            <option value="name">الاسم (أ-ي)</option>
+            <option value="purchases_high">الأكثر شراءً</option>
+            <option value="debt_high">الأكثر مديونية</option>
+            <option value="visits_high">الأكثر زيارات</option>
+        </select>
+    </div>
+    
+    <div id="customersContainer">
+        <div class="customers-grid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+        </div>
+    </div>
+    
+    <div class="pagination" id="pagination" style="display: none;"></div>
+    
+</main>
+
+<!-- Add/Edit Customer Modal -->
+<div class="modal-overlay" id="customerModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-user" id="customerModalIcon"></i>
+                <span id="customerModalTitle">إضافة عميل جديد</span>
+            </h3>
+            <button class="modal-close" id="closeCustomerModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="customerForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label class="form-label" for="customerName">
+                            <i class="fas fa-user"></i> اسم العميل <span class="required">*</span>
+                        </label>
+                        <input type="text" id="customerName" class="form-input" placeholder="مثال: أحمد محمد" maxlength="100" required>
+                        <div class="form-error" id="nameError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال اسم العميل</span>
+                        </div>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label" for="customerPhone">
+                            <i class="fas fa-phone"></i> رقم الموبايل <span class="required">*</span>
+                        </label>
+                        <input type="tel" id="customerPhone" class="form-input" placeholder="01XXXXXXXXX" maxlength="20" required>
+                        <div class="form-error" id="phoneError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال رقم موبايل صحيح</span>
+                        </div>
+                        <div class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            الرقم لازم يكون فريد (مش مسجل لعميل تاني)
+                        </div>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label" for="customerAddress">
+                            <i class="fas fa-location-dot"></i> العنوان (اختياري)
+                        </label>
+                        <input type="text" id="customerAddress" class="form-input" placeholder="مثال: القاهرة - مدينة نصر" maxlength="200">
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label" for="customerNotes">
+                            <i class="fas fa-align-right"></i> ملاحظات (اختياري)
+                        </label>
+                        <textarea id="customerNotes" class="form-textarea" placeholder="أي ملاحظات عن العميل..." maxlength="500"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelCustomerBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="submit" class="btn btn-primary" id="saveCustomerBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="saveCustomerText">حفظ</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Customer Details Modal -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-user-circle"></i>
+                <span>ملف العميل</span>
+            </h3>
+            <button class="modal-close" id="closeDetailsModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="detailsContent"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="closeDetailsBtn">إغلاق</button>
+            <button type="button" class="btn btn-primary" id="editFromDetailsBtn">
+                <i class="fas fa-pen"></i> تعديل
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--danger);"></i>
+                تأكيد الحذف
+            </h3>
+            <button class="modal-close" id="closeDeleteModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                هل أنت متأكد من حذف العميل 
+                <strong id="deleteCustomerName" style="color: var(--danger);"></strong>؟
+            </p>
+            <div id="deleteWarning" style="display: none; padding: 0.75rem 1rem; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); color: var(--warning); font-size: 0.85rem; font-weight: 600;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="deleteWarningText"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> حذف نهائي
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications -->
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title"><i class="fas fa-bell"></i> الإشعارات</h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+</div>
+
+<!-- User Dropdown -->
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn"><i class="fas fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+var DB_NAME = 'electronic_db';
+var DB_VERSION = 5;
+var PAGE_SIZE = 24;
+
+// ═══════════════════════════════════════════════════════════════
+// 🗄️ Supabase Client
+// ═══════════════════════════════════════════════════════════════
+var supabaseClient = null;
+
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+        console.warn('Supabase library not loaded');
+        return null;
+    }
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) {
+        console.error('Supabase init failed:', e);
+        return null;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function isValidUUID(uuid) {
+    if (!uuid || typeof uuid !== 'string') return false;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
+}
+
+function sanitizePhone(phone) {
+    if (!phone) return '';
+    // احتفظ بالأرقام و + فقط
+    return String(phone).replace(/[^\d+]/g, '');
+}
+
+function formatPhone(phone) {
+    if (!phone) return '—';
+    return String(phone);
+}
+
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ج.م'; }
+    catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatCurrencyShort(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م'; }
+    catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+
+function formatDate(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', { 
+            year: 'numeric', month: 'short', day: 'numeric' 
+        });
+    } catch (e) { return '—'; }
+}
+
+function formatTimeAgo(date) {
+    if (!date) return '';
+    try {
+        var seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        if (seconds < 60) return 'الآن';
+        if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+        if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+        if (seconds < 604800) return 'منذ ' + Math.floor(seconds / 86400) + ' يوم';
+        return formatDate(date);
+    } catch (e) { return ''; }
+}
+
+function getInitials(name) {
+    if (!name) return '؟';
+    var parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+function getUrlParam(name) {
+    try {
+        return new URLSearchParams(window.location.search).get(name);
+    } catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check', error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation', info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🌐 Online
+// ═══════════════════════════════════════════════════════════════
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    if (!dot) return;
+    dot.classList.toggle('offline', !navigator.onLine);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 Session
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⏱️ Inactivity
+// ═══════════════════════════════════════════════════════════════
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+var inactivityTimer = null;
+
+function resetInactivity() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+
+function startInactivityMonitor() {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📦 IndexedDB
+// ═══════════════════════════════════════════════════════════════
+var dbInstance = null;
+var dbPromise = null;
+var dbFailed = false;
+
+function openDB() {
+    if (dbFailed) return Promise.resolve(null);
+    if (dbInstance) return Promise.resolve(dbInstance);
+    if (dbPromise) return dbPromise;
+    
+    dbPromise = new Promise(function(resolve) {
+        try {
+            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                var stores = ['accounts', 'cache', 'settings', 'products', 'categories',
+                              'customers', 'invoices', 'repairs', 'suppliers',
+                              'stock_movements', 'notifications'];
+                stores.forEach(function(name) {
+                    if (!db.objectStoreNames.contains(name)) {
+                        db.createObjectStore(name, { keyPath: 'id' });
+                    }
+                });
+                if (!db.objectStoreNames.contains('outbox')) {
+                    var s = db.createObjectStore('outbox', { keyPath: 'id', autoIncrement: true });
+                    s.createIndex('status', 'status');
+                    s.createIndex('created_at', 'created_at');
+                }
+            };
+            
+            req.onsuccess = function() {
+                dbInstance = req.result;
+                dbInstance.onversionchange = function() {
+                    try { dbInstance.close(); } catch(e) {}
+                    dbInstance = null;
+                    dbPromise = null;
+                };
+                resolve(dbInstance);
+            };
+            
+            req.onerror = function() {
+                console.warn('IndexedDB error:', req.error);
+                dbFailed = true;
+                dbPromise = null;
+                resolve(null);
+            };
+            
+            req.onblocked = function() {
+                console.warn('IndexedDB blocked');
+                setTimeout(function() {
+                    dbFailed = true;
+                    dbPromise = null;
+                    resolve(null);
+                }, 500);
+            };
+        } catch (e) {
+            console.warn('IndexedDB not available:', e);
+            dbFailed = true;
+            resolve(null);
+        }
+    });
+    
+    return dbPromise;
+}
+
+function dbPut(store, data) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).put(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+function dbBulkPut(store, items) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var os = tx.objectStore(store);
+                items.forEach(function(item) {
+                    try { os.put(item); } catch(e) {}
+                });
+                tx.oncomplete = function() { resolve(); };
+                tx.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+
+function dbGetAll(store) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return [];
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readonly');
+                var r = tx.objectStore(store).getAll();
+                r.onsuccess = function() { resolve(r.result || []); };
+                r.onerror = function() { resolve([]); };
+            } catch (e) { resolve([]); }
+        });
+    });
+}
+
+function dbDelete(store, key) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).delete(key);
+                r.onsuccess = function() { resolve(); };
+                r.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+
+function addToOutbox(action) {
+    return openDB().then(function(db) {
+        if (!db) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction('outbox', 'readwrite');
+                var data = Object.assign({}, action, { status: 'pending', created_at: Date.now() });
+                var r = tx.objectStore('outbox').add(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    customers: [],
+    invoices: [],
+    repairs: [],
+    filtered: [],
+    searchQuery: '',
+    sortFilter: 'newest',
+    currentPage: 1,
+    editingCustomer: null,
+    deletingCustomer: null,
+    viewingCustomer: null,
+    isLoading: true
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Data
+// ═══════════════════════════════════════════════════════════════
+function loadData() {
+    state.isLoading = true;
+    var sb = getSupabaseClient();
+    
+    if (!sb || !navigator.onLine) {
+        return loadFromCache();
+    }
+    
+    return Promise.all([
+        sb.from('customers').select('*').order('created_at', { ascending: false }),
+        sb.from('invoices').select('id, customer_id, total, paid_amount, paid, created_at'),
+        sb.from('repair_orders').select('id, customer_id, tracking_code, status, device_type, device_model, created_at, delivered_at')
+    ]).then(function(results) {
+        state.customers = results[0].data || [];
+        state.invoices = results[1].data || [];
+        state.repairs = results[2].data || [];
+        
+        return Promise.all([
+            dbBulkPut('customers', state.customers),
+            dbBulkPut('invoices', state.invoices),
+            dbBulkPut('repairs', state.repairs)
+        ]);
+    }).catch(function(err) {
+        console.warn('Load failed, using cache:', err);
+        return loadFromCacheInternal();
+    }).then(function() {
+        state.isLoading = false;
+        updateStats();
+        applyFilters();
+    });
+}
+
+function loadFromCache() {
+    return loadFromCacheInternal().then(function() {
+        state.isLoading = false;
+        updateStats();
+        applyFilters();
+    });
+}
+
+function loadFromCacheInternal() {
+    return Promise.all([
+        dbGetAll('customers'),
+        dbGetAll('invoices'),
+        dbGetAll('repairs')
+    ]).then(function(cached) {
+        state.customers = cached[0] || [];
+        state.invoices = cached[1] || [];
+        state.repairs = cached[2] || [];
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 Stats
+// ═══════════════════════════════════════════════════════════════
+function updateStats() {
+    var totalCustomers = state.customers.length;
+    var customersWithDebt = 0;
+    var totalRevenue = 0;
+    var customerTotals = {};
+    
+    state.invoices.forEach(function(inv) {
+        var total = parseFloat(inv.total) || 0;
+        var paid = parseFloat(inv.paid_amount) || 0;
+        totalRevenue += total;
+        
+        if (inv.customer_id) {
+            if (!customerTotals[inv.customer_id]) customerTotals[inv.customer_id] = { total: 0, debt: 0 };
+            customerTotals[inv.customer_id].total += total;
+            if (!inv.paid && total > paid) {
+                customerTotals[inv.customer_id].debt += (total - paid);
+            }
+        }
+    });
+    
+    Object.keys(customerTotals).forEach(function(cid) {
+        if (customerTotals[cid].debt > 0) customersWithDebt++;
+    });
+    
+    var topCustomer = '—';
+    var maxTotal = 0;
+    Object.keys(customerTotals).forEach(function(cid) {
+        if (customerTotals[cid].total > maxTotal) {
+            maxTotal = customerTotals[cid].total;
+            for (var i = 0; i < state.customers.length; i++) {
+                if (state.customers[i].id === cid) {
+                    topCustomer = state.customers[i].name;
+                    break;
+                }
+            }
+        }
+    });
+    
+    var setEl = function(id, html) {
+        var el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    };
+    
+    setEl('totalCustomers', formatNumber(totalCustomers));
+    setEl('customersWithDebt', formatNumber(customersWithDebt));
+    setEl('topCustomer', escapeHtml(topCustomer));
+    setEl('totalRevenue', formatCurrencyShort(totalRevenue) + ' <small>ج.م</small>');
+    
+    var subtitle = document.getElementById('pageSubtitle');
+    if (subtitle) subtitle.textContent = totalCustomers + ' عميل مسجل';
+}
+
+function getCustomerStats(customerId) {
+    var invoices = state.invoices.filter(function(i) { return i.customer_id === customerId; });
+    var repairs = state.repairs.filter(function(r) { return r.customer_id === customerId; });
+    
+    var totalPurchases = 0;
+    var totalPaid = 0;
+    var totalDebt = 0;
+    
+    invoices.forEach(function(inv) {
+        var total = parseFloat(inv.total) || 0;
+        var paid = parseFloat(inv.paid_amount) || 0;
+        totalPurchases += total;
+        totalPaid += paid;
+        if (!inv.paid && total > paid) {
+            totalDebt += (total - paid);
+        }
+    });
+    
+    var lastVisit = null;
+    if (repairs.length > 0) {
+        var sorted = repairs.slice().sort(function(a, b) {
+            return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+        });
+        lastVisit = sorted[0].created_at;
+    }
+    
+    return {
+        invoiceCount: invoices.length,
+        repairCount: repairs.length,
+        totalPurchases: totalPurchases,
+        totalPaid: totalPaid,
+        totalDebt: totalDebt,
+        lastVisit: lastVisit
+    };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 Filters
+// ═══════════════════════════════════════════════════════════════
+function applyFilters() {
+    var list = state.customers.slice();
+    var q = (state.searchQuery || '').trim().toLowerCase();
+    
+    if (q) {
+        list = list.filter(function(c) {
+            return (c.name || '').toLowerCase().indexOf(q) !== -1 ||
+                   (c.phone || '').toLowerCase().indexOf(q) !== -1;
+        });
+    }
+    
+    switch (state.sortFilter) {
+        case 'name':
+            list.sort(function(a, b) { return (a.name || '').localeCompare(b.name || '', 'ar'); });
+            break;
+        case 'purchases_high':
+            list.sort(function(a, b) {
+                return getCustomerStats(b.id).totalPurchases - getCustomerStats(a.id).totalPurchases;
+            });
+            break;
+        case 'debt_high':
+            list.sort(function(a, b) {
+                return getCustomerStats(b.id).totalDebt - getCustomerStats(a.id).totalDebt;
+            });
+            break;
+        case 'visits_high':
+            list.sort(function(a, b) {
+                return getCustomerStats(b.id).repairCount - getCustomerStats(a.id).repairCount;
+            });
+            break;
+        case 'newest':
+        default:
+            list.sort(function(a, b) {
+                return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+            });
+    }
+    
+    state.filtered = list;
+    state.currentPage = 1;
+    render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render
+// ═══════════════════════════════════════════════════════════════
+function render() {
+    var container = document.getElementById('customersContainer');
+    var pagination = document.getElementById('pagination');
+    if (!container) return;
+    
+    if (state.isLoading) {
+        container.innerHTML = '<div class="customers-grid">' +
+            '<div class="skeleton skeleton-card"></div>'.repeat(6) +
+        '</div>';
+        if (pagination) pagination.style.display = 'none';
+        return;
+    }
+    
+    if (!state.filtered.length) {
+        container.innerHTML = getEmptyState();
+        bindEmptyStateBtn();
+        if (pagination) pagination.style.display = 'none';
+        return;
+    }
+    
+    var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+    var start = (state.currentPage - 1) * PAGE_SIZE;
+    var pageItems = state.filtered.slice(start, start + PAGE_SIZE);
+    
+    container.innerHTML = '<div class="customers-grid">' +
+        pageItems.map(renderCustomerCard).join('') +
+    '</div>';
+    
+    if (totalPages > 1 && pagination) {
+        pagination.style.display = 'flex';
+        pagination.innerHTML = renderPagination(totalPages);
+        bindPaginationEvents();
+    } else if (pagination) {
+        pagination.style.display = 'none';
+    }
+    
+    bindCustomerEvents();
+}
+
+function getEmptyState() {
+    if (state.searchQuery) {
+        return '<div class="empty-state">' +
+            '<i class="fas fa-magnifying-glass"></i>' +
+            '<h3>لا توجد نتائج</h3>' +
+            '<p>لم نجد عملاء يطابقون "' + escapeHtml(state.searchQuery) + '"</p>' +
+        '</div>';
+    }
+    return '<div class="empty-state">' +
+        '<i class="fas fa-users"></i>' +
+        '<h3>لا يوجد عملاء بعد</h3>' +
+        '<p>ابدأ بإضافة أول عميل للمركز</p>' +
+        '<button class="btn btn-primary" id="emptyAddBtn"><i class="fas fa-user-plus"></i> عميل جديد</button>' +
+    '</div>';
+}
+
+function bindEmptyStateBtn() {
+    var btn = document.getElementById('emptyAddBtn');
+    if (btn) btn.addEventListener('click', openAddModal);
+}
+
+function renderCustomerCard(c) {
+    var stats = getCustomerStats(c.id);
+    var initials = getInitials(c.name);
+    
+    var debtBadge = '';
+    if (stats.totalDebt > 0) {
+        debtBadge = '<span class="customer-stat-badge danger">' +
+            '<i class="fas fa-circle-exclamation"></i>' + formatCurrencyShort(stats.totalDebt) + ' دين' +
+        '</span>';
+    } else if (stats.invoiceCount > 0) {
+        debtBadge = '<span class="customer-stat-badge success">' +
+            '<i class="fas fa-circle-check"></i> لا ديون' +
+        '</span>';
+    }
+    
+    return '<div class="customer-card" data-id="' + c.id + '">' +
+        '<div class="customer-card-header">' +
+            '<div class="customer-avatar">' + escapeHtml(initials) + '</div>' +
+            '<div class="customer-info">' +
+                '<div class="customer-name">' + escapeHtml(c.name) + '</div>' +
+                '<div class="customer-phone"><i class="fas fa-phone"></i> ' + escapeHtml(c.phone || '—') + '</div>' +
+            '</div>' +
+            '<div class="customer-card-menu">' +
+                '<button class="customer-menu-btn" data-action="edit" data-id="' + c.id + '" title="تعديل">' +
+                    '<i class="fas fa-pen"></i>' +
+                '</button>' +
+                '<button class="customer-menu-btn danger" data-action="delete" data-id="' + c.id + '" title="حذف">' +
+                    '<i class="fas fa-trash"></i>' +
+                '</button>' +
+            '</div>' +
+        '</div>' +
+        
+        '<div class="customer-meta">' +
+            '<div class="customer-meta-row">' +
+                '<span class="customer-meta-label"><i class="fas fa-file-invoice-dollar"></i> فواتير</span>' +
+                '<span class="customer-meta-value">' + formatNumber(stats.invoiceCount) + '</span>' +
+            '</div>' +
+            '<div class="customer-meta-row">' +
+                '<span class="customer-meta-label"><i class="fas fa-screwdriver-wrench"></i> أجهزة</span>' +
+                '<span class="customer-meta-value">' + formatNumber(stats.repairCount) + '</span>' +
+            '</div>' +
+            '<div class="customer-meta-row">' +
+                '<span class="customer-meta-label"><i class="fas fa-coins"></i> إجمالي الشراء</span>' +
+                '<span class="customer-meta-value ' + (stats.totalPurchases > 0 ? 'success' : '') + '">' +
+                    formatCurrencyShort(stats.totalPurchases) +
+                '</span>' +
+            '</div>' +
+        '</div>' +
+        
+        '<div class="customer-stats">' +
+            debtBadge +
+            (stats.lastVisit ? '<span class="customer-stat-badge"><i class="fas fa-clock"></i> ' + formatTimeAgo(stats.lastVisit) + '</span>' : '') +
+        '</div>' +
+        
+        '<div class="customer-actions">' +
+            (c.phone ? 
+                '<a href="https://wa.me/' + escapeHtml(sanitizePhone(c.phone).replace(/^0/, '20')) + '" target="_blank" class="btn btn-whatsapp" onclick="event.stopPropagation();">' +
+                    '<i class="fab fa-whatsapp"></i>' +
+                '</a>' +
+                '<a href="tel:' + escapeHtml(sanitizePhone(c.phone)) + '" class="btn btn-success" onclick="event.stopPropagation();">' +
+                    '<i class="fas fa-phone"></i>' +
+                '</a>'
+                : '') +
+            '<button class="btn btn-primary" data-action="view" data-id="' + c.id + '" onclick="event.stopPropagation();">' +
+                '<i class="fas fa-eye"></i> عرض' +
+            '</button>' +
+        '</div>' +
+    '</div>';
+}
+
+function renderPagination(totalPages) {
+    var current = state.currentPage;
+    var pages = [];
+    pages.push('<button class="pagination-btn" data-page="' + (current - 1) + '" ' + (current === 1 ? 'disabled' : '') + '><i class="fas fa-chevron-right"></i></button>');
+    var start = Math.max(1, current - 2);
+    var end = Math.min(totalPages, current + 2);
+    if (start > 1) {
+        pages.push('<button class="pagination-btn" data-page="1">1</button>');
+        if (start > 2) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+    }
+    for (var i = start; i <= end; i++) {
+        pages.push('<button class="pagination-btn ' + (i === current ? 'active' : '') + '" data-page="' + i + '">' + i + '</button>');
+    }
+    if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+        pages.push('<button class="pagination-btn" data-page="' + totalPages + '">' + totalPages + '</button>');
+    }
+    pages.push('<button class="pagination-btn" data-page="' + (current + 1) + '" ' + (current === totalPages ? 'disabled' : '') + '><i class="fas fa-chevron-left"></i></button>');
+    return pages.join('');
+}
+
+function bindPaginationEvents() {
+    var btns = document.querySelectorAll('.pagination-btn[data-page]');
+    for (var i = 0; i < btns.length; i++) {
+        (function(btn) {
+            btn.addEventListener('click', function() {
+                var page = parseInt(btn.dataset.page);
+                var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+                if (page >= 1 && page <= totalPages) {
+                    state.currentPage = page;
+                    render();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        })(btns[i]);
+    }
+}
+
+function bindCustomerEvents() {
+    document.querySelectorAll('.customer-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            var target = e.target;
+            while (target && target !== card) {
+                if (target.dataset && target.dataset.action) {
+                    e.stopPropagation();
+                    var action = target.dataset.action;
+                    var id = target.dataset.id;
+                    if (action === 'edit') openEditModal(id);
+                    else if (action === 'delete') openDeleteModal(id);
+                    else if (action === 'view') openDetailsModal(id);
+                    return;
+                }
+                target = target.parentElement;
+            }
+            // ضغط على البطاقة
+            openDetailsModal(card.dataset.id);
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Add/Edit Modal
+// ═══════════════════════════════════════════════════════════════
+function openAddModal() {
+    state.editingCustomer = null;
+    document.getElementById('customerModalTitle').textContent = 'إضافة عميل جديد';
+    document.getElementById('customerModalIcon').className = 'fas fa-user-plus';
+    document.getElementById('saveCustomerText').textContent = 'حفظ';
+    document.getElementById('customerForm').reset();
+    clearFormErrors();
+    document.getElementById('customerModal').classList.add('show');
+    setTimeout(function() {
+        var el = document.getElementById('customerName');
+        if (el) el.focus();
+    }, 300);
+}
+
+function openEditModal(id) {
+    var c = null;
+    for (var i = 0; i < state.customers.length; i++) {
+        if (state.customers[i].id === id) { c = state.customers[i]; break; }
+    }
+    if (!c) return;
+    
+    state.editingCustomer = c;
+    document.getElementById('customerModalTitle').textContent = 'تعديل بيانات العميل';
+    document.getElementById('customerModalIcon').className = 'fas fa-user-pen';
+    document.getElementById('saveCustomerText').textContent = 'حفظ التعديلات';
+    
+    document.getElementById('customerName').value = c.name || '';
+    document.getElementById('customerPhone').value = c.phone || '';
+    document.getElementById('customerAddress').value = c.address || '';
+    document.getElementById('customerNotes').value = c.notes || '';
+    
+    clearFormErrors();
+    document.getElementById('customerModal').classList.add('show');
+    setTimeout(function() {
+        var el = document.getElementById('customerName');
+        if (el) el.focus();
+    }, 300);
+}
+
+function closeCustomerModal() {
+    document.getElementById('customerModal').classList.remove('show');
+    state.editingCustomer = null;
+}
+
+function clearFormErrors() {
+    var errors = document.querySelectorAll('.form-error');
+    for (var i = 0; i < errors.length; i++) errors[i].classList.remove('show');
+    var inputs = document.querySelectorAll('.form-input.error, .form-textarea.error');
+    for (var j = 0; j < inputs.length; j++) inputs[j].classList.remove('error');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 💾 Save Customer
+// ═══════════════════════════════════════════════════════════════
+function saveCustomer(e) {
+    e.preventDefault();
+    clearFormErrors();
+    
+    var name = document.getElementById('customerName').value.trim();
+    var phone = document.getElementById('customerPhone').value.trim();
+    var address = document.getElementById('customerAddress').value.trim() || null;
+    var notes = document.getElementById('customerNotes').value.trim() || null;
+    
+    var hasError = false;
+    
+    if (!name) {
+        document.getElementById('customerName').classList.add('error');
+        document.getElementById('nameError').classList.add('show');
+        hasError = true;
+    }
+    
+    var cleanPhone = sanitizePhone(phone);
+    if (!cleanPhone || cleanPhone.length < 8) {
+        document.getElementById('customerPhone').classList.add('error');
+        var phoneErr = document.getElementById('phoneError');
+        phoneErr.querySelector('span').textContent = 'الرجاء إدخال رقم موبايل صحيح';
+        phoneErr.classList.add('show');
+        hasError = true;
+    }
+    
+    if (hasError) {
+        if (!name) document.getElementById('customerName').focus();
+        else document.getElementById('customerPhone').focus();
+        return;
+    }
+    
+    // فحص رقم الموبايل المكرر
+    var duplicatePhone = null;
+    for (var i = 0; i < state.customers.length; i++) {
+        var c = state.customers[i];
+        if (sanitizePhone(c.phone) === cleanPhone) {
+            if (!state.editingCustomer || c.id !== state.editingCustomer.id) {
+                duplicatePhone = c;
+                break;
+            }
+        }
+    }
+    
+    if (duplicatePhone) {
+        document.getElementById('customerPhone').classList.add('error');
+        var dupErr = document.getElementById('phoneError');
+        dupErr.querySelector('span').textContent = 'هذا الرقم مسجل بالفعل للعميل: ' + duplicatePhone.name;
+        dupErr.classList.add('show');
+        return;
+    }
+    
+    var btn = document.getElementById('saveCustomerBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveCustomerText');
+    
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    var isEditing = !!state.editingCustomer;
+    
+    var customerData = {
+        name: name,
+        phone: phone,
+        address: address,
+        notes: notes
+    };
+    
+    var savePromise;
+    
+    if (isEditing) {
+        var editingId = state.editingCustomer.id;
+        
+        if (sb && navigator.onLine && isValidUUID(editingId)) {
+            savePromise = sb.from('customers').update(customerData).eq('id', editingId)
+                .then(function(result) {
+                    if (result.error) throw result.error;
+                    sb.from('audit_log').insert({
+                        user_id: session && session.user ? session.user.id : null,
+                        action: 'UPDATE',
+                        table_name: 'customers',
+                        record_id: editingId,
+                        old_data: state.editingCustomer,
+                        new_data: customerData
+                    }).then(function(){}, function(){});
+                });
+        } else {
+            savePromise = addToOutbox({
+                type: 'update', table: 'customers', id: editingId, data: customerData
+            });
+        }
+        
+        savePromise = savePromise.then(function() {
+            for (var k = 0; k < state.customers.length; k++) {
+                if (state.customers[k].id === editingId) {
+                    state.customers[k] = Object.assign({}, state.customers[k], customerData);
+                    dbPut('customers', state.customers[k]);
+                    break;
+                }
+            }
+            showToast('✅ تم تحديث بيانات العميل', 'success');
+        });
+        
+    } else {
+        var newCustomer = Object.assign({
+            id: 'temp_' + Date.now(),
+            created_at: new Date().toISOString()
+        }, customerData);
+        
+        if (sb && navigator.onLine) {
+            savePromise = sb.from('customers').insert(customerData).select().single()
+                .then(function(result) {
+                    if (result.error) throw result.error;
+                    newCustomer.id = result.data.id;
+                    newCustomer.created_at = result.data.created_at;
+                    
+                    sb.from('audit_log').insert({
+                        user_id: session && session.user ? session.user.id : null,
+                        action: 'INSERT',
+                        table_name: 'customers',
+                        record_id: result.data.id,
+                        new_data: result.data
+                    }).then(function(){}, function(){});
+                });
+        } else {
+            savePromise = addToOutbox({
+                type: 'insert', table: 'customers', tempId: newCustomer.id, data: customerData
+            });
+        }
+        
+        savePromise = savePromise.then(function() {
+            state.customers.unshift(newCustomer);
+            dbPut('customers', newCustomer);
+            showToast('✅ تم إضافة العميل بنجاح', 'success');
+        });
+    }
+    
+    savePromise.then(function() {
+        closeCustomerModal();
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.error('Save error:', err);
+        var msg = 'حدث خطأ أثناء الحفظ';
+        if (err.code === '23505') msg = 'رقم الموبايل مسجل بالفعل';
+        else if (err.message) msg = err.message;
+        showToast(msg, 'error');
+    }).then(function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = isEditing ? 'حفظ التعديلات' : 'حفظ';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📋 Details Modal
+// ═══════════════════════════════════════════════════════════════
+function openDetailsModal(id) {
+    var c = null;
+    for (var i = 0; i < state.customers.length; i++) {
+        if (state.customers[i].id === id) { c = state.customers[i]; break; }
+    }
+    if (!c) return;
+    
+    state.viewingCustomer = c;
+    var stats = getCustomerStats(c.id);
+    var initials = getInitials(c.name);
+    
+    var customerInvoices = state.invoices.filter(function(i) { return i.customer_id === c.id; });
+    var customerRepairs = state.repairs.filter(function(r) { return r.customer_id === c.id; });
+    
+    // Sort
+    customerInvoices.sort(function(a, b) {
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    });
+    customerRepairs.sort(function(a, b) {
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+    });
+    
+    var invoicesHtml = '';
+    if (customerInvoices.length) {
+        invoicesHtml = customerInvoices.map(function(inv) {
+            var total = parseFloat(inv.total) || 0;
+            var paid = parseFloat(inv.paid_amount) || 0;
+            var isPaid = inv.paid || paid >= total;
+            return '<div class="item-row">' +
+                '<div class="item-row-icon ' + (isPaid ? 'success' : 'danger') + '">' +
+                    '<i class="fas fa-file-invoice-dollar"></i>' +
+                '</div>' +
+                '<div class="item-row-content">' +
+                    '<div class="item-row-title">فاتورة #' + escapeHtml((inv.id || '').slice(0, 8)) + '</div>' +
+                    '<div class="item-row-meta">' +
+                        '<span><i class="fas fa-calendar"></i> ' + formatDate(inv.created_at) + '</span>' +
+                        (isPaid ? '<span style="color: var(--success);"><i class="fas fa-circle-check"></i> مدفوع</span>' : '<span style="color: var(--danger);"><i class="fas fa-clock"></i> غير مدفوع</span>') +
+                    '</div>' +
+                '</div>' +
+                '<div class="item-row-value ' + (isPaid ? 'success' : 'danger') + '">' +
+                    formatCurrencyShort(total) +
+                '</div>' +
+            '</div>';
+        }).join('');
+    } else {
+        invoicesHtml = '<div class="empty-tab"><i class="fas fa-file-invoice"></i><p>لا توجد فواتير</p></div>';
+    }
+    
+    var repairsHtml = '';
+    if (customerRepairs.length) {
+        var statusMap = {
+            'received': { text: 'تم الاستلام', icon: 'fa-inbox', cls: 'warning' },
+            'repairing': { text: 'قيد الإصلاح', icon: 'fa-wrench', cls: 'warning' },
+            'ready': { text: 'جاهز', icon: 'fa-circle-check', cls: 'success' },
+            'delivered': { text: 'تم التسليم', icon: 'fa-truck', cls: 'success' },
+            'cancelled': { text: 'ملغي', icon: 'fa-ban', cls: 'danger' }
+        };
+        
+        repairsHtml = customerRepairs.map(function(r) {
+            var st = statusMap[r.status] || { text: r.status, icon: 'fa-circle', cls: '' };
+            return '<div class="item-row">' +
+                '<div class="item-row-icon ' + st.cls + '">' +
+                    '<i class="fas ' + st.icon + '"></i>' +
+                '</div>' +
+                '<div class="item-row-content">' +
+                    '<div class="item-row-title">' + escapeHtml(r.device_type || 'جهاز') + (r.device_model ? ' - ' + escapeHtml(r.device_model) : '') + '</div>' +
+                    '<div class="item-row-meta">' +
+                        '<span><i class="fas fa-barcode"></i> ' + escapeHtml(r.tracking_code || '—') + '</span>' +
+                        '<span><i class="fas fa-calendar"></i> ' + formatDate(r.created_at) + '</span>' +
+                        '<span style="color: var(--' + (st.cls === 'success' ? 'success' : st.cls === 'danger' ? 'danger' : 'warning') + ');">' + st.text + '</span>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    } else {
+        repairsHtml = '<div class="empty-tab"><i class="fas fa-screwdriver-wrench"></i><p>لا توجد أجهزة</p></div>';
+    }
+    
+    var contactButtons = '';
+    if (c.phone) {
+        contactButtons = '<div class="customer-contact-buttons">' +
+            '<a href="https://wa.me/' + escapeHtml(sanitizePhone(c.phone).replace(/^0/, '20')) + '" target="_blank" class="btn btn-whatsapp">' +
+                '<i class="fab fa-whatsapp"></i> واتساب' +
+            '</a>' +
+            '<a href="tel:' + escapeHtml(sanitizePhone(c.phone)) + '" class="btn btn-success">' +
+                '<i class="fas fa-phone"></i> اتصال' +
+            '</a>' +
+            '<a href="sms:' + escapeHtml(sanitizePhone(c.phone)) + '" class="btn btn-primary">' +
+                '<i class="fas fa-comment-sms"></i> SMS' +
+            '</a>' +
+        '</div>';
+    }
+    
+    document.getElementById('detailsContent').innerHTML =
+        '<div class="customer-profile-header">' +
+            '<div class="customer-profile-avatar">' + escapeHtml(initials) + '</div>' +
+            '<div class="customer-profile-info">' +
+                '<div class="customer-profile-name">' + escapeHtml(c.name) + '</div>' +
+                '<div class="customer-profile-phone">' + (c.phone ? '<i class="fas fa-phone"></i> ' + escapeHtml(c.phone) : '') + '</div>' +
+                (c.address ? '<div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;"><i class="fas fa-location-dot"></i> ' + escapeHtml(c.address) + '</div>' : '') +
+            '</div>' +
+        '</div>' +
+        
+        contactButtons +
+        
+        '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.65rem; margin-bottom: 1.25rem;">' +
+            '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color);">' +
+                '<div style="font-size: 1.25rem; font-weight: 800; color: var(--tech-blue); margin-bottom: 0.2rem;">' + stats.invoiceCount + '</div>' +
+                '<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600;">فواتير</div>' +
+            '</div>' +
+            '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color);">' +
+                '<div style="font-size: 1.25rem; font-weight: 800; color: var(--warning); margin-bottom: 0.2rem;">' + stats.repairCount + '</div>' +
+                '<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600;">أجهزة صيانة</div>' +
+            '</div>' +
+            '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color);">' +
+                '<div style="font-size: 0.95rem; font-weight: 800; color: var(--success); margin-bottom: 0.2rem;">' + formatCurrencyShort(stats.totalPurchases) + '</div>' +
+                '<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600;">إجمالي الشراء</div>' +
+            '</div>' +
+            '<div style="padding: 0.85rem; background: ' + (stats.totalDebt > 0 ? 'rgba(239,68,68,0.08)' : 'var(--bg-primary)') + '; border-radius: var(--radius-md); text-align: center; border: 1px solid ' + (stats.totalDebt > 0 ? 'rgba(239,68,68,0.3)' : 'var(--border-color)') + ';">' +
+                '<div style="font-size: 0.95rem; font-weight: 800; color: ' + (stats.totalDebt > 0 ? 'var(--danger)' : 'var(--success)') + '; margin-bottom: 0.2rem;">' + (stats.totalDebt > 0 ? formatCurrencyShort(stats.totalDebt) : 'لا ديون') + '</div>' +
+                '<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600;">المديونية</div>' +
+            '</div>' +
+        '</div>' +
+        
+        '<div class="tabs-nav">' +
+            '<button class="tab-btn active" data-tab="invoices"><i class="fas fa-file-invoice-dollar"></i> الفواتير</button>' +
+            '<button class="tab-btn" data-tab="repairs"><i class="fas fa-screwdriver-wrench"></i> الأجهزة</button>' +
+            '<button class="tab-btn" data-tab="info"><i class="fas fa-info-circle"></i> معلومات</button>' +
+        '</div>' +
+        
+        '<div class="tab-content active" data-tab-content="invoices">' + invoicesHtml + '</div>' +
+        '<div class="tab-content" data-tab-content="repairs">' + repairsHtml + '</div>' +
+        '<div class="tab-content" data-tab-content="info">' +
+            '<div style="display: flex; flex-direction: column; gap: 0.75rem;">' +
+                '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md);">' +
+                    '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.35rem;">الاسم</div>' +
+                    '<div style="font-size: 0.9rem; font-weight: 700;">' + escapeHtml(c.name) + '</div>' +
+                '</div>' +
+                '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md);">' +
+                    '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.35rem;">الموبايل</div>' +
+                    '<div style="font-size: 0.9rem; font-weight: 700; direction: ltr; text-align: right; font-family: monospace;">' + escapeHtml(c.phone || '—') + '</div>' +
+                '</div>' +
+                '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md);">' +
+                    '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.35rem;">العنوان</div>' +
+                    '<div style="font-size: 0.9rem; font-weight: 700;">' + escapeHtml(c.address || 'لا يوجد') + '</div>' +
+                '</div>' +
+                '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md);">' +
+                    '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.35rem;">ملاحظات</div>' +
+                    '<div style="font-size: 0.85rem;">' + escapeHtml(c.notes || 'لا توجد ملاحظات') + '</div>' +
+                '</div>' +
+                '<div style="padding: 0.85rem; background: var(--bg-primary); border-radius: var(--radius-md);">' +
+                    '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.35rem;">تاريخ التسجيل</div>' +
+                    '<div style="font-size: 0.9rem; font-weight: 700;">' + formatDate(c.created_at) + '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    
+    document.getElementById('detailsModal').classList.add('show');
+    bindTabEvents();
+}
+
+function bindTabEvents() {
+    var tabs = document.querySelectorAll('.tab-btn');
+    var contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var tabName = tab.dataset.tab;
+            tabs.forEach(function(t) { t.classList.toggle('active', t === tab); });
+            contents.forEach(function(c) {
+                c.classList.toggle('active', c.dataset.tabContent === tabName);
+            });
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🗑️ Delete
+// ═══════════════════════════════════════════════════════════════
+function openDeleteModal(id) {
+    var c = null;
+    for (var i = 0; i < state.customers.length; i++) {
+        if (state.customers[i].id === id) { c = state.customers[i]; break; }
+    }
+    if (!c) return;
+    
+    state.deletingCustomer = c;
+    document.getElementById('deleteCustomerName').textContent = c.name;
+    
+    var stats = getCustomerStats(c.id);
+    var warningEl = document.getElementById('deleteWarning');
+    var warningText = document.getElementById('deleteWarningText');
+    
+    if (stats.invoiceCount > 0 || stats.repairCount > 0) {
+        warningEl.style.display = 'block';
+        warningText.textContent = 'تنبيه: هذا العميل مرتبط بـ ' + stats.invoiceCount + ' فاتورة و ' + stats.repairCount + ' جهاز. سيتم فصل البيانات لكن لن تُحذف.';
+    } else {
+        warningEl.style.display = 'none';
+    }
+    
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function confirmDelete() {
+    var c = state.deletingCustomer;
+    if (!c) return;
+    
+    var btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="display:block;width:16px;height:16px;"></span>';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    var promise;
+    
+    if (sb && navigator.onLine && isValidUUID(c.id)) {
+        promise = sb.from('customers').delete().eq('id', c.id)
+            .then(function(result) {
+                if (result.error) throw result.error;
+                sb.from('audit_log').insert({
+                    user_id: session && session.user ? session.user.id : null,
+                    action: 'DELETE',
+                    table_name: 'customers',
+                    record_id: c.id,
+                    old_data: c
+                }).then(function(){}, function(){});
+            });
+    } else {
+        promise = addToOutbox({ type: 'delete', table: 'customers', id: c.id });
+    }
+    
+    promise.then(function() {
+        state.customers = state.customers.filter(function(x) { return x.id !== c.id; });
+        dbDelete('customers', c.id);
+        showToast('✅ تم حذف العميل', 'success');
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingCustomer = null;
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.error('Delete error:', err);
+        showToast('حدث خطأ أثناء الحذف', 'error');
+    }).then(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash"></i> حذف نهائي';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📤 Export Excel
+// ═══════════════════════════════════════════════════════════════
+function exportExcel() {
+    var loadLib = Promise.resolve();
+    if (typeof XLSX === 'undefined') {
+        loadLib = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+    
+    loadLib.then(function() {
+        var data = state.filtered.map(function(c) {
+            var stats = getCustomerStats(c.id);
+            return {
+                'الاسم': c.name,
+                'الموبايل': c.phone || '',
+                'العنوان': c.address || '',
+                'عدد الفواتير': stats.invoiceCount,
+                'عدد الأجهزة': stats.repairCount,
+                'إجمالي الشراء': stats.totalPurchases,
+                'المدفوع': stats.totalPaid,
+                'المديونية': stats.totalDebt,
+                'تاريخ التسجيل': formatDate(c.created_at)
+            };
+        });
+        
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'العملاء');
+        XLSX.writeFile(wb, 'customers_' + new Date().toISOString().split('T')[0] + '.xlsx');
+        showToast('تم التصدير بنجاح', 'success');
+    }).catch(function(err) {
+        console.error(err);
+        showToast('فشل التصدير', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔔 Notifications
+// ═══════════════════════════════════════════════════════════════
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return;
+    
+    sb.from('notifications')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
+        .limit(20)
+        .then(function(result) {
+            renderNotifications(result.data || []);
+        })
+        .catch(function(){});
+}
+
+function renderNotifications(notifications) {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+    
+    var unread = 0;
+    for (var i = 0; i < notifications.length; i++) {
+        if (!notifications[i].read) unread++;
+    }
+    
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+    
+    if (!notifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+    
+    var typeMap = {
+        'out_of_stock': { icon: 'fa-circle-xmark', cls: 'danger' },
+        'low_stock': { icon: 'fa-triangle-exclamation', cls: 'warning' },
+        'info': { icon: 'fa-circle-info', cls: 'info' },
+        'new_repair': { icon: 'fa-screwdriver-wrench', cls: 'info' },
+        'ready_repair': { icon: 'fa-circle-check', cls: 'success' }
+    };
+    
+    list.innerHTML = notifications.map(function(n) {
+        var t = typeMap[n.type] || typeMap.info;
+        return '<div class="notification-item ' + (n.read ? '' : 'unread') + '">' +
+            '<div class="notification-item-icon ' + t.cls + '"><i class="fas ' + t.icon + '"></i></div>' +
+            '<div class="notification-item-content">' +
+                '<div class="notification-item-title">' + escapeHtml(n.title) + '</div>' +
+                '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>' +
+                '<div class="notification-item-time"><i class="fas fa-clock"></i> ' + formatTimeAgo(n.created_at) + '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications').update({ read: true }).eq('user_id', session.user.id).eq('read', false)
+            .then(function() {
+                loadNotifications();
+                showToast('تم تعيين الكل كمقروء', 'success');
+            }).catch(function(){});
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 User UI
+// ═══════════════════════════════════════════════════════════════
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+    
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+    
+    document.querySelectorAll('.sidebar-link[data-perm]').forEach(function(link) {
+        if (!isAdmin && !perms[link.dataset.perm]) link.style.display = 'none';
+    });
+    
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        var dal = document.getElementById('dropdownAdminLink');
+        if (al) al.style.display = 'flex';
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 URL Params
+// ═══════════════════════════════════════════════════════════════
+function handleUrlParams() {
+    var action = getUrlParam('action');
+    var id = getUrlParam('id');
+    var search = getUrlParam('search');
+    
+    if (action === 'add') {
+        setTimeout(function() { openAddModal(); }, 500);
+    }
+    
+    if (id) {
+        setTimeout(function() {
+            var exists = state.customers.some(function(c) { return c.id === id; });
+            if (exists) openEditModal(id);
+        }, 700);
+    }
+    
+    if (search) {
+        var si = document.getElementById('searchInput');
+        if (si) {
+            si.value = search;
+            state.searchQuery = search;
+            applyFilters();
+        }
+    }
+    
+    if (action || id) {
+        try {
+            window.history.replaceState({}, '', window.location.pathname);
+        } catch (e) {}
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    
+    var session = getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    if (session.user.must_change_password) { window.location.href = 'index.html'; return; }
+    
+    initTheme();
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+    
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+        loadData();
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('وضع Offline', 'warning');
+    });
+    
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+    
+    // Sidebar
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (menuBtn) menuBtn.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.toggle('show');
+        if (overlay) overlay.classList.toggle('show');
+    });
+    if (overlay) overlay.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.remove('show');
+        if (overlay) overlay.classList.remove('show');
+    });
+    
+    // User dropdown
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+    
+    if (userBtn) userBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (userDropdown) userDropdown.classList.toggle('show');
+        if (notifPanel) notifPanel.classList.remove('show');
+    });
+    
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+    
+    if (notifBtn) notifBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (notifPanel) notifPanel.classList.toggle('show');
+        if (userDropdown) userDropdown.classList.remove('show');
+    });
+    
+    var markAllBtn = document.getElementById('markAllReadBtn');
+    if (markAllBtn) markAllBtn.addEventListener('click', markAllRead);
+    
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+    
+    // Search
+    var searchTimeout;
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        var val = e.target.value;
+        searchTimeout = setTimeout(function() {
+            state.searchQuery = val;
+            applyFilters();
+        }, 250);
+    });
+    
+    // Sort
+    var sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) sortFilter.addEventListener('change', function(e) {
+        state.sortFilter = e.target.value;
+        applyFilters();
+    });
+    
+    // Add
+    var addBtn = document.getElementById('addCustomerBtn');
+    if (addBtn) addBtn.addEventListener('click', openAddModal);
+    
+    // Customer modal
+    var closeP = document.getElementById('closeCustomerModal');
+    var cancelP = document.getElementById('cancelCustomerBtn');
+    var form = document.getElementById('customerForm');
+    if (closeP) closeP.addEventListener('click', closeCustomerModal);
+    if (cancelP) cancelP.addEventListener('click', closeCustomerModal);
+    if (form) form.addEventListener('submit', saveCustomer);
+    
+    // Delete modal
+    var closeDel = document.getElementById('closeDeleteModal');
+    var cancelDel = document.getElementById('cancelDeleteBtn');
+    var confirmDel = document.getElementById('confirmDeleteBtn');
+    if (closeDel) closeDel.addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingCustomer = null;
+    });
+    if (cancelDel) cancelDel.addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingCustomer = null;
+    });
+    if (confirmDel) confirmDel.addEventListener('click', confirmDelete);
+    
+    // Details modal
+    var closeDetails = document.getElementById('closeDetailsModal');
+    var closeDetailsBtn = document.getElementById('closeDetailsBtn');
+    var editFromDetails = document.getElementById('editFromDetailsBtn');
+    if (closeDetails) closeDetails.addEventListener('click', function() {
+        document.getElementById('detailsModal').classList.remove('show');
+        state.viewingCustomer = null;
+    });
+    if (closeDetailsBtn) closeDetailsBtn.addEventListener('click', function() {
+        document.getElementById('detailsModal').classList.remove('show');
+        state.viewingCustomer = null;
+    });
+    if (editFromDetails) editFromDetails.addEventListener('click', function() {
+        var id = state.viewingCustomer && state.viewingCustomer.id;
+        document.getElementById('detailsModal').classList.remove('show');
+        if (id) setTimeout(function() { openEditModal(id); }, 200);
+    });
+    
+    // Export
+    var expBtn = document.getElementById('exportExcelBtn');
+    if (expBtn) expBtn.addEventListener('click', exportExcel);
+    
+    // Overlay close
+    document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+        ov.addEventListener('click', function(e) {
+            if (e.target === ov) ov.classList.remove('show');
+        });
+    });
+    
+    // Keyboard
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.show').forEach(function(m) { m.classList.remove('show'); });
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            var si = document.getElementById('searchInput');
+            if (si) si.focus();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+    
+    // Scroll
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        if (winScroll > 300) {
+            if (scrollTopBtn) scrollTopBtn.classList.add('show');
+        } else {
+            if (scrollTopBtn) scrollTopBtn.classList.remove('show');
+        }
+    }, { passive: true });
+    if (scrollTopBtn) scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Permissions
+    if (session.user.role !== 'admin' && (!session.user.permissions || !session.user.permissions.can_edit_customers)) {
+        var addBtn2 = document.getElementById('addCustomerBtn');
+        if (addBtn2) addBtn2.style.display = 'none';
+    }
+    
+    // Load
+    openDB()
+        .then(function() { return loadData(); })
+        .then(function() {
+            loadNotifications();
+            setInterval(loadNotifications, 60000);
+            handleUrlParams();
+        })
+        .catch(function(err) {
+            console.error('Init error:', err);
+            state.isLoading = false;
+            showToast('حدث خطأ في تحميل البيانات', 'error');
+        });
+    
+    startInactivityMonitor();
+    console.log('%c👥 صفحة العملاء جاهزة', 'color: #1d5b8e; font-size: 16px; font-weight: bold;');
+});
+
+window.CustomersApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession,
+    reload: function() { return loadData(); }
+};
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,4013 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F766E" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+<meta name="description" content="أوامر الصيانة - TopLoad لصيانة الغسالات">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>أوامر الصيانة | TopLoad - لصيانة الغسالات</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   🎨 TopLoad Design System - Washing Machine Theme
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+    --primary: #0F766E;
+    --primary-dark: #115E59;
+    --primary-light: #14B8A6;
+    --primary-lighter: #5EEAD4;
+    --primary-glow: rgba(15, 118, 110, 0.25);
+    --primary-soft: rgba(15, 118, 110, 0.08);
+    
+    --accent: #F59E0B;
+    --accent-dark: #D97706;
+    --accent-light: #FBBF24;
+    
+    --success: #10B981;
+    --success-dark: #059669;
+    --success-soft: rgba(16, 185, 129, 0.12);
+    
+    --danger: #EF4444;
+    --danger-dark: #DC2626;
+    --danger-soft: rgba(239, 68, 68, 0.12);
+    
+    --warning: #F59E0B;
+    --warning-dark: #D97706;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+    
+    --info: #3B82F6;
+    --info-soft: rgba(59, 130, 246, 0.12);
+    
+    --purple: #8B5CF6;
+    --purple-dark: #7C3AED;
+    --purple-soft: rgba(139, 92, 246, 0.12);
+    
+    --bg-primary: #E0F7FA;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F0FDFA;
+    --bg-subtle: #F8FAFC;
+    
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    
+    --border-color: #E2E8F0;
+    --border-strong: #CBD5E1;
+    
+    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+    --shadow-primary: 0 8px 24px rgba(15, 118, 110, 0.25);
+    
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    
+    --navbar-height: 68px;
+    --sidebar-width: 268px;
+    
+    --t-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+    --bg-hover: #334155;
+    --bg-subtle: #1A2332;
+    
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+    
+    --border-color: #334155;
+    --border-strong: #475569;
+    
+    --primary: #14B8A6;
+    --primary-dark: #0F766E;
+    --primary-light: #5EEAD4;
+    --primary-glow: rgba(20, 184, 166, 0.3);
+    --primary-soft: rgba(20, 184, 166, 0.12);
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+
+*, *::before, *::after {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--t), color var(--t);
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+.reading-progress {
+    position: fixed; top: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+    width: 0%; z-index: 10000; transition: width 0.1s linear;
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* Navbar */
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--navbar-height);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000; display: flex; align-items: center;
+    padding: 0 1rem;
+    padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem; box-shadow: var(--shadow-sm);
+}
+.navbar-menu-btn {
+    width: 42px; height: 42px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1.1rem;
+    transition: all var(--t); flex-shrink: 0;
+}
+.navbar-menu-btn:hover { background: var(--bg-hover); color: var(--primary); transform: scale(1.05); }
+.navbar-brand { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.navbar-logo {
+    width: 44px; height: 44px; object-fit: contain;
+    border-radius: var(--radius-md); background: var(--bg-primary);
+    padding: 4px; border: 1px solid var(--border-color);
+    transition: transform var(--t);
+}
+.navbar-brand:hover .navbar-logo { transform: scale(1.05); }
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-brand-text strong { font-size: 1.05rem; font-weight: 900; letter-spacing: -0.3px; }
+.navbar-brand-text span { font-size: 0.7rem; color: var(--primary); font-weight: 700; }
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-right: auto; }
+.navbar-btn {
+    width: 42px; height: 42px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1rem;
+    transition: all var(--t); position: relative; flex-shrink: 0;
+}
+.navbar-btn:hover { background: var(--bg-hover); color: var(--primary); transform: scale(1.05); }
+.navbar-badge {
+    position: absolute; top: 4px; left: 4px;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 9px; background: var(--danger); color: white;
+    font-size: 0.65rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--bg-card);
+    animation: pulse-badge 2s infinite;
+}
+@keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+.online-dot {
+    position: absolute; top: 8px; left: 8px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--success); border: 2px solid var(--bg-card);
+    animation: pulse-online 2s infinite;
+}
+.online-dot.offline { background: var(--danger); animation: none; }
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+.navbar-user {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary); border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--t); cursor: pointer; flex-shrink: 0;
+}
+.navbar-user:hover { background: var(--bg-hover); border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
+.navbar-user-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; font-weight: 800; flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+.navbar-user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--primary); font-weight: 700; }
+
+/* Sidebar */
+.sidebar {
+    position: fixed; top: var(--navbar-height); right: 0; bottom: 0;
+    width: var(--sidebar-width); background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900; overflow-y: auto;
+    padding: 1.25rem 0.85rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--t);
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+.sidebar-section { margin-bottom: 1.4rem; }
+.sidebar-section-title {
+    font-size: 0.7rem; font-weight: 800; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 0 0.85rem; margin-bottom: 0.6rem;
+}
+.sidebar-link {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.7rem 0.9rem; border-radius: var(--radius-md);
+    color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
+    transition: all var(--t-fast); margin-bottom: 0.2rem; position: relative;
+}
+.sidebar-link:hover { background: var(--bg-hover); color: var(--primary); transform: translateX(-3px); }
+.sidebar-link.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; font-weight: 700; box-shadow: var(--shadow-primary);
+}
+.sidebar-link.active::before {
+    content: ''; position: absolute; right: -0.85rem; top: 50%;
+    transform: translateY(-50%); width: 4px; height: 60%;
+    background: var(--accent); border-radius: 4px;
+}
+.sidebar-link i:first-child { width: 20px; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+.sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px); z-index: 899;
+    opacity: 0; visibility: hidden;
+    transition: all var(--t); top: var(--navbar-height);
+}
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem; min-height: calc(100vh - var(--navbar-height));
+    transition: margin var(--t);
+}
+
+/* Page Header */
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+}
+.page-header-text h1 {
+    font-size: 1.75rem; font-weight: 900; margin-bottom: 0.35rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    letter-spacing: -0.5px;
+}
+.page-header-text h1 i {
+    width: 44px; height: 44px; border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; box-shadow: var(--shadow-primary);
+}
+.page-header-text p { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
+.page-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn {
+    padding: 0.7rem 1.2rem; border-radius: var(--radius-md);
+    font-size: 0.9rem; font-weight: 700;
+    transition: all var(--t); display: inline-flex;
+    align-items: center; gap: 0.5rem;
+    justify-content: center; white-space: nowrap;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; box-shadow: var(--shadow-primary);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px var(--primary-glow); filter: brightness(1.05); }
+.btn-secondary {
+    background: var(--bg-card); color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+}
+.btn-secondary:hover { background: var(--bg-hover); border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+.btn-danger { background: linear-gradient(135deg, var(--danger), var(--danger-dark)); color: white; }
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(239, 68, 68, 0.35); }
+.btn-success { background: linear-gradient(135deg, var(--success), var(--success-dark)); color: white; }
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(16, 185, 129, 0.4); }
+.btn-warning { background: linear-gradient(135deg, var(--warning), var(--warning-dark)); color: white; }
+.btn-warning:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(245, 158, 11, 0.4); }
+.btn-info { background: linear-gradient(135deg, var(--info), #2563EB); color: white; }
+.btn-info:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(59, 130, 246, 0.4); }
+.btn-sm { padding: 0.5rem 0.85rem; font-size: 0.8rem; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* Stats Bar */
+.stats-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem; margin-bottom: 1.5rem;
+}
+.stat-item {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl); padding: 1.15rem;
+    display: flex; align-items: center; gap: 0.85rem;
+    transition: all var(--t); box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.4s ease backwards;
+}
+.stat-item:nth-child(1) { animation-delay: 0.05s; }
+.stat-item:nth-child(2) { animation-delay: 0.1s; }
+.stat-item:nth-child(3) { animation-delay: 0.15s; }
+.stat-item:nth-child(4) { animation-delay: 0.2s; }
+.stat-item:nth-child(5) { animation-delay: 0.25s; }
+.stat-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+.stat-item-icon {
+    width: 48px; height: 48px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; color: white; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    box-shadow: var(--shadow-primary);
+    position: relative; overflow: hidden;
+}
+.stat-item-icon::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 60%);
+    pointer-events: none;
+}
+.stat-item-icon.info { background: linear-gradient(135deg, var(--info), #2563EB); box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3); }
+.stat-item-icon.warning { background: linear-gradient(135deg, var(--warning), var(--warning-dark)); box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3); }
+.stat-item-icon.success { background: linear-gradient(135deg, var(--success), var(--success-dark)); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); }
+.stat-item-icon.purple { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3); }
+.stat-item-content { flex: 1; min-width: 0; }
+.stat-item-value { font-size: 1.5rem; font-weight: 900; color: var(--text-primary); line-height: 1.2; letter-spacing: -0.5px; }
+.stat-item-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 700; }
+
+/* Status Tabs */
+.status-tabs {
+    display: flex; gap: 0.35rem;
+    background: var(--bg-card); padding: 0.35rem;
+    border-radius: var(--radius-xl); margin-bottom: 1.25rem;
+    border: 1px solid var(--border-color);
+    overflow-x: auto; scrollbar-width: none;
+    box-shadow: var(--shadow-sm);
+}
+.status-tabs::-webkit-scrollbar { display: none; }
+.status-tab {
+    flex: 1; min-width: 120px;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md);
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t);
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    white-space: nowrap;
+}
+.status-tab:hover:not(.active) { background: var(--bg-hover); color: var(--primary); }
+.status-tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+.status-tab .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem; font-weight: 800;
+    min-width: 24px; text-align: center;
+}
+.status-tab:not(.active) .tab-count {
+    background: var(--bg-primary);
+    color: var(--text-muted);
+}
+
+/* Toolbar */
+.toolbar {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl); padding: 1.15rem;
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    box-shadow: var(--shadow-sm);
+}
+.toolbar-search { flex: 1; min-width: 240px; position: relative; }
+.toolbar-search-input {
+    width: 100%; padding: 0.7rem 1rem; padding-right: 2.75rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem;
+    outline: none; transition: all var(--t); font-weight: 500;
+}
+.toolbar-search-input:focus {
+    border-color: var(--primary); background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+.toolbar-search-icon {
+    position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none;
+}
+.toolbar-select {
+    padding: 0.7rem 2.25rem 0.7rem 1rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600;
+    color: var(--text-primary); outline: none; cursor: pointer;
+    transition: all var(--t); appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: left 0.75rem center;
+    min-width: 160px;
+}
+.toolbar-select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
+
+/* Repairs Grid */
+.repairs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+}
+.repair-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    transition: all var(--t);
+    position: relative; overflow: hidden;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.4s ease backwards;
+}
+.repair-card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, var(--status-color, var(--primary)) 0%, transparent 70%);
+    opacity: 0.06; border-radius: 50%;
+    transform: translate(30%, -30%);
+    transition: opacity var(--t);
+    pointer-events: none;
+}
+.repair-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--status-color, var(--primary));
+}
+.repair-card:hover::before { opacity: 0.15; }
+
+.repair-device-image-wrapper {
+    position: relative; width: 100%; height: 180px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-primary), var(--bg-hover));
+    display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--border-color);
+}
+.repair-device-image {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.repair-card:hover .repair-device-image { transform: scale(1.05); }
+.repair-device-image-placeholder {
+    font-size: 3rem; color: var(--text-muted); opacity: 0.35;
+}
+.repair-image-zoom-hint {
+    position: absolute; bottom: 0.5rem; left: 0.5rem;
+    background: rgba(0,0,0,0.6); color: white;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-full);
+    font-size: 0.65rem; font-weight: 700;
+    display: flex; align-items: center; gap: 0.25rem;
+    backdrop-filter: blur(8px);
+    opacity: 0; transition: opacity var(--t);
+}
+.repair-card:hover .repair-image-zoom-hint { opacity: 1; }
+
+.repair-card-body {
+    padding: 1rem 1.15rem 1.15rem;
+    flex: 1; display: flex; flex-direction: column;
+}
+.repair-card-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 0.75rem; margin-bottom: 0.85rem;
+    position: relative; z-index: 1;
+}
+.repair-tracking {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.35rem 0.7rem;
+    background: linear-gradient(135deg, var(--status-color, var(--primary)), var(--status-color-dark, var(--primary-dark)));
+    color: white; border-radius: var(--radius-full);
+    font-size: 0.75rem; font-weight: 800;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+.repair-card-menu {
+    display: flex; gap: 0.25rem;
+    opacity: 0; transition: opacity var(--t);
+}
+.repair-card:hover .repair-card-menu,
+.repair-card:focus-within .repair-card-menu { opacity: 1; }
+.repair-menu-btn {
+    width: 34px; height: 34px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 0.8rem;
+    transition: all var(--t-fast);
+    background: var(--bg-primary); border: 1px solid var(--border-color);
+}
+.repair-menu-btn:hover {
+    background: var(--primary); color: white;
+    border-color: var(--primary); transform: scale(1.05);
+}
+.repair-menu-btn.danger:hover { background: var(--danger); border-color: var(--danger); }
+
+.repair-device {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 0.85rem;
+    position: relative; z-index: 1;
+}
+.repair-device-icon {
+    width: 50px; height: 50px; border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--status-color, var(--primary)), var(--status-color-dark, var(--primary-dark)));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.35rem; flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+.repair-device-info { flex: 1; min-width: 0; }
+.repair-device-name {
+    font-size: 0.95rem; font-weight: 800;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    margin-bottom: 0.15rem;
+}
+.repair-device-model {
+    font-size: 0.75rem; color: var(--text-muted);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-weight: 600;
+}
+.repair-meta {
+    padding: 0.75rem 0;
+    margin-bottom: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex; flex-direction: column; gap: 0.4rem;
+    position: relative; z-index: 1;
+}
+.repair-meta-row {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.78rem; gap: 0.5rem;
+}
+.repair-meta-label {
+    color: var(--text-muted); font-weight: 600;
+    display: flex; align-items: center; gap: 0.35rem;
+}
+.repair-meta-label i { width: 14px; text-align: center; font-size: 0.7rem; }
+.repair-meta-value {
+    color: var(--text-primary); font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 60%;
+}
+.repair-problem {
+    padding: 0.65rem 0.8rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem; color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
+    position: relative; z-index: 1;
+    font-weight: 600;
+}
+.repair-problem i { color: var(--warning); margin-left: 0.25rem; }
+.repair-status-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem; font-weight: 800;
+    color: white;
+    position: relative; z-index: 1;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    box-shadow: var(--shadow-sm);
+}
+
+.status-received { --status-color: #3B82F6; --status-color-dark: #2563EB; }
+.status-repairing { --status-color: #F59E0B; --status-color-dark: #D97706; }
+.status-ready { --status-color: #10B981; --status-color-dark: #059669; }
+.status-delivered { --status-color: #64748B; --status-color-dark: #475569; }
+.status-cancelled { --status-color: #EF4444; --status-color-dark: #DC2626; }
+
+/* Modal */
+.modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 2000; padding: 1rem;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease;
+}
+.modal-overlay.show { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+    background: var(--bg-card); border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 640px; width: 100%; max-height: 92vh;
+    overflow: hidden;
+    animation: modalIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    display: flex; flex-direction: column; margin: auto;
+    border: 1px solid var(--border-color);
+}
+.modal-sm { max-width: 480px; }
+.modal-lg { max-width: 900px; }
+.modal-xl { max-width: 1100px; }
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-header {
+    padding: 1.35rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-shrink: 0; background: var(--bg-subtle);
+}
+.modal-title { font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 0.6rem; }
+.modal-title i { color: var(--primary); }
+.modal-close {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all var(--t);
+    flex-shrink: 0;
+}
+.modal-close:hover { background: var(--danger-soft); color: var(--danger); transform: rotate(90deg); }
+.modal-body {
+    padding: 1.5rem; overflow-y: auto;
+    flex: 1; min-height: 0; max-height: calc(92vh - 180px);
+}
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex; gap: 0.75rem; justify-content: flex-end;
+    flex-shrink: 0; background: var(--bg-subtle); flex-wrap: wrap;
+}
+.modal-footer .btn { flex: 1; min-width: 120px; }
+@media (min-width: 480px) { .modal-footer .btn { flex: initial; min-width: auto; } }
+
+/* Forms */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+    display: block; font-size: 0.85rem; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 0.5rem;
+}
+.form-label .required { color: var(--danger); }
+.form-label i { color: var(--primary); margin-left: 0.35rem; font-size: 0.8rem; }
+.form-input, .form-textarea, .form-select {
+    width: 100%; padding: 0.8rem 1rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 500;
+    color: var(--text-primary); outline: none;
+    transition: all var(--t); font-family: inherit;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--primary); background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+.form-textarea { resize: vertical; min-height: 90px; max-height: 200px; line-height: 1.7; }
+.form-select {
+    cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: left 0.85rem center;
+    padding-left: 2.5rem;
+}
+.form-input.error, .form-textarea.error, .form-select.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px var(--danger-soft);
+    animation: shake 0.4s ease;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+.form-error {
+    font-size: 0.75rem; color: var(--danger); margin-top: 0.45rem;
+    display: none; align-items: center; gap: 0.35rem; font-weight: 700;
+}
+.form-error.show { display: flex; }
+.form-hint {
+    font-size: 0.75rem; color: var(--text-muted); margin-top: 0.45rem;
+    display: flex; align-items: center; gap: 0.35rem; line-height: 1.5;
+    font-weight: 600;
+}
+
+/* Image Upload */
+.image-upload-box {
+    position: relative;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.75rem; padding: 1.75rem;
+    background: var(--bg-primary);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    cursor: pointer; transition: all var(--t);
+    min-height: 220px; overflow: hidden;
+}
+.image-upload-box:hover {
+    border-color: var(--primary); background: var(--bg-hover);
+}
+.image-upload-box.dragover {
+    border-color: var(--primary); background: var(--primary-soft);
+}
+.image-upload-box input[type="file"] {
+    position: absolute; inset: 0; opacity: 0;
+    cursor: pointer; width: 100%; height: 100%;
+}
+.image-upload-preview {
+    width: 100%; max-width: 300px; max-height: 260px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+.image-upload-icon {
+    width: 68px; height: 68px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; color: white;
+    box-shadow: var(--shadow-primary);
+}
+.image-upload-text { text-align: center; }
+.image-upload-text strong { display: block; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.2rem; }
+.image-upload-text span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+.image-remove-btn {
+    position: absolute; top: 0.5rem; left: 0.5rem;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--danger); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; box-shadow: var(--shadow-md);
+    transition: all var(--t); z-index: 3;
+}
+.image-remove-btn:hover { transform: scale(1.1); background: var(--danger-dark); }
+.image-upload-progress {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 4px; background: rgba(0,0,0,0.1);
+    display: none;
+}
+.image-upload-progress.show { display: block; }
+.image-upload-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    width: 0%; transition: width 0.3s ease;
+    border-radius: var(--radius-full);
+}
+
+/* Device Image Large */
+.device-image-large {
+    width: 100%; max-height: 420px; object-fit: contain;
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    margin-bottom: 1.25rem; cursor: pointer;
+    transition: all var(--t);
+    box-shadow: var(--shadow-md);
+}
+.device-image-large:hover { transform: scale(1.01); box-shadow: var(--shadow-lg); }
+
+/* Lightbox */
+.lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 9999; padding: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+.lightbox.show { display: flex; }
+.lightbox img {
+    max-width: 95%; max-height: 90vh;
+    object-fit: contain;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+}
+.lightbox-close {
+    position: absolute; top: 1rem; left: 1rem;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; transition: all var(--t); cursor: pointer;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+
+/* Picker */
+.picker { position: relative; }
+.picker-input {
+    width: 100%; padding: 0.8rem 1rem;
+    padding-left: 2.75rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 500;
+    outline: none; transition: all var(--t); cursor: pointer;
+    color: var(--text-primary);
+}
+.picker-input:focus {
+    border-color: var(--primary); background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+.picker-icon {
+    position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+    color: var(--primary); pointer-events: none; font-size: 0.95rem;
+}
+.picker-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0;
+    margin-top: 0.35rem; background: var(--bg-card);
+    border: 1.5px solid var(--border-color); border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl); z-index: 100;
+    max-height: 340px; overflow-y: auto; display: none;
+}
+.picker-dropdown.show { display: block; }
+.picker-dropdown-search {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky; top: 0; background: var(--bg-card); z-index: 2;
+    position: relative;
+}
+.picker-dropdown-search input {
+    width: 100%; padding: 0.55rem 0.85rem;
+    padding-right: 2.25rem;
+    background: var(--bg-primary); border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm); font-size: 0.85rem; outline: none;
+    color: var(--text-primary);
+}
+.picker-dropdown-search i {
+    position: absolute; right: 1.5rem; top: 50%;
+    transform: translateY(-50%); color: var(--text-muted);
+    font-size: 0.8rem; pointer-events: none;
+}
+.picker-option {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.7rem 0.9rem; cursor: pointer;
+    transition: all var(--t-fast);
+    border-bottom: 1px solid var(--border-color);
+}
+.picker-option:last-child { border-bottom: none; }
+.picker-option:hover { background: var(--bg-hover); }
+.picker-option-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800; flex-shrink: 0;
+}
+.picker-option-info { flex: 1; min-width: 0; }
+.picker-option-name {
+    font-size: 0.85rem; font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    margin-bottom: 0.1rem;
+}
+.picker-option-meta {
+    font-size: 0.7rem; color: var(--text-muted);
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    font-weight: 600;
+}
+.picker-empty {
+    padding: 2.5rem 1rem; text-align: center;
+    color: var(--text-muted); font-size: 0.85rem;
+    font-weight: 600;
+}
+.picker-empty i {
+    font-size: 1.75rem; opacity: 0.3;
+    margin-bottom: 0.6rem; display: block;
+    color: var(--primary);
+}
+
+.selected-chip {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.85rem 0.9rem;
+    background: linear-gradient(135deg, var(--primary-soft), transparent);
+    border: 1.5px solid var(--primary);
+    border-radius: var(--radius-md); margin-top: 0.6rem;
+}
+.selected-chip-icon {
+    width: 44px; height: 44px; border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem; flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+.selected-chip-info { flex: 1; min-width: 0; }
+.selected-chip-name { font-size: 0.9rem; font-weight: 800; margin-bottom: 0.15rem; }
+.selected-chip-meta { font-size: 0.72rem; color: var(--text-secondary); font-weight: 600; }
+.selected-chip-remove {
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all var(--t-fast);
+    flex-shrink: 0;
+}
+.selected-chip-remove:hover { background: var(--danger-soft); color: var(--danger); }
+
+/* Device Suggestions */
+.device-suggestions {
+    display: flex; gap: 0.35rem; flex-wrap: wrap;
+    margin-top: 0.65rem;
+}
+.device-suggestion-chip {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem; font-weight: 700;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border-color);
+    cursor: pointer; transition: all var(--t-fast);
+    display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.device-suggestion-chip:hover {
+    background: var(--primary); color: white;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+.device-suggestion-chip i { font-size: 0.7rem; }
+
+/* Timeline */
+.timeline { position: relative; padding-right: 2rem; }
+.timeline::before {
+    content: ''; position: absolute;
+    top: 0; bottom: 0; right: 10px;
+    width: 2px; background: var(--border-color);
+}
+.timeline-item {
+    position: relative; padding-bottom: 1.35rem;
+    padding-right: 1.5rem;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+    content: ''; position: absolute;
+    right: -0.5rem; top: 0.35rem;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid var(--bg-card);
+    box-shadow: 0 0 0 2px var(--primary);
+    z-index: 1;
+}
+.timeline-item.current::before {
+    background: var(--success);
+    box-shadow: 0 0 0 2px var(--success), 0 0 0 6px rgba(16,185,129,0.2);
+    animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 2px var(--success), 0 0 0 6px rgba(16,185,129,0.2); }
+    50% { box-shadow: 0 0 0 2px var(--success), 0 0 0 10px rgba(16,185,129,0); }
+}
+.timeline-status {
+    font-size: 0.85rem; font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+    display: flex; align-items: center; gap: 0.4rem;
+}
+.timeline-note {
+    font-size: 0.78rem; color: var(--text-secondary);
+    margin-bottom: 0.25rem; line-height: 1.6; font-weight: 600;
+}
+.timeline-time {
+    font-size: 0.7rem; color: var(--text-muted);
+    display: flex; align-items: center; gap: 0.25rem;
+    font-weight: 600;
+}
+
+/* Details Header */
+.repair-details-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.35rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; border-radius: var(--radius-xl);
+    margin-bottom: 1.25rem;
+    position: relative; overflow: hidden;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow-primary);
+}
+.repair-details-header::before {
+    content: ''; position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+.repair-details-icon {
+    width: 68px; height: 68px; border-radius: var(--radius-lg);
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.85rem; flex-shrink: 0;
+    position: relative; z-index: 1;
+    backdrop-filter: blur(8px);
+}
+.repair-details-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+.repair-details-info h2 {
+    font-size: 1.35rem; font-weight: 900;
+    margin-bottom: 0.35rem; word-break: break-word;
+    letter-spacing: -0.3px;
+}
+.repair-details-info .meta {
+    font-size: 0.8rem; opacity: 0.9;
+    display: flex; gap: 0.85rem; flex-wrap: wrap;
+    align-items: center; font-weight: 600;
+}
+.repair-details-info .meta span {
+    display: flex; align-items: center; gap: 0.3rem;
+}
+.repair-details-tracking {
+    padding: 0.5rem 1rem; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.2);
+    font-family: 'Courier New', monospace;
+    font-weight: 800; font-size: 0.9rem;
+    letter-spacing: 1px;
+    position: relative; z-index: 1;
+    backdrop-filter: blur(8px);
+}
+
+/* Tabs */
+.tabs-nav {
+    display: flex; gap: 0.3rem;
+    background: var(--bg-primary); padding: 0.3rem;
+    border-radius: var(--radius-md); margin-bottom: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+}
+.tab-btn {
+    flex: 1; min-width: 110px;
+    padding: 0.65rem 0.9rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t);
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    white-space: nowrap;
+}
+.tab-btn.active {
+    background: var(--bg-card); color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+.tab-btn:hover:not(.active) { color: var(--primary); }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+/* Toast */
+.toast-container {
+    position: fixed; top: calc(var(--navbar-height) + 1rem);
+    left: 50%; transform: translateX(-50%);
+    z-index: 3000; display: flex; flex-direction: column;
+    gap: 0.75rem; pointer-events: none;
+    max-width: 90vw; width: 420px;
+}
+.toast {
+    background: var(--bg-card); color: var(--text-primary);
+    padding: 1rem 1.25rem; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl); border: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.9rem; font-weight: 600; pointer-events: auto;
+    border-right: 4px solid var(--info);
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast i { font-size: 1.25rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Skeleton & Empty */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-xl);
+}
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.skeleton-card { height: 400px; }
+
+.empty-state {
+    padding: 4rem 1rem; text-align: center; color: var(--text-muted);
+    grid-column: 1 / -1;
+    background: var(--bg-card);
+    border: 2px dashed var(--border-color); border-radius: var(--radius-xl);
+}
+.empty-state i {
+    font-size: 4rem; opacity: 0.25; margin-bottom: 1rem;
+    display: block; color: var(--primary);
+}
+.empty-state h3 {
+    font-size: 1.1rem; font-weight: 800;
+    color: var(--text-secondary); margin-bottom: 0.35rem;
+}
+.empty-state p { font-size: 0.85rem; margin-bottom: 1rem; font-weight: 600; }
+
+.pagination {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.35rem; margin-top: 1.5rem; flex-wrap: wrap;
+}
+.pagination-btn {
+    min-width: 40px; height: 40px; padding: 0 0.75rem;
+    border-radius: var(--radius-md);
+    background: var(--bg-card); border: 1.5px solid var(--border-color);
+    color: var(--text-secondary); font-size: 0.85rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--t);
+}
+.pagination-btn:hover:not(:disabled):not(.active) { border-color: var(--primary); color: var(--primary); }
+.pagination-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; border-color: var(--primary);
+    box-shadow: var(--shadow-primary);
+}
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.scroll-top {
+    position: fixed; bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; box-shadow: var(--shadow-primary);
+    opacity: 0; visibility: hidden; transform: translateY(20px);
+    transition: all var(--t); z-index: 1400;
+}
+.scroll-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.scroll-top:hover { transform: translateY(-4px); }
+
+/* Notifications & User Dropdown */
+.notifications-panel, .user-dropdown {
+    position: fixed; top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem; width: 400px; max-width: calc(100vw - 2rem);
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
+    z-index: 1200; opacity: 0; visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--t); overflow: hidden;
+    max-height: 520px; display: flex; flex-direction: column;
+}
+.user-dropdown { width: 250px; max-height: none; display: block; }
+.notifications-panel.show, .user-dropdown.show {
+    opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+}
+.notifications-header {
+    padding: 1.15rem 1.35rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0; background: var(--bg-subtle);
+}
+.notifications-title { font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+.notifications-title i { color: var(--primary); }
+.notifications-mark-read {
+    font-size: 0.75rem; font-weight: 700; color: var(--primary);
+    padding: 0.4rem 0.75rem; border-radius: var(--radius-sm);
+    transition: all var(--t);
+}
+.notifications-mark-read:hover { background: var(--primary-soft); }
+.notifications-list { flex: 1; overflow-y: auto; }
+.notification-item {
+    display: flex; gap: 0.75rem; padding: 0.9rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer; position: relative;
+    transition: all var(--t-fast);
+}
+.notification-item:hover { background: var(--bg-hover); }
+.notification-item.unread { background: var(--primary-soft); }
+.notification-item.unread::before {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 3px; height: 60%;
+    background: var(--primary); border-radius: 3px;
+}
+.notification-item-icon {
+    width: 38px; height: 38px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; flex-shrink: 0;
+}
+.notification-item-icon.info { background: var(--info-soft); color: var(--info); }
+.notification-item-icon.warning { background: var(--warning-soft); color: var(--warning); }
+.notification-item-icon.danger { background: var(--danger-soft); color: var(--danger); }
+.notification-item-icon.success { background: var(--success-soft); color: var(--success); }
+.notification-item-content { flex: 1; min-width: 0; }
+.notification-item-title { font-size: 0.85rem; font-weight: 800; margin-bottom: 0.15rem; }
+.notification-item-message {
+    font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-weight: 500;
+}
+.notification-item-time { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.25rem; font-weight: 600; }
+.notifications-empty { padding: 3rem 1rem; text-align: center; color: var(--text-muted); }
+.notifications-empty i { font-size: 3rem; opacity: 0.3; margin-bottom: 0.75rem; display: block; color: var(--primary); }
+.user-dropdown-header {
+    padding: 1.15rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+    background: var(--bg-subtle);
+}
+.user-dropdown-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem; font-weight: 800; flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+.user-dropdown-info strong { display: block; font-size: 0.9rem; font-weight: 800; margin-bottom: 0.15rem; }
+.user-dropdown-info span { font-size: 0.75rem; color: var(--primary); font-weight: 700; }
+.user-dropdown-menu { padding: 0.5rem; }
+.user-dropdown-item {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.7rem 0.8rem; border-radius: var(--radius-sm);
+    font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);
+    transition: all var(--t-fast); width: 100%; text-align: right;
+}
+.user-dropdown-item:hover { background: var(--primary-soft); color: var(--primary); }
+.user-dropdown-item.danger:hover { background: var(--danger-soft); color: var(--danger); }
+.user-dropdown-divider { height: 1px; background: var(--border-color); margin: 0.4rem 0.5rem; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); box-shadow: var(--shadow-xl); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+}
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    .repairs-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .notifications-panel, .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    .toolbar { padding: 0.85rem; gap: 0.5rem; }
+    .toolbar-search { min-width: 0; flex: 1 1 100%; }
+    .toolbar-select { flex: 1; min-width: 0; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .stat-item { padding: 0.85rem; gap: 0.6rem; }
+    .stat-item-icon { width: 40px; height: 40px; font-size: 1.05rem; }
+    .stat-item-value { font-size: 1.15rem; }
+    .stat-item-label { font-size: 0.68rem; }
+    .modal-body { padding: 1rem; max-height: calc(92vh - 160px); }
+    .modal-header { padding: 1rem 1.25rem; }
+    .modal-footer { padding: 0.85rem 1.25rem; gap: 0.5rem; }
+    .repair-details-header { padding: 1rem; flex-direction: column; align-items: flex-start; }
+    .repair-details-icon { width: 54px; height: 54px; font-size: 1.5rem; }
+    .repair-details-info h2 { font-size: 1.05rem; }
+    .repair-device-image-wrapper { height: 160px; }
+}
+@media (max-width: 400px) {
+    .stats-bar { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الغسالات</span>
+        </div>
+    </a>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-house"></i><span>لوحة التحكم</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products"><i class="fas fa-boxes-stacked"></i><span>الأصناف</span></a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories"><i class="fas fa-tags"></i><span>الفئات</span></a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in"><i class="fas fa-truck-ramp-box"></i><span>الوارد</span></a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers"><i class="fas fa-handshake"></i><span>الموردين</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers"><i class="fas fa-users"></i><span>العملاء</span></a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts"><i class="fas fa-hand-holding-dollar"></i><span>المديونيات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link active" data-perm="can_view_repairs"><i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span></a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-chart-pie"></i><span>التقارير</span></a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts"><i class="fas fa-clock"></i><span>الورديات</span></a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log"><i class="fas fa-clipboard-list"></i><span>سجل الحركات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1><i class="fas fa-screwdriver-wrench"></i> أوامر الصيانة</h1>
+            <p id="pageSubtitle">إدارة صيانة الغسالات</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportExcelBtn">
+                <i class="fas fa-file-excel"></i> تصدير
+            </button>
+            <button class="btn btn-primary" id="addRepairBtn">
+                <i class="fas fa-plus"></i> استلام غسالة
+            </button>
+        </div>
+    </div>
+    
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-item-icon"><i class="fas fa-list"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="totalRepairs">0</div>
+                <div class="stat-item-label">إجمالي الأوامر</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon info"><i class="fas fa-inbox"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="receivedCount">0</div>
+                <div class="stat-item-label">تم الاستلام</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon warning"><i class="fas fa-wrench"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="repairingCount">0</div>
+                <div class="stat-item-label">قيد الإصلاح</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon success"><i class="fas fa-circle-check"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="readyCount">0</div>
+                <div class="stat-item-label">جاهز للتسليم</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-item-icon purple"><i class="fas fa-truck"></i></div>
+            <div class="stat-item-content">
+                <div class="stat-item-value" id="deliveredCount">0</div>
+                <div class="stat-item-label">تم التسليم</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="status-tabs">
+        <button class="status-tab active" data-status="all">
+            <i class="fas fa-list"></i> الكل
+            <span class="tab-count" id="countAll">0</span>
+        </button>
+        <button class="status-tab" data-status="received">
+            <i class="fas fa-inbox"></i> تم الاستلام
+            <span class="tab-count" id="countReceived">0</span>
+        </button>
+        <button class="status-tab" data-status="repairing">
+            <i class="fas fa-wrench"></i> قيد الإصلاح
+            <span class="tab-count" id="countRepairing">0</span>
+        </button>
+        <button class="status-tab" data-status="ready">
+            <i class="fas fa-circle-check"></i> جاهز
+            <span class="tab-count" id="countReady">0</span>
+        </button>
+        <button class="status-tab" data-status="delivered">
+            <i class="fas fa-truck"></i> تم التسليم
+            <span class="tab-count" id="countDelivered">0</span>
+        </button>
+        <button class="status-tab" data-status="cancelled">
+            <i class="fas fa-ban"></i> ملغي
+            <span class="tab-count" id="countCancelled">0</span>
+        </button>
+    </div>
+    
+    <div class="toolbar">
+        <div class="toolbar-search">
+            <input type="text" class="toolbar-search-input" id="searchInput" placeholder="ابحث برقم التتبع، اسم العميل، الموبايل..." autocomplete="off">
+            <i class="fas fa-magnifying-glass toolbar-search-icon"></i>
+        </div>
+        <select class="toolbar-select" id="sortFilter">
+            <option value="newest">الأحدث</option>
+            <option value="oldest">الأقدم</option>
+            <option value="customer">اسم العميل</option>
+        </select>
+    </div>
+    
+    <div id="repairsContainer">
+        <div class="repairs-grid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+        </div>
+    </div>
+    
+    <div class="pagination" id="pagination" style="display: none;"></div>
+    
+</main>
+
+<!-- Add/Edit Repair Modal -->
+<div class="modal-overlay" id="repairModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-screwdriver-wrench" id="repairModalIcon"></i>
+                <span id="repairModalTitle">استلام غسالة جديدة</span>
+            </h3>
+            <button class="modal-close" id="closeRepairModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="repairForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="form-grid">
+                    
+                    <div class="form-group full">
+                        <label class="form-label">
+                            <i class="fas fa-camera"></i> صورة الغسالة
+                        </label>
+                        <div class="image-upload-box" id="deviceImageBox">
+                            <img id="deviceImagePreview" class="image-upload-preview" style="display: none;" alt="معاينة">
+                            <button type="button" class="image-remove-btn" id="removeDeviceImageBtn" style="display: none;" title="إزالة الصورة">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div id="deviceImagePlaceholder">
+                                <div class="image-upload-icon" style="margin: 0 auto 0.75rem;">
+                                    <i class="fas fa-cloud-arrow-up"></i>
+                                </div>
+                                <div class="image-upload-text">
+                                    <strong>اضغط أو اسحب صورة الغسالة</strong>
+                                    <span>PNG, JPG - حتى 5 ميجا</span>
+                                </div>
+                            </div>
+                            <input type="file" id="deviceImageInput" accept="image/jpeg,image/jpg,image/png,image/webp,image/gif">
+                            <div class="image-upload-progress" id="deviceImageProgress">
+                                <div class="image-upload-progress-bar" id="deviceImageProgressBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full">
+                        <label class="form-label">
+                            <i class="fas fa-user"></i> العميل <span class="required">*</span>
+                        </label>
+                        <div class="picker" id="customerPicker">
+                            <input type="text" class="picker-input" id="customerSearch" placeholder="اضغط لاختيار عميل..." readonly>
+                            <i class="fas fa-user picker-icon"></i>
+                            <div class="picker-dropdown" id="customerDropdown">
+                                <div class="picker-dropdown-search">
+                                    <input type="text" id="customerDropdownSearch" placeholder="ابحث بالاسم أو الموبايل..." autocomplete="off">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                </div>
+                                <div id="customerOptionsList"></div>
+                                <div style="padding: 0.7rem; border-top: 1px solid var(--border-color); background: var(--bg-subtle);">
+                                    <button type="button" class="btn btn-primary btn-sm" id="newCustomerBtn" style="width: 100%;">
+                                        <i class="fas fa-user-plus"></i> عميل جديد
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="selectedCustomerContainer"></div>
+                        <div class="form-error" id="customerError"><i class="fas fa-circle-exclamation"></i><span>الرجاء اختيار عميل</span></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="deviceType">
+                            <i class="fas fa-soap"></i> نوع الغسالة <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="deviceType"
+                            placeholder="مثال: أوتوماتيك، نصف أوتوماتيك، فوق..."
+                            maxlength="100" required autocomplete="off">
+                        <div class="device-suggestions" id="deviceSuggestions"></div>
+                        <div class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            اكتب نوع الغسالة يدويًا، واقتراحات سابقة ستظهر هنا
+                        </div>
+                        <div class="form-error" id="deviceTypeError">
+                            <i class="fas fa-circle-exclamation"></i><span>الرجاء إدخال نوع الغسالة</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="deviceModel">
+                            <i class="fas fa-tag"></i> الماركة / الموديل
+                        </label>
+                        <input type="text" class="form-input" id="deviceModel" placeholder="مثال: LG، Samsung، Zanussi" maxlength="100">
+                    </div>
+                    
+                    <div class="form-group full">
+                        <label class="form-label" for="serialNumber">
+                            <i class="fas fa-barcode"></i> الرقم التسلسلي / Serial Number (اختياري)
+                        </label>
+                        <input type="text" class="form-input" id="serialNumber" placeholder="الرقم التسلسلي للغسالة" maxlength="100">
+                    </div>
+                    
+                    <div class="form-group full">
+                        <label class="form-label" for="problem">
+                            <i class="fas fa-comment-medical"></i> وصف العطل <span class="required">*</span>
+                        </label>
+                        <textarea class="form-textarea" id="problem" placeholder="اشرح المشكلة بالتفصيل..." maxlength="1000" required></textarea>
+                        <div class="form-error" id="problemError"><i class="fas fa-circle-exclamation"></i><span>الرجاء إدخال وصف العطل</span></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="laborCost">
+                            <i class="fas fa-money-bill-wave"></i> تكلفة المصنعية المتوقعة (ج.م)
+                        </label>
+                        <input type="number" class="form-input" id="laborCost" placeholder="0.00" min="0" step="0.01" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="status">
+                            <i class="fas fa-circle-dot"></i> الحالة
+                        </label>
+                        <select class="form-select" id="status">
+                            <option value="received">تم الاستلام</option>
+                            <option value="repairing">قيد الإصلاح</option>
+                            <option value="ready">جاهز للتسليم</option>
+                            <option value="delivered">تم التسليم</option>
+                            <option value="cancelled">ملغي</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="expectedRepairDate">
+                            <i class="fas fa-calendar-day"></i> التاريخ المتوقع للإصلاح (اختياري)
+                        </label>
+                        <input type="date" class="form-input" id="expectedRepairDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="visitAt">
+                            <i class="fas fa-calendar-check"></i> موعد الزيارة (اختياري)
+                        </label>
+                        <input type="datetime-local" class="form-input" id="visitAt">
+                    </div>
+                    
+                    <div class="form-group full">
+                        <label class="form-label" for="repairNotes">
+                            <i class="fas fa-align-right"></i> ملاحظات إضافية
+                        </label>
+                        <textarea class="form-textarea" id="repairNotes" placeholder="أي ملاحظات..." maxlength="500"></textarea>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelRepairBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="submit" class="btn btn-primary" id="saveRepairBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="saveRepairText">حفظ</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- New Customer Modal -->
+<div class="modal-overlay" id="newCustomerModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-user-plus"></i>
+                <span>عميل جديد</span>
+            </h3>
+            <button class="modal-close" id="closeNewCustomerModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="newCustomerForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label" for="newCustomerName">
+                        <i class="fas fa-user"></i> الاسم <span class="required">*</span>
+                    </label>
+                    <input type="text" class="form-input" id="newCustomerName" placeholder="اسم العميل" required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="newCustomerPhone">
+                        <i class="fas fa-phone"></i> الموبايل <span class="required">*</span>
+                    </label>
+                    <input type="tel" class="form-input" id="newCustomerPhone" placeholder="01XXXXXXXXX" required maxlength="20" style="direction: ltr; text-align: left; font-family: 'Courier New', monospace;">
+                    <div class="form-error" id="newCustomerPhoneError">
+                        <i class="fas fa-circle-exclamation"></i>
+                        <span>الرجاء إدخال رقم صحيح</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelNewCustomerBtn">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="saveNewCustomerBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="saveNewCustomerText">إضافة</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Repair Details Modal -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal modal-xl">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-circle-info"></i>
+                <span>تفاصيل أمر الصيانة</span>
+            </h3>
+            <button class="modal-close" id="closeDetailsModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="detailsContent"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="closeDetailsBtn">إغلاق</button>
+            <button type="button" class="btn btn-warning" id="printRepairBtn">
+                <i class="fas fa-print"></i> طباعة
+            </button>
+            <button type="button" class="btn btn-info" id="shareRepairBtn">
+                <i class="fas fa-share-nodes"></i> مشاركة
+            </button>
+            <button type="button" class="btn btn-success" id="invoiceFromRepairBtn">
+                <i class="fas fa-file-invoice"></i> إصدار فاتورة
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Status Update Modal -->
+<div class="modal-overlay" id="statusModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-circle-dot"></i>
+                <span>تحديث الحالة</span>
+            </h3>
+            <button class="modal-close" id="closeStatusModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="statusForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label" for="newStatus">
+                        <i class="fas fa-list"></i> الحالة الجديدة
+                    </label>
+                    <select class="form-select" id="newStatus" required>
+                        <option value="received">تم الاستلام</option>
+                        <option value="repairing">قيد الإصلاح</option>
+                        <option value="ready">جاهز للتسليم</option>
+                        <option value="delivered">تم التسليم</option>
+                        <option value="cancelled">ملغي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="statusNote">
+                        <i class="fas fa-comment"></i> ملاحظة (اختياري)
+                    </label>
+                    <textarea class="form-textarea" id="statusNote" placeholder="ملاحظة عن التغيير..." maxlength="300"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelStatusBtn">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="saveStatusBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="saveStatusText">تحديث</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--danger);"></i>
+                تأكيد الحذف
+            </h3>
+            <button class="modal-close" id="closeDeleteModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                هل أنت متأكد من حذف أمر الصيانة 
+                <strong id="deleteRepairCode" style="color: var(--danger); font-family: monospace;"></strong>؟
+            </p>
+            <div style="padding: 0.85rem 1rem; background: var(--warning-soft); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); color: var(--warning-dark); font-size: 0.85rem; font-weight: 700;">
+                <i class="fas fa-exclamation-triangle"></i>
+                سيتم حذف كل الـ Timeline المرتبط
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> حذف نهائي
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+    <img id="lightboxImage" src="" alt="صورة الجهاز">
+</div>
+
+<!-- Notifications -->
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title"><i class="fas fa-bell"></i> الإشعارات</h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+</div>
+
+<!-- User Dropdown -->
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn"><i class="fas fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+var BUCKET_NAME = 'product-images';
+var DB_NAME = 'topload_db';
+var DB_VERSION = 5;
+var PAGE_SIZE = 24;
+
+var supabaseClient = null;
+
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function isValidUUID(uuid) {
+    if (!uuid || typeof uuid !== 'string') return false;
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
+}
+
+function sanitizePhone(phone) {
+    if (!phone) return '';
+    return String(phone).replace(/[^\d+]/g, '');
+}
+
+function formatCurrencyShort(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' ج.م'; }
+    catch (e) { return num.toFixed(2) + ' ج.م'; }
+}
+
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+
+function formatDate(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+    } catch (e) { return '—'; }
+}
+
+function formatDateTime(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    } catch (e) { return '—'; }
+}
+
+function formatTimeAgo(date) {
+    if (!date) return '';
+    try {
+        var seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        if (seconds < 60) return 'الآن';
+        if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+        if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+        if (seconds < 604800) return 'منذ ' + Math.floor(seconds / 86400) + ' يوم';
+        return formatDate(date);
+    } catch (e) { return ''; }
+}
+
+function getInitials(name) {
+    if (!name) return '؟';
+    var parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+function getUrlParam(name) {
+    try { return new URLSearchParams(window.location.search).get(name); }
+    catch (e) { return null; }
+}
+
+function getStatusInfo(status) {
+    var map = {
+        'received': { text: 'تم الاستلام', icon: 'fa-inbox', cls: 'received', color: '#3B82F6' },
+        'repairing': { text: 'قيد الإصلاح', icon: 'fa-wrench', cls: 'repairing', color: '#F59E0B' },
+        'ready': { text: 'جاهز للتسليم', icon: 'fa-circle-check', cls: 'ready', color: '#10B981' },
+        'delivered': { text: 'تم التسليم', icon: 'fa-truck', cls: 'delivered', color: '#64748B' },
+        'cancelled': { text: 'ملغي', icon: 'fa-ban', cls: 'cancelled', color: '#EF4444' }
+    };
+    return map[status] || { text: status || '—', icon: 'fa-circle', cls: 'received', color: '#64748B' };
+}
+
+function getDeviceIcon(deviceType) {
+    if (!deviceType) return 'fa-soap';
+    var t = String(deviceType).toLowerCase();
+    var keywords = [
+        { keys: ['اوتوماتيك', 'أوتوماتيك', 'automatic', 'auto'], icon: 'fa-soap' },
+        { keys: ['فوق', 'top', 'top load'], icon: 'fa-soap' },
+        { keys: ['امامي', 'أمامي', 'front', 'front load'], icon: 'fa-soap' },
+        { keys: ['نصف', 'semi', 'half'], icon: 'fa-soap' },
+        { keys: ['ثلاجة', 'refrigerator', 'fridge'], icon: 'fa-box' },
+        { keys: ['فريزر', 'freezer'], icon: 'fa-snowflake' },
+        { keys: ['مكيف', 'تكييف', 'air conditioner', 'ac'], icon: 'fa-snowflake' },
+        { keys: ['غسالة أطباق', 'dishwasher', 'اطباق'], icon: 'fa-utensils' },
+        { keys: ['ميكروويف', 'microwave'], icon: 'fa-fire' },
+        { keys: ['مروحة', 'fan'], icon: 'fa-fan' },
+        { keys: ['موبايل', 'هاتف', 'phone'], icon: 'fa-mobile-screen' },
+        { keys: ['تابلت', 'tablet'], icon: 'fa-tablet-screen-button' },
+        { keys: ['لابتوب', 'laptop'], icon: 'fa-laptop' },
+        { keys: ['تلفزيون', 'tv', 'شاشة'], icon: 'fa-tv' },
+        { keys: ['مكواة', 'iron'], icon: 'fa-shirt' }
+    ];
+    for (var i = 0; i < keywords.length; i++) {
+        for (var j = 0; j < keywords[i].keys.length; j++) {
+            if (t.indexOf(keywords[i].keys[j]) !== -1) {
+                return keywords[i].icon;
+            }
+        }
+    }
+    return 'fa-soap';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check', error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation', info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    if (!dot) return;
+    dot.classList.toggle('offline', !navigator.onLine);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 Session
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⏱️ Inactivity
+// ═══════════════════════════════════════════════════════════════
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+var inactivityTimer = null;
+
+function resetInactivity() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+
+function startInactivityMonitor() {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📦 IndexedDB
+// ═══════════════════════════════════════════════════════════════
+var dbInstance = null;
+var dbPromise = null;
+var dbFailed = false;
+
+function openDB() {
+    if (dbFailed) return Promise.resolve(null);
+    if (dbInstance) return Promise.resolve(dbInstance);
+    if (dbPromise) return dbPromise;
+
+    dbPromise = new Promise(function(resolve) {
+        try {
+            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                var stores = ['accounts', 'cache', 'settings', 'products', 'categories',
+                              'customers', 'invoices', 'repairs', 'suppliers',
+                              'stock_movements', 'notifications', 'payments', 'repair_timeline'];
+                stores.forEach(function(name) {
+                    if (!db.objectStoreNames.contains(name)) {
+                        db.createObjectStore(name, { keyPath: 'id' });
+                    }
+                });
+                if (!db.objectStoreNames.contains('outbox')) {
+                    var s = db.createObjectStore('outbox', { keyPath: 'id', autoIncrement: true });
+                    s.createIndex('status', 'status');
+                    s.createIndex('created_at', 'created_at');
+                }
+            };
+            req.onsuccess = function() {
+                dbInstance = req.result;
+                dbInstance.onversionchange = function() {
+                    try { dbInstance.close(); } catch(e) {}
+                    dbInstance = null; dbPromise = null;
+                };
+                resolve(dbInstance);
+            };
+            req.onerror = function() {
+                dbFailed = true; dbPromise = null; resolve(null);
+            };
+            req.onblocked = function() {
+                setTimeout(function() {
+                    dbFailed = true; dbPromise = null; resolve(null);
+                }, 500);
+            };
+        } catch (e) { dbFailed = true; resolve(null); }
+    });
+    return dbPromise;
+}
+
+function dbPut(store, data) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).put(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+function dbBulkPut(store, items) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var os = tx.objectStore(store);
+                items.forEach(function(item) { try { os.put(item); } catch(e) {} });
+                tx.oncomplete = function() { resolve(); };
+                tx.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+
+function dbGetAll(store) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return [];
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readonly');
+                var r = tx.objectStore(store).getAll();
+                r.onsuccess = function() { resolve(r.result || []); };
+                r.onerror = function() { resolve([]); };
+            } catch (e) { resolve([]); }
+        });
+    });
+}
+
+function dbDelete(store, key) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).delete(key);
+                r.onsuccess = function() { resolve(); };
+                r.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+
+function addToOutbox(action) {
+    return openDB().then(function(db) {
+        if (!db) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction('outbox', 'readwrite');
+                var data = Object.assign({}, action, { status: 'pending', created_at: Date.now() });
+                var r = tx.objectStore('outbox').add(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    repairs: [],
+    customers: [],
+    timeline: [],
+    deviceTypes: [],
+    filtered: [],
+    searchQuery: '',
+    statusFilter: 'all',
+    sortFilter: 'newest',
+    currentPage: 1,
+    editingRepair: null,
+    deletingRepair: null,
+    viewingRepair: null,
+    selectedCustomer: null,
+    imageFile: null,
+    uploadedImageUrl: null,
+    isLoading: true
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 📸 Upload Device Image
+// ═══════════════════════════════════════════════════════════════
+function uploadDeviceImage(sb, file) {
+    return new Promise(function(resolve, reject) {
+        var fileExt = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        var fileName = 'repairs/' + Date.now() + '_' + Math.random().toString(36).substring(2, 10) + '.' + fileExt;
+
+        var progressEl = document.getElementById('deviceImageProgress');
+        var progressBar = document.getElementById('deviceImageProgressBar');
+        if (progressEl) progressEl.classList.add('show');
+        if (progressBar) progressBar.style.width = '30%';
+
+        sb.storage.from(BUCKET_NAME).upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: file.type || 'image/jpeg'
+        }).then(function(result) {
+            if (progressBar) progressBar.style.width = '80%';
+
+            if (result.error) {
+                console.error('❌ Upload error:', result.error);
+                if (progressEl) progressEl.classList.remove('show');
+                reject(result.error);
+                return;
+            }
+
+            var urlResult = sb.storage.from(BUCKET_NAME).getPublicUrl(fileName);
+            if (progressBar) progressBar.style.width = '100%';
+            setTimeout(function() {
+                if (progressEl) progressEl.classList.remove('show');
+                if (progressBar) progressBar.style.width = '0%';
+            }, 500);
+
+            resolve(urlResult.data.publicUrl);
+        }).catch(function(err) {
+            if (progressEl) progressEl.classList.remove('show');
+            reject(err);
+        });
+    });
+}
+
+function resetDeviceImage() {
+    state.imageFile = null;
+    state.uploadedImageUrl = null;
+    var preview = document.getElementById('deviceImagePreview');
+    if (preview) { preview.style.display = 'none'; preview.src = ''; }
+    var placeholder = document.getElementById('deviceImagePlaceholder');
+    if (placeholder) placeholder.style.display = 'block';
+    var removeBtn = document.getElementById('removeDeviceImageBtn');
+    if (removeBtn) removeBtn.style.display = 'none';
+    var input = document.getElementById('deviceImageInput');
+    if (input) input.value = '';
+}
+
+function showDeviceImagePreview(url) {
+    var preview = document.getElementById('deviceImagePreview');
+    if (preview) { preview.src = url; preview.style.display = 'block'; }
+    var placeholder = document.getElementById('deviceImagePlaceholder');
+    if (placeholder) placeholder.style.display = 'none';
+    var removeBtn = document.getElementById('removeDeviceImageBtn');
+    if (removeBtn) removeBtn.style.display = 'flex';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Data
+// ═══════════════════════════════════════════════════════════════
+function loadData() {
+    state.isLoading = true;
+    var sb = getSupabaseClient();
+
+    if (!sb || !navigator.onLine) {
+        return loadFromCache().then(function() {
+            state.isLoading = false;
+            buildDeviceTypesFromRepairs();
+            updateStats();
+            applyFilters();
+        });
+    }
+
+    return Promise.all([
+        sb.from('repair_orders').select('*, customer:customers(id, name, phone)').order('created_at', { ascending: false }).limit(500),
+        sb.from('customers').select('id, name, phone').order('name'),
+        sb.from('repair_timeline').select('*').order('created_at', { ascending: true }).limit(2000)
+    ]).then(function(results) {
+        if (results[0].error) console.warn('Repairs error:', results[0].error);
+        state.repairs = results[0].data || [];
+        state.customers = results[1].data || [];
+        state.timeline = results[2].data || [];
+
+        console.log('✅ Loaded:', {
+            repairs: state.repairs.length,
+            customers: state.customers.length,
+            timeline: state.timeline.length
+        });
+
+        return Promise.all([
+            dbBulkPut('repairs', state.repairs),
+            dbBulkPut('customers', state.customers),
+            dbBulkPut('repair_timeline', state.timeline)
+        ]);
+    }).catch(function(err) {
+        console.warn('Load failed, using cache:', err);
+        return loadFromCache();
+    }).then(function() {
+        state.isLoading = false;
+        buildDeviceTypesFromRepairs();
+        updateStats();
+        applyFilters();
+    });
+}
+
+function loadFromCache() {
+    return Promise.all([
+        dbGetAll('repairs'),
+        dbGetAll('customers'),
+        dbGetAll('repair_timeline')
+    ]).then(function(cached) {
+        state.repairs = cached[0] || [];
+        state.customers = cached[1] || [];
+        state.timeline = cached[2] || [];
+
+        var customerMap = {};
+        state.customers.forEach(function(c) { customerMap[c.id] = c; });
+        state.repairs = state.repairs.map(function(r) {
+            if (r.customer_id && customerMap[r.customer_id] && !r.customer) {
+                r.customer = customerMap[r.customer_id];
+            }
+            return r;
+        });
+    });
+}
+
+function buildDeviceTypesFromRepairs() {
+    var counts = {};
+    state.repairs.forEach(function(r) {
+        var t = (r.device_type || '').trim();
+        if (!t) return;
+        if (!counts[t]) counts[t] = { name: t, count: 0 };
+        counts[t].count += 1;
+    });
+    var arr = Object.keys(counts).map(function(k) { return counts[k]; });
+    arr.sort(function(a, b) { return b.count - a.count; });
+    state.deviceTypes = arr.slice(0, 12);
+}
+
+function updateStats() {
+    var total = state.repairs.length;
+    var counts = { received: 0, repairing: 0, ready: 0, delivered: 0, cancelled: 0 };
+
+    state.repairs.forEach(function(r) {
+        if (counts[r.status] !== undefined) counts[r.status]++;
+    });
+
+    var setEl = function(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = formatNumber(val);
+    };
+
+    setEl('totalRepairs', total);
+    setEl('receivedCount', counts.received);
+    setEl('repairingCount', counts.repairing);
+    setEl('readyCount', counts.ready);
+    setEl('deliveredCount', counts.delivered);
+    setEl('countAll', total);
+    setEl('countReceived', counts.received);
+    setEl('countRepairing', counts.repairing);
+    setEl('countReady', counts.ready);
+    setEl('countDelivered', counts.delivered);
+    setEl('countCancelled', counts.cancelled);
+
+    var subtitle = document.getElementById('pageSubtitle');
+    if (subtitle) subtitle.textContent = total + ' أمر صيانة';
+}
+
+function applyFilters() {
+    var list = state.repairs.slice();
+    var q = (state.searchQuery || '').trim().toLowerCase();
+
+    if (q) {
+        list = list.filter(function(r) {
+            var code = (r.tracking_code || '').toLowerCase();
+            var device = ((r.device_type || '') + ' ' + (r.device_model || '')).toLowerCase();
+            var custName = (r.customer && r.customer.name || '').toLowerCase();
+            var custPhone = (r.customer && r.customer.phone || '').toLowerCase();
+            var serial = (r.serial_number || '').toLowerCase();
+            return code.indexOf(q) !== -1 || device.indexOf(q) !== -1 ||
+                   custName.indexOf(q) !== -1 || custPhone.indexOf(q) !== -1 ||
+                   serial.indexOf(q) !== -1;
+        });
+    }
+
+    if (state.statusFilter !== 'all') {
+        list = list.filter(function(r) { return r.status === state.statusFilter; });
+    }
+
+    if (state.sortFilter === 'oldest') {
+        list.sort(function(a, b) { return new Date(a.created_at || 0) - new Date(b.created_at || 0); });
+    } else if (state.sortFilter === 'customer') {
+        list.sort(function(a, b) {
+            var aName = (a.customer && a.customer.name || '').toLowerCase();
+            var bName = (b.customer && b.customer.name || '').toLowerCase();
+            return aName.localeCompare(bName, 'ar');
+        });
+    } else {
+        list.sort(function(a, b) {
+            return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+        });
+    }
+
+    state.filtered = list;
+    state.currentPage = 1;
+    render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render
+// ═══════════════════════════════════════════════════════════════
+function render() {
+    var container = document.getElementById('repairsContainer');
+    var pagination = document.getElementById('pagination');
+    if (!container) return;
+
+    if (state.isLoading) {
+        container.innerHTML = '<div class="repairs-grid">' +
+            '<div class="skeleton skeleton-card"></div>'.repeat(3) + '</div>';
+        if (pagination) pagination.style.display = 'none';
+        return;
+    }
+
+    if (!state.filtered.length) {
+        container.innerHTML = getEmptyState();
+        bindEmptyStateBtn();
+        if (pagination) pagination.style.display = 'none';
+        return;
+    }
+
+    var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+    var start = (state.currentPage - 1) * PAGE_SIZE;
+    var pageItems = state.filtered.slice(start, start + PAGE_SIZE);
+
+    var html = '<div class="repairs-grid">';
+    pageItems.forEach(function(r) { html += renderRepairCard(r); });
+    html += '</div>';
+    container.innerHTML = html;
+
+    if (totalPages > 1 && pagination) {
+        pagination.style.display = 'flex';
+        pagination.innerHTML = renderPagination(totalPages);
+        bindPaginationEvents();
+    } else if (pagination) {
+        pagination.style.display = 'none';
+    }
+
+    bindRepairEvents();
+}
+
+function getEmptyState() {
+    if (state.searchQuery || state.statusFilter !== 'all') {
+        return '<div class="empty-state">' +
+            '<i class="fas fa-magnifying-glass"></i>' +
+            '<h3>لا توجد نتائج</h3>' +
+            '<p>لم نجد أوامر صيانة تطابق بحثك</p>' +
+        '</div>';
+    }
+    return '<div class="empty-state">' +
+        '<i class="fas fa-soap"></i>' +
+        '<h3>لا توجد أوامر صيانة بعد</h3>' +
+        '<p>ابدأ باستلام أول غسالة للصيانة</p>' +
+        '<button class="btn btn-primary" id="emptyAddBtn"><i class="fas fa-plus"></i> استلام غسالة</button>' +
+    '</div>';
+}
+
+function bindEmptyStateBtn() {
+    var btn = document.getElementById('emptyAddBtn');
+    if (btn) btn.addEventListener('click', openAddModal);
+}
+
+function renderRepairCard(r) {
+    var statusInfo = getStatusInfo(r.status);
+    var customer = r.customer || {};
+    var deviceIcon = getDeviceIcon(r.device_type);
+    var deviceName = (r.device_type || '') + (r.device_model ? ' - ' + r.device_model : '');
+    if (!deviceName) deviceName = 'غسالة';
+
+    var imageHtml = '';
+    if (r.device_image_url) {
+        imageHtml = '<img src="' + escapeHtml(r.device_image_url) + '" alt="' + escapeHtml(deviceName) + '" class="repair-device-image" loading="lazy" data-action="zoom-image" data-url="' + escapeHtml(r.device_image_url) + '">' +
+            '<div class="repair-image-zoom-hint"><i class="fas fa-search-plus"></i> عرض</div>';
+    } else {
+        imageHtml = '<i class="fas ' + deviceIcon + ' repair-device-image-placeholder"></i>';
+    }
+
+    var html = '<div class="repair-card status-' + statusInfo.cls + '" data-id="' + r.id + '">';
+    html += '<div class="repair-device-image-wrapper">' + imageHtml + '</div>';
+    html += '<div class="repair-card-body">';
+
+    html += '<div class="repair-card-header">';
+    html += '<div class="repair-tracking"><i class="fas fa-barcode"></i> ' + escapeHtml(r.tracking_code || '—') + '</div>';
+    html += '<div class="repair-card-menu">';
+    html += '<button class="repair-menu-btn" data-action="status" data-id="' + r.id + '" title="تحديث الحالة"><i class="fas fa-circle-dot"></i></button>';
+    html += '<button class="repair-menu-btn" data-action="edit" data-id="' + r.id + '" title="تعديل"><i class="fas fa-pen"></i></button>';
+    html += '<button class="repair-menu-btn danger" data-action="delete" data-id="' + r.id + '" title="حذف"><i class="fas fa-trash"></i></button>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="repair-device">';
+    html += '<div class="repair-device-icon"><i class="fas ' + deviceIcon + '"></i></div>';
+    html += '<div class="repair-device-info">';
+    html += '<div class="repair-device-name">' + escapeHtml(deviceName) + '</div>';
+    if (r.serial_number) {
+        html += '<div class="repair-device-model">S/N: ' + escapeHtml(r.serial_number) + '</div>';
+    }
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="repair-meta">';
+    if (customer.name) {
+        html += '<div class="repair-meta-row">';
+        html += '<span class="repair-meta-label"><i class="fas fa-user"></i> العميل</span>';
+        html += '<span class="repair-meta-value">' + escapeHtml(customer.name) + '</span>';
+        html += '</div>';
+    }
+    if (customer.phone) {
+        html += '<div class="repair-meta-row">';
+        html += '<span class="repair-meta-label"><i class="fas fa-phone"></i> الموبايل</span>';
+        html += '<span class="repair-meta-value" style="font-family: monospace; direction: ltr;">' + escapeHtml(customer.phone) + '</span>';
+        html += '</div>';
+    }
+    html += '<div class="repair-meta-row">';
+    html += '<span class="repair-meta-label"><i class="fas fa-clock"></i> منذ</span>';
+    html += '<span class="repair-meta-value">' + formatTimeAgo(r.created_at) + '</span>';
+    html += '</div>';
+    html += '</div>';
+
+    if (r.problem) {
+        html += '<div class="repair-problem"><i class="fas fa-exclamation-circle"></i> ' + escapeHtml(r.problem) + '</div>';
+    }
+
+    html += '<div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">';
+    html += '<span class="repair-status-badge" style="background: ' + statusInfo.color + ';">';
+    html += '<i class="fas ' + statusInfo.icon + '"></i> ' + statusInfo.text;
+    html += '</span>';
+    if (parseFloat(r.labor_cost) > 0) {
+        html += '<span style="font-size: 0.85rem; font-weight: 800; color: var(--primary);">' + formatCurrencyShort(r.labor_cost) + '</span>';
+    }
+    html += '</div>';
+
+    html += '</div></div>';
+    return html;
+}
+
+function renderPagination(totalPages) {
+    var current = state.currentPage;
+    var pages = [];
+    pages.push('<button class="pagination-btn" data-page="' + (current - 1) + '" ' + (current === 1 ? 'disabled' : '') + '><i class="fas fa-chevron-right"></i></button>');
+    var start = Math.max(1, current - 2);
+    var end = Math.min(totalPages, current + 2);
+    if (start > 1) {
+        pages.push('<button class="pagination-btn" data-page="1">1</button>');
+        if (start > 2) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+    }
+    for (var i = start; i <= end; i++) {
+        pages.push('<button class="pagination-btn ' + (i === current ? 'active' : '') + '" data-page="' + i + '">' + i + '</button>');
+    }
+    if (end < totalPages) {
+        if (end < totalPages - 1) pages.push('<span style="padding: 0 0.5rem; color: var(--text-muted);">...</span>');
+        pages.push('<button class="pagination-btn" data-page="' + totalPages + '">' + totalPages + '</button>');
+    }
+    pages.push('<button class="pagination-btn" data-page="' + (current + 1) + '" ' + (current === totalPages ? 'disabled' : '') + '><i class="fas fa-chevron-left"></i></button>');
+    return pages.join('');
+}
+
+function bindPaginationEvents() {
+    var btns = document.querySelectorAll('.pagination-btn[data-page]');
+    for (var i = 0; i < btns.length; i++) {
+        (function(btn) {
+            btn.addEventListener('click', function() {
+                var page = parseInt(btn.dataset.page);
+                var totalPages = Math.ceil(state.filtered.length / PAGE_SIZE);
+                if (page >= 1 && page <= totalPages) {
+                    state.currentPage = page;
+                    render();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        })(btns[i]);
+    }
+}
+
+function bindRepairEvents() {
+    document.querySelectorAll('.repair-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            var target = e.target;
+            while (target && target !== card) {
+                if (target.dataset && target.dataset.action) {
+                    e.stopPropagation();
+                    var action = target.dataset.action;
+                    var id = target.dataset.id;
+                    if (action === 'edit') openEditModal(id);
+                    else if (action === 'delete') openDeleteModal(id);
+                    else if (action === 'status') openStatusModal(id);
+                    else if (action === 'zoom-image') openLightbox(target.dataset.url);
+                    return;
+                }
+                target = target.parentElement;
+            }
+            openDetailsModal(card.dataset.id);
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔍 Lightbox
+// ═══════════════════════════════════════════════════════════════
+function openLightbox(url) {
+    if (!url) return;
+    var lightbox = document.getElementById('lightbox');
+    var img = document.getElementById('lightboxImage');
+    if (!lightbox || !img) return;
+    img.src = url;
+    lightbox.classList.add('show');
+}
+
+function closeLightbox() {
+    var lightbox = document.getElementById('lightbox');
+    if (lightbox) lightbox.classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Add/Edit Modal
+// ═══════════════════════════════════════════════════════════════
+function openAddModal() {
+    state.editingRepair = null;
+    state.selectedCustomer = null;
+    resetDeviceImage();
+
+    document.getElementById('repairModalTitle').textContent = 'استلام غسالة جديدة';
+    document.getElementById('repairModalIcon').className = 'fas fa-plus';
+    document.getElementById('saveRepairText').textContent = 'حفظ';
+
+    document.getElementById('repairForm').reset();
+    document.getElementById('laborCost').value = '0';
+    document.getElementById('status').value = 'received';
+    document.getElementById('customerSearch').value = '';
+    document.getElementById('selectedCustomerContainer').innerHTML = '';
+    document.getElementById('deviceType').value = '';
+
+    clearFormErrors();
+    renderDeviceSuggestions();
+    document.getElementById('repairModal').classList.add('show');
+    setTimeout(function() {
+        document.getElementById('customerSearch').focus();
+    }, 300);
+}
+
+function openEditModal(id) {
+    var r = null;
+    for (var i = 0; i < state.repairs.length; i++) {
+        if (state.repairs[i].id === id) { r = state.repairs[i]; break; }
+    }
+    if (!r) return;
+
+    state.editingRepair = r;
+    state.uploadedImageUrl = r.device_image_url || null;
+
+    var customer = null;
+    if (r.customer_id) {
+        for (var j = 0; j < state.customers.length; j++) {
+            if (state.customers[j].id === r.customer_id) { customer = state.customers[j]; break; }
+        }
+    }
+    state.selectedCustomer = customer;
+
+    document.getElementById('repairModalTitle').textContent = 'تعديل أمر الصيانة';
+    document.getElementById('repairModalIcon').className = 'fas fa-pen';
+    document.getElementById('saveRepairText').textContent = 'حفظ التعديلات';
+
+    document.getElementById('deviceType').value = r.device_type || '';
+    document.getElementById('deviceModel').value = r.device_model || '';
+    document.getElementById('serialNumber').value = r.serial_number || '';
+    document.getElementById('problem').value = r.problem || '';
+    document.getElementById('laborCost').value = r.labor_cost || 0;
+    document.getElementById('status').value = r.status || 'received';
+    document.getElementById('expectedRepairDate').value = r.expected_repair_date || '';
+    var visitAt = document.getElementById('visitAt');
+    visitAt.value = r.visit_at ? new Date(new Date(r.visit_at).getTime() - new Date(r.visit_at).getTimezoneOffset() * 60000).toISOString().slice(0, 16) : '';
+    document.getElementById('repairNotes').value = r.notes || '';
+
+    resetDeviceImage();
+    if (r.device_image_url) {
+        showDeviceImagePreview(r.device_image_url);
+    }
+
+    if (customer) {
+        document.getElementById('customerSearch').value = customer.name + ' - ' + (customer.phone || '');
+        renderSelectedCustomer(customer);
+    }
+
+    clearFormErrors();
+    renderDeviceSuggestions();
+    document.getElementById('repairModal').classList.add('show');
+    setTimeout(function() {
+        document.getElementById('deviceType').focus();
+    }, 300);
+}
+
+function closeRepairModal() {
+    document.getElementById('repairModal').classList.remove('show');
+    document.getElementById('customerDropdown').classList.remove('show');
+    state.editingRepair = null;
+    state.selectedCustomer = null;
+    resetDeviceImage();
+}
+
+function clearFormErrors() {
+    var errors = document.querySelectorAll('.form-error');
+    for (var i = 0; i < errors.length; i++) errors[i].classList.remove('show');
+    var inputs = document.querySelectorAll('.form-input.error, .form-textarea.error, .form-select.error');
+    for (var j = 0; j < inputs.length; j++) inputs[j].classList.remove('error');
+}
+
+function renderDeviceSuggestions() {
+    var container = document.getElementById('deviceSuggestions');
+    if (!container) return;
+    if (!state.deviceTypes.length) {
+        container.innerHTML = '';
+        return;
+    }
+    var currentValue = (document.getElementById('deviceType').value || '').trim().toLowerCase();
+    var html = '';
+    state.deviceTypes.forEach(function(dt) {
+        if (dt.name.toLowerCase() === currentValue) return;
+        html += '<button type="button" class="device-suggestion-chip" data-device-type="' + escapeHtml(dt.name) + '">';
+        html += '<i class="fas ' + getDeviceIcon(dt.name) + '"></i> ' + escapeHtml(dt.name);
+        if (dt.count > 1) html += ' <span style="opacity: 0.6; font-size: 0.7em;">(' + dt.count + ')</span>';
+        html += '</button>';
+    });
+    container.innerHTML = html;
+    container.querySelectorAll('.device-suggestion-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            document.getElementById('deviceType').value = chip.dataset.deviceType;
+            renderDeviceSuggestions();
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔍 Customer Picker
+// ═══════════════════════════════════════════════════════════════
+function initCustomerPicker() {
+    var input = document.getElementById('customerSearch');
+    var dropdown = document.getElementById('customerDropdown');
+    var searchInput = document.getElementById('customerDropdownSearch');
+
+    if (input) {
+        input.addEventListener('click', function() {
+            dropdown.classList.add('show');
+            renderCustomerOptions('');
+            setTimeout(function() { if (searchInput) searchInput.focus(); }, 100);
+        });
+    }
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) { renderCustomerOptions(e.target.value); });
+    }
+    document.addEventListener('click', function(e) {
+        if (!dropdown || !input) return;
+        if (!dropdown.contains(e.target) && !input.contains(e.target)) dropdown.classList.remove('show');
+    });
+    var newBtn = document.getElementById('newCustomerBtn');
+    if (newBtn) {
+        newBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.remove('show');
+            openNewCustomerModal();
+        });
+    }
+}
+
+function renderCustomerOptions(search) {
+    var list = document.getElementById('customerOptionsList');
+    if (!list) return;
+    var q = (search || '').trim().toLowerCase();
+    var customers = state.customers;
+    if (q) {
+        customers = customers.filter(function(c) {
+            return (c.name || '').toLowerCase().indexOf(q) !== -1 ||
+                   (c.phone || '').toLowerCase().indexOf(q) !== -1;
+        });
+    }
+    if (!customers.length) {
+        list.innerHTML = '<div class="picker-empty"><i class="fas fa-user-slash"></i><p>لا يوجد عملاء</p></div>';
+        return;
+    }
+    var html = '';
+    customers.slice(0, 30).forEach(function(c) {
+        var initials = getInitials(c.name);
+        html += '<div class="picker-option" data-customer-id="' + c.id + '">';
+        html += '<div class="picker-option-avatar">' + escapeHtml(initials) + '</div>';
+        html += '<div class="picker-option-info">';
+        html += '<div class="picker-option-name">' + escapeHtml(c.name) + '</div>';
+        html += '<div class="picker-option-meta"><span><i class="fas fa-phone"></i> ' + escapeHtml(c.phone || '—') + '</span></div>';
+        html += '</div></div>';
+    });
+    list.innerHTML = html;
+    list.querySelectorAll('.picker-option').forEach(function(el) {
+        el.addEventListener('click', function() { selectCustomer(el.dataset.customerId); });
+    });
+}
+
+function selectCustomer(id) {
+    var c = null;
+    for (var i = 0; i < state.customers.length; i++) {
+        if (state.customers[i].id === id) { c = state.customers[i]; break; }
+    }
+    if (!c) return;
+    state.selectedCustomer = c;
+    document.getElementById('customerDropdown').classList.remove('show');
+    document.getElementById('customerSearch').value = c.name + ' - ' + (c.phone || '');
+    renderSelectedCustomer(c);
+    document.getElementById('customerError').classList.remove('show');
+}
+
+function renderSelectedCustomer(c) {
+    var container = document.getElementById('selectedCustomerContainer');
+    if (!container) return;
+    var initials = getInitials(c.name);
+    var html = '<div class="selected-chip">';
+    html += '<div class="selected-chip-icon">' + escapeHtml(initials) + '</div>';
+    html += '<div class="selected-chip-info">';
+    html += '<div class="selected-chip-name">' + escapeHtml(c.name) + '</div>';
+    html += '<div class="selected-chip-meta"><i class="fas fa-phone"></i> ' + escapeHtml(c.phone || '—') + '</div>';
+    html += '</div>';
+    html += '<button type="button" class="selected-chip-remove" id="removeSelectedCustomer"><i class="fas fa-times"></i></button>';
+    html += '</div>';
+    container.innerHTML = html;
+    var removeBtn = document.getElementById('removeSelectedCustomer');
+    if (removeBtn) {
+        removeBtn.addEventListener('click', function() {
+            state.selectedCustomer = null;
+            document.getElementById('customerSearch').value = '';
+            container.innerHTML = '';
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 New Customer Modal
+// ═══════════════════════════════════════════════════════════════
+function openNewCustomerModal() {
+    document.getElementById('newCustomerForm').reset();
+    document.getElementById('newCustomerPhoneError').classList.remove('show');
+    document.getElementById('newCustomerPhone').classList.remove('error');
+    document.getElementById('newCustomerName').classList.remove('error');
+    document.getElementById('newCustomerModal').classList.add('show');
+    setTimeout(function() { document.getElementById('newCustomerName').focus(); }, 300);
+}
+
+function closeNewCustomerModal() {
+    document.getElementById('newCustomerModal').classList.remove('show');
+}
+
+function saveNewCustomer(e) {
+    e.preventDefault();
+    var name = document.getElementById('newCustomerName').value.trim();
+    var phone = document.getElementById('newCustomerPhone').value.trim();
+    var cleanPhone = sanitizePhone(phone);
+    if (!name) {
+        document.getElementById('newCustomerName').classList.add('error');
+        return;
+    }
+    if (!cleanPhone || cleanPhone.length < 8) {
+        document.getElementById('newCustomerPhone').classList.add('error');
+        document.getElementById('newCustomerPhoneError').classList.add('show');
+        return;
+    }
+    var btn = document.getElementById('saveNewCustomerBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveNewCustomerText');
+    btn.disabled = true;
+    spinner.style.display = 'inline-block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+
+    var sb = getSupabaseClient();
+    var customerData = { name: name, phone: phone };
+    var newCustomer = Object.assign({ id: 'temp_' + Date.now(), created_at: new Date().toISOString() }, customerData);
+    var promise;
+    if (sb && navigator.onLine) {
+        promise = sb.from('customers').insert(customerData).select().single()
+            .then(function(result) {
+                if (result.error) throw result.error;
+                newCustomer.id = result.data.id;
+                newCustomer.created_at = result.data.created_at;
+            });
+    } else {
+        promise = addToOutbox({ type: 'insert', table: 'customers', tempId: newCustomer.id, data: customerData });
+    }
+    promise.then(function() {
+        state.customers.push(newCustomer);
+        dbPut('customers', newCustomer);
+        closeNewCustomerModal();
+        selectCustomer(newCustomer.id);
+        showToast('تم إضافة العميل بنجاح', 'success');
+    }).catch(function(err) {
+        console.error('Save customer error:', err);
+        showToast('حدث خطأ أثناء حفظ العميل', 'error');
+    }).then(function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = 'إضافة';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 💾 Save Repair
+// ═══════════════════════════════════════════════════════════════
+function saveRepair(e) {
+    e.preventDefault();
+    clearFormErrors();
+
+    var customerId = state.selectedCustomer && state.selectedCustomer.id;
+    var deviceType = document.getElementById('deviceType').value.trim();
+    var deviceModel = document.getElementById('deviceModel').value.trim() || null;
+    var serialNumber = document.getElementById('serialNumber').value.trim() || null;
+    var problem = document.getElementById('problem').value.trim();
+    var laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+    var status = document.getElementById('status').value;
+    var expectedRepairDate = document.getElementById('expectedRepairDate').value || null;
+    var visitAtValue = document.getElementById('visitAt').value;
+    var notes = document.getElementById('repairNotes').value.trim() || null;
+
+    var hasError = false;
+    if (!customerId || !isValidUUID(customerId)) {
+        document.getElementById('customerError').classList.add('show');
+        hasError = true;
+    }
+    if (!deviceType) {
+        document.getElementById('deviceType').classList.add('error');
+        document.getElementById('deviceTypeError').classList.add('show');
+        hasError = true;
+    }
+    if (!problem) {
+        document.getElementById('problem').classList.add('error');
+        document.getElementById('problemError').classList.add('show');
+        hasError = true;
+    }
+    if (hasError) return;
+
+    var btn = document.getElementById('saveRepairBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveRepairText');
+
+    btn.disabled = true;
+    spinner.style.display = 'inline-block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+
+    var session = getSession();
+    var sb = getSupabaseClient();
+    var isEditing = !!state.editingRepair;
+
+    var imagePromise = Promise.resolve(
+        state.uploadedImageUrl || (state.editingRepair ? state.editingRepair.device_image_url : null)
+    );
+
+    if (state.imageFile && sb && navigator.onLine) {
+        imagePromise = uploadDeviceImage(sb, state.imageFile)
+            .then(function(url) {
+                console.log('✅ تم رفع الصورة:', url);
+                return url;
+            })
+            .catch(function(err) {
+                console.error('❌ فشل رفع الصورة:', err);
+                showToast('فشل رفع الصورة، سيتم الحفظ بدونها', 'warning', 4000);
+                return state.editingRepair ? state.editingRepair.device_image_url : null;
+            });
+    }
+
+    imagePromise.then(function(imageUrl) {
+        var repairData = {
+            customer_id: customerId,
+            device_type: deviceType,
+            device_model: deviceModel,
+            serial_number: serialNumber,
+            problem: problem,
+            labor_cost: laborCost,
+            status: status,
+            expected_repair_date: expectedRepairDate,
+            visit_at: visitAtValue ? new Date(visitAtValue).toISOString() : null,
+            notes: notes,
+            device_image_url: imageUrl,
+            created_by: session && session.user ? session.user.id : null
+        };
+
+        var tempId = 'temp_' + Date.now();
+        var savePromise;
+
+        if (isEditing) {
+            var editingId = state.editingRepair.id;
+            var oldStatus = state.editingRepair.status;
+
+            if (sb && navigator.onLine && isValidUUID(editingId)) {
+                savePromise = sb.from('repair_orders').update(repairData).eq('id', editingId)
+                    .then(function(result) {
+                        if (result.error) throw result.error;
+                        if (oldStatus !== status) {
+                            return sb.from('repair_timeline').insert({
+                                repair_order_id: editingId,
+                                status: status,
+                                note: 'تم التحديث من ' + getStatusInfo(oldStatus).text + ' إلى ' + getStatusInfo(status).text,
+                                created_by: session && session.user ? session.user.id : null
+                            });
+                        }
+                    });
+            } else {
+                savePromise = addToOutbox({ type: 'update', table: 'repair_orders', id: editingId, data: repairData });
+            }
+
+            savePromise = savePromise.then(function() {
+                for (var i = 0; i < state.repairs.length; i++) {
+                    if (state.repairs[i].id === editingId) {
+                        state.repairs[i] = Object.assign({}, state.repairs[i], repairData);
+                        state.repairs[i].customer = state.selectedCustomer;
+                        dbPut('repairs', state.repairs[i]);
+                        break;
+                    }
+                }
+                showToast('تم تحديث أمر الصيانة', 'success');
+            });
+
+        } else {
+            var newRepair = Object.assign({
+                id: tempId,
+                tracking_code: generateTrackingCode(),
+                created_at: new Date().toISOString(),
+                customer: state.selectedCustomer
+            }, repairData);
+
+            if (sb && navigator.onLine) {
+                savePromise = sb.from('repair_orders').insert(repairData).select('*, customer:customers(id, name, phone)').single()
+                    .then(function(result) {
+                        if (result.error) throw result.error;
+                        newRepair.id = result.data.id;
+                        newRepair.tracking_code = result.data.tracking_code;
+                        newRepair.created_at = result.data.created_at;
+                        newRepair.customer = result.data.customer;
+                        return sb.from('repair_timeline').insert({
+                            repair_order_id: result.data.id,
+                            status: 'received',
+                            note: 'تم استلام الغسالة',
+                            created_by: session && session.user ? session.user.id : null
+                        }).then(function() { return result.data; });
+                    });
+            } else {
+                savePromise = addToOutbox({ type: 'insert', table: 'repair_orders', tempId: tempId, data: repairData });
+            }
+
+            savePromise = savePromise.then(function() {
+                state.repairs.unshift(newRepair);
+                dbPut('repairs', newRepair);
+                showToast('تم استلام الغسالة بنجاح', 'success');
+            });
+        }
+
+        return savePromise;
+    }).then(function() {
+        closeRepairModal();
+        buildDeviceTypesFromRepairs();
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.error('Save error:', err);
+        var msg = 'حدث خطأ أثناء الحفظ';
+        if (err.message) {
+            if (err.message.indexOf('device_image_url') !== -1) {
+                msg = '⚠️ عمود device_image_url غير موجود في قاعدة البيانات. تأكد من تشغيل SQL الإصلاح.';
+            } else if (err.message.indexOf('tracking_code') !== -1) {
+                msg = '⚠️ عمود tracking_code غير موجود. تأكد من تشغيل SQL.';
+            } else if (err.code === '23505') {
+                msg = 'رقم التتبع مستخدم، حاول مرة أخرى';
+            } else {
+                msg = err.message;
+            }
+        }
+        showToast(msg, 'error', 8000);
+    }).then(function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = isEditing ? 'حفظ التعديلات' : 'حفظ';
+    });
+}
+
+function generateTrackingCode() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var random = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    return 'REP-' + year + '-' + random;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📋 Details Modal
+// ═══════════════════════════════════════════════════════════════
+function openDetailsModal(id) {
+    var r = null;
+    for (var i = 0; i < state.repairs.length; i++) {
+        if (state.repairs[i].id === id) { r = state.repairs[i]; break; }
+    }
+    if (!r) return;
+
+    state.viewingRepair = r;
+    var statusInfo = getStatusInfo(r.status);
+    var customer = r.customer || {};
+    var deviceIcon = getDeviceIcon(r.device_type);
+    var deviceName = (r.device_type || '') + (r.device_model ? ' - ' + r.device_model : '');
+    if (!deviceName) deviceName = 'غسالة';
+
+    var repairTimeline = state.timeline.filter(function(t) {
+        return t.repair_order_id === r.id;
+    }).sort(function(a, b) {
+        return new Date(a.created_at) - new Date(b.created_at);
+    });
+
+    var timelineHtml = '';
+    if (repairTimeline.length) {
+        timelineHtml = '<div class="timeline">';
+        repairTimeline.forEach(function(t, idx) {
+            var isLast = idx === repairTimeline.length - 1;
+            var tStatus = getStatusInfo(t.status);
+            timelineHtml += '<div class="timeline-item ' + (isLast ? 'current' : '') + '">';
+            timelineHtml += '<div class="timeline-status">';
+            timelineHtml += '<i class="fas ' + tStatus.icon + '" style="color: ' + tStatus.color + ';"></i> ' + tStatus.text;
+            timelineHtml += '</div>';
+            if (t.note) timelineHtml += '<div class="timeline-note">' + escapeHtml(t.note) + '</div>';
+            timelineHtml += '<div class="timeline-time"><i class="fas fa-clock"></i> ' + formatDateTime(t.created_at) + '</div>';
+            timelineHtml += '</div>';
+        });
+        timelineHtml += '</div>';
+    } else {
+        timelineHtml = '<div style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted); background: var(--bg-primary); border-radius: var(--radius-md); border: 2px dashed var(--border-color);">' +
+            '<i class="fas fa-clock" style="font-size: 2.25rem; opacity: 0.3; display: block; margin-bottom: 0.6rem; color: var(--primary);"></i>' +
+            '<p style="font-size: 0.85rem; font-weight: 700;">لا يوجد سجل بعد</p></div>';
+    }
+
+    var baseUrl = window.location.origin + window.location.pathname.replace('repairs.html', 'track.html');
+    var trackUrl = baseUrl + '?code=' + encodeURIComponent(r.tracking_code || '');
+
+    var html = '';
+
+    if (r.device_image_url) {
+        html += '<img src="' + escapeHtml(r.device_image_url) + '" alt="' + escapeHtml(deviceName) + '" class="device-image-large" data-action="zoom-image" data-url="' + escapeHtml(r.device_image_url) + '">';
+    }
+
+    html += '<div class="repair-details-header">';
+    html += '<div class="repair-details-icon"><i class="fas ' + deviceIcon + '"></i></div>';
+    html += '<div class="repair-details-info">';
+    html += '<h2>' + escapeHtml(deviceName) + '</h2>';
+    html += '<div class="meta">';
+    if (customer.name) html += '<span><i class="fas fa-user"></i> ' + escapeHtml(customer.name) + '</span>';
+    if (customer.phone) html += '<span><i class="fas fa-phone"></i> ' + escapeHtml(customer.phone) + '</span>';
+    html += '<span><i class="fas fa-calendar"></i> ' + formatDate(r.created_at) + '</span>';
+    html += '</div></div>';
+    html += '<div class="repair-details-tracking"><i class="fas fa-barcode"></i> ' + escapeHtml(r.tracking_code || '—') + '</div>';
+    html += '</div>';
+
+    html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">';
+    html += '<div style="padding: 0.95rem; background: ' + statusInfo.color + '15; border-radius: var(--radius-md); text-align: center; border: 1px solid ' + statusInfo.color + '40;">';
+    html += '<div style="font-size: 1.5rem; color: ' + statusInfo.color + '; margin-bottom: 0.35rem;"><i class="fas ' + statusInfo.icon + '"></i></div>';
+    html += '<div style="font-size: 0.9rem; font-weight: 800; color: ' + statusInfo.color + ';">' + statusInfo.text + '</div>';
+    html += '<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700;">الحالة الحالية</div>';
+    html += '</div>';
+    html += '<div style="padding: 0.95rem; background: var(--bg-primary); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color);">';
+    html += '<div style="font-size: 0.95rem; font-weight: 800; color: var(--primary); margin-bottom: 0.35rem;">' + formatCurrencyShort(r.labor_cost) + '</div>';
+    html += '<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700;">تكلفة المصنعية</div>';
+    html += '</div>';
+    html += '<div style="padding: 0.95rem; background: var(--bg-primary); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color);">';
+    html += '<div style="font-size: 0.95rem; font-weight: 800; color: var(--warning); margin-bottom: 0.35rem;">' + formatTimeAgo(r.created_at) + '</div>';
+    html += '<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700;">منذ الاستلام</div>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="tabs-nav">';
+    html += '<button class="tab-btn active" data-tab="info"><i class="fas fa-info-circle"></i> التفاصيل</button>';
+    html += '<button class="tab-btn" data-tab="timeline"><i class="fas fa-clock-rotate-left"></i> Timeline (' + repairTimeline.length + ')</button>';
+    html += '<button class="tab-btn" data-tab="share"><i class="fas fa-share-nodes"></i> مشاركة</button>';
+    html += '</div>';
+
+    html += '<div class="tab-content active" data-tab-content="info">';
+    html += '<div style="display: flex; flex-direction: column; gap: 0.65rem;">';
+    html += '<div style="padding: 0.95rem; background: var(--bg-primary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">';
+    html += '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; margin-bottom: 0.4rem; text-transform: uppercase;">وصف العطل</div>';
+    html += '<div style="font-size: 0.9rem; line-height: 1.7; font-weight: 600;">' + escapeHtml(r.problem || 'لا يوجد') + '</div>';
+    html += '</div>';
+    if (r.serial_number) {
+        html += '<div style="padding: 0.95rem; background: var(--bg-primary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">';
+        html += '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; margin-bottom: 0.4rem; text-transform: uppercase;">الرقم التسلسلي</div>';
+        html += '<div style="font-size: 0.9rem; font-weight: 800; font-family: monospace;">' + escapeHtml(r.serial_number) + '</div>';
+        html += '</div>';
+    }
+    if (r.notes) {
+        html += '<div style="padding: 0.95rem; background: var(--bg-primary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">';
+        html += '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; margin-bottom: 0.4rem; text-transform: uppercase;">ملاحظات</div>';
+        html += '<div style="font-size: 0.9rem; line-height: 1.7; font-weight: 600;">' + escapeHtml(r.notes) + '</div>';
+        html += '</div>';
+    }
+    html += '</div></div>';
+
+    html += '<div class="tab-content" data-tab-content="timeline">' + timelineHtml + '</div>';
+
+    html += '<div class="tab-content" data-tab-content="share">';
+    html += '<div style="padding: 1.25rem; background: var(--bg-primary); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color);">';
+    html += '<div id="qrRepairBox" style="width: 200px; height: 200px; margin: 0 auto 1rem; background: white; padding: 0.5rem; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; border: 2px solid var(--border-color);"></div>';
+    html += '<h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem;"><i class="fas fa-qrcode" style="color: var(--primary);"></i> لينك تتبع الغسالة</h4>';
+    html += '<p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.85rem; font-weight: 600;">شارك الكود مع العميل لمتابعة حالة غسالته</p>';
+    html += '<div style="display: flex; gap: 0.35rem; margin-bottom: 1rem; max-width: 400px; margin-right: auto; margin-left: auto;">';
+    html += '<input type="text" id="trackUrlInput" value="' + escapeHtml(trackUrl) + '" readonly style="flex: 1; padding: 0.65rem 0.8rem; background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: var(--radius-sm); font-size: 0.75rem; font-family: monospace; direction: ltr; text-align: left; color: var(--text-primary); font-weight: 700;">';
+    html += '<button type="button" class="btn btn-primary btn-sm" id="copyTrackUrlBtn" style="flex-shrink: 0;"><i class="fas fa-copy"></i></button>';
+    html += '</div>';
+    html += '<div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">';
+    var waPhone = sanitizePhone(customer.phone || '').replace(/^0/, '20');
+    var waMsg = 'مرحباً ' + (customer.name || '') + '،\nجهازك ' + deviceName + ' برقم تتبع: ' + (r.tracking_code || '') + '\nيمكنك متابعة حالة الجهاز من هنا: ' + trackUrl;
+    html += '<a href="https://wa.me/' + escapeHtml(waPhone) + '?text=' + encodeURIComponent(waMsg) + '" target="_blank" class="btn btn-success btn-sm"><i class="fab fa-whatsapp"></i> واتساب</a>';
+    html += '<a href="sms:' + escapeHtml(sanitizePhone(customer.phone || '')) + '?body=' + encodeURIComponent('جهازك برقم ' + (r.tracking_code || '') + ' - تابع من: ' + trackUrl) + '" class="btn btn-info btn-sm"><i class="fas fa-comment-sms"></i> SMS</a>';
+    html += '</div></div></div>';
+
+    document.getElementById('detailsContent').innerHTML = html;
+    document.getElementById('detailsModal').classList.add('show');
+    bindDetailsTabEvents();
+    bindDetailsImageEvents();
+    setTimeout(function() { generateRepairQR(trackUrl); }, 100);
+}
+
+function bindDetailsImageEvents() {
+    document.querySelectorAll('#detailsModal [data-action="zoom-image"]').forEach(function(img) {
+        img.addEventListener('click', function() {
+            openLightbox(img.dataset.url);
+        });
+    });
+}
+
+function bindDetailsTabEvents() {
+    var tabs = document.querySelectorAll('#detailsModal .tab-btn');
+    var contents = document.querySelectorAll('#detailsModal .tab-content');
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var tabName = tab.dataset.tab;
+            tabs.forEach(function(t) { t.classList.toggle('active', t === tab); });
+            contents.forEach(function(c) {
+                c.classList.toggle('active', c.dataset.tabContent === tabName);
+            });
+        });
+    });
+    var copyBtn = document.getElementById('copyTrackUrlBtn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+            var input = document.getElementById('trackUrlInput');
+            if (!input) return;
+            input.select();
+            try {
+                document.execCommand('copy');
+                showToast('تم نسخ الرابط', 'success');
+            } catch (e) {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(input.value).then(function() {
+                        showToast('تم نسخ الرابط', 'success');
+                    });
+                }
+            }
+        });
+    }
+}
+
+function generateRepairQR(text) {
+    var qrBox = document.getElementById('qrRepairBox');
+    if (!qrBox) return;
+    if (typeof QRCode === 'undefined') {
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+        script.onload = function() { generateRepairQR(text); };
+        script.onerror = function() {
+            qrBox.innerHTML = '<i class="fas fa-qrcode" style="font-size: 2rem; color: var(--text-muted);"></i>';
+        };
+        document.head.appendChild(script);
+        return;
+    }
+    QRCode.toCanvas(text, { width: 200, margin: 1, color: { dark: '#0F766E', light: '#ffffff' } }, function(err, canvas) {
+        if (err) {
+            qrBox.innerHTML = '<i class="fas fa-qrcode" style="font-size: 2rem; color: var(--text-muted);"></i>';
+            return;
+        }
+        qrBox.innerHTML = '';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        qrBox.appendChild(canvas);
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔄 Status Update
+// ═══════════════════════════════════════════════════════════════
+function openStatusModal(id) {
+    var r = null;
+    for (var i = 0; i < state.repairs.length; i++) {
+        if (state.repairs[i].id === id) { r = state.repairs[i]; break; }
+    }
+    if (!r) return;
+    state.editingRepair = r;
+    document.getElementById('newStatus').value = r.status || 'received';
+    document.getElementById('statusNote').value = '';
+    document.getElementById('statusModal').classList.add('show');
+}
+
+function closeStatusModal() {
+    document.getElementById('statusModal').classList.remove('show');
+    state.editingRepair = null;
+}
+
+function saveStatus(e) {
+    e.preventDefault();
+    var r = state.editingRepair;
+    if (!r) return;
+    var newStatus = document.getElementById('newStatus').value;
+    var note = document.getElementById('statusNote').value.trim() || null;
+    if (newStatus === r.status && !note) {
+        showToast('لم يتم تغيير الحالة', 'warning');
+        return;
+    }
+    var btn = document.getElementById('saveStatusBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveStatusText');
+    btn.disabled = true;
+    spinner.style.display = 'inline-block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري التحديث...';
+
+    var session = getSession();
+    var sb = getSupabaseClient();
+    var oldStatus = r.status;
+    var isStatusChanged = newStatus !== oldStatus;
+    var promise;
+
+    if (sb && navigator.onLine && isValidUUID(r.id)) {
+        promise = Promise.resolve();
+        if (isStatusChanged) {
+            promise = promise.then(function() {
+                var updateData = { status: newStatus };
+                if (newStatus === 'delivered') updateData.delivered_at = new Date().toISOString();
+                return sb.from('repair_orders').update(updateData).eq('id', r.id);
+            });
+        }
+        promise = promise.then(function() {
+            return sb.from('repair_timeline').insert({
+                repair_order_id: r.id,
+                status: newStatus,
+                note: note || (isStatusChanged ? 'تم التحديث من ' + getStatusInfo(oldStatus).text + ' إلى ' + getStatusInfo(newStatus).text : 'ملاحظة'),
+                created_by: session && session.user ? session.user.id : null
+            });
+        });
+    } else {
+        promise = addToOutbox({ type: 'update', table: 'repair_orders', id: r.id, data: { status: newStatus } })
+            .then(function() {
+                return addToOutbox({ type: 'insert', table: 'repair_timeline', data: { repair_order_id: r.id, status: newStatus, note: note || 'تحديث الحالة' } });
+            });
+    }
+
+    promise.then(function() {
+        for (var i = 0; i < state.repairs.length; i++) {
+            if (state.repairs[i].id === r.id) {
+                state.repairs[i].status = newStatus;
+                if (newStatus === 'delivered') state.repairs[i].delivered_at = new Date().toISOString();
+                dbPut('repairs', state.repairs[i]);
+                break;
+            }
+        }
+        var newTimeline = { id: 'temp_' + Date.now(), repair_order_id: r.id, status: newStatus, note: note, created_at: new Date().toISOString() };
+        state.timeline.push(newTimeline);
+        dbPut('repair_timeline', newTimeline);
+        showToast('تم تحديث الحالة بنجاح', 'success');
+        closeStatusModal();
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.error('Status update error:', err);
+        showToast('حدث خطأ في التحديث', 'error');
+    }).then(function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = 'تحديث';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🗑️ Delete
+// ═══════════════════════════════════════════════════════════════
+function openDeleteModal(id) {
+    var r = null;
+    for (var i = 0; i < state.repairs.length; i++) {
+        if (state.repairs[i].id === id) { r = state.repairs[i]; break; }
+    }
+    if (!r) return;
+    state.deletingRepair = r;
+    document.getElementById('deleteRepairCode').textContent = r.tracking_code || '';
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function confirmDelete() {
+    var r = state.deletingRepair;
+    if (!r) return;
+    var btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="display:block;width:16px;height:16px;"></span>';
+    var session = getSession();
+    var sb = getSupabaseClient();
+    var promise;
+    if (sb && navigator.onLine && isValidUUID(r.id)) {
+        promise = sb.from('repair_orders').delete().eq('id', r.id).then(function(result) {
+            if (result.error) throw result.error;
+            sb.from('audit_log').insert({
+                user_id: session && session.user ? session.user.id : null,
+                action: 'DELETE', table_name: 'repair_orders',
+                record_id: r.id, old_data: r
+            }).then(function(){}, function(){});
+        });
+    } else {
+        promise = addToOutbox({ type: 'delete', table: 'repair_orders', id: r.id });
+    }
+    promise.then(function() {
+        state.repairs = state.repairs.filter(function(x) { return x.id !== r.id; });
+        state.timeline = state.timeline.filter(function(t) { return t.repair_order_id !== r.id; });
+        dbDelete('repairs', r.id);
+        showToast('تم حذف أمر الصيانة', 'success');
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingRepair = null;
+        buildDeviceTypesFromRepairs();
+        updateStats();
+        applyFilters();
+    }).catch(function(err) {
+        console.error('Delete error:', err);
+        showToast('حدث خطأ أثناء الحذف', 'error');
+    }).then(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-trash"></i> حذف نهائي';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🖨️ Print
+// ═══════════════════════════════════════════════════════════════
+function printRepair() {
+    var r = state.viewingRepair;
+    if (!r) return;
+    var customer = r.customer || {};
+    var statusInfo = getStatusInfo(r.status);
+
+    var imageHtml = r.device_image_url 
+        ? '<div style="text-align:center; margin-bottom: 8mm;"><img src="' + escapeHtml(r.device_image_url) + '" style="max-width: 100%; max-height: 80mm; border-radius: 3mm; border: 1px solid #e1e8f0;"></div>'
+        : '';
+
+    var html = '<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>أمر صيانة ' + escapeHtml(r.tracking_code) + '</title>' +
+        '<style>' +
+        '@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap");' +
+        '* { margin: 0; padding: 0; box-sizing: border-box; }' +
+        'body { font-family: "Cairo", sans-serif; padding: 15mm; background: white; color: #0F172A; }' +
+        '.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #0F766E; padding-bottom: 5mm; margin-bottom: 8mm; }' +
+        '.brand { display: flex; align-items: center; gap: 4mm; }' +
+        '.brand img { width: 60px; height: 60px; object-fit: contain; }' +
+        '.brand h1 { font-size: 22pt; font-weight: 900; color: #0F766E; }' +
+        '.brand p { font-size: 10pt; color: #64748b; }' +
+        '.tracking { text-align: left; }' +
+        '.tracking h2 { font-size: 22pt; font-weight: 900; font-family: monospace; color: #0F766E; }' +
+        '.tracking p { font-size: 10pt; color: #64748b; }' +
+        '.status { text-align: center; padding: 5mm; background: ' + statusInfo.color + '20; border: 2px solid ' + statusInfo.color + '; border-radius: 3mm; margin-bottom: 8mm; }' +
+        '.status h3 { font-size: 18pt; color: ' + statusInfo.color + '; font-weight: 900; }' +
+        '.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-bottom: 8mm; }' +
+        '.info-box { padding: 4mm; background: #F0FDFA; border-radius: 3mm; border: 1px solid #E2E8F0; }' +
+        '.info-box h3 { font-size: 10pt; color: #64748b; font-weight: 800; margin-bottom: 2mm; text-transform: uppercase; }' +
+        '.info-box p { font-size: 12pt; font-weight: 700; margin-bottom: 1mm; }' +
+        '.problem-box { padding: 5mm; background: #FEF3C7; border-radius: 3mm; border-right: 4px solid #F59E0B; margin-bottom: 8mm; }' +
+        '.problem-box h3 { font-size: 11pt; font-weight: 800; margin-bottom: 2mm; }' +
+        '.problem-box p { font-size: 12pt; line-height: 1.6; font-weight: 600; }' +
+        '.footer { text-align: center; font-size: 9pt; color: #64748b; padding-top: 5mm; border-top: 1px solid #E2E8F0; margin-top: 8mm; font-weight: 600; }' +
+        '</style></head><body>' +
+        '<div class="header">' +
+            '<div class="brand">' +
+                '<img src="logo.png" alt="TopLoad" onerror="this.style.display=\'none\'">' +
+                '<div><h1>TopLoad</h1><p>لصيانة الغسالات</p></div>' +
+            '</div>' +
+            '<div class="tracking"><h2>' + escapeHtml(r.tracking_code || '') + '</h2><p>' + formatDateTime(r.created_at) + '</p></div>' +
+        '</div>' +
+        '<div class="status"><h3>' + statusInfo.text + '</h3></div>' +
+        imageHtml +
+        '<div class="info-grid">' +
+            '<div class="info-box"><h3>العميل</h3><p>' + escapeHtml(customer.name || '—') + '</p><p style="font-family: monospace; direction: ltr; text-align: right;">' + escapeHtml(customer.phone || '') + '</p></div>' +
+            '<div class="info-box"><h3>الغسالة</h3><p>' + escapeHtml(r.device_type || '—') + '</p>' + (r.device_model ? '<p style="font-size: 10pt;">' + escapeHtml(r.device_model) + '</p>' : '') + '</div>' +
+        '</div>' +
+        '<div class="problem-box"><h3>وصف العطل</h3><p>' + escapeHtml(r.problem || '—') + '</p></div>' +
+        '<div class="footer"><p>شكراً لتعاملكم معنا</p></div>' +
+        '<script>window.onload = function() { setTimeout(function() { window.print(); }, 500); };<\/script>' +
+        '</body></html>';
+
+    var win = window.open('', '_blank');
+    if (!win) { showToast('يرجى السماح بالنوافذ المنبثقة', 'error'); return; }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+}
+
+function shareRepair() {
+    var tabs = document.querySelectorAll('#detailsModal .tab-btn');
+    var contents = document.querySelectorAll('#detailsModal .tab-content');
+    tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.tab === 'share'); });
+    contents.forEach(function(c) { c.classList.toggle('active', c.dataset.tabContent === 'share'); });
+}
+
+function createInvoiceFromRepair() {
+    var r = state.viewingRepair;
+    if (!r) return;
+    window.location.href = 'invoices.html?action=add&repair_id=' + r.id;
+}
+
+function exportExcel() {
+    var loadLib = Promise.resolve();
+    if (typeof XLSX === 'undefined') {
+        loadLib = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+    loadLib.then(function() {
+        var data = state.filtered.map(function(r) {
+            var customer = r.customer || {};
+            var statusInfo = getStatusInfo(r.status);
+            return {
+                'رقم التتبع': r.tracking_code || '',
+                'التاريخ': formatDate(r.created_at),
+                'العميل': customer.name || '',
+                'الموبايل': customer.phone || '',
+                'نوع الغسالة': r.device_type || '',
+                'الماركة': r.device_model || '',
+                'الرقم التسلسلي': r.serial_number || '',
+                'العطل': r.problem || '',
+                'الحالة': statusInfo.text,
+                'تكلفة المصنعية': parseFloat(r.labor_cost) || 0,
+                'صورة الغسالة': r.device_image_url || ''
+            };
+        });
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'أوامر الصيانة');
+        XLSX.writeFile(wb, 'repairs_' + new Date().toISOString().split('T')[0] + '.xlsx');
+        showToast('تم التصدير بنجاح', 'success');
+    }).catch(function(err) {
+        console.error(err);
+        showToast('فشل التصدير', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔔 Notifications
+// ═══════════════════════════════════════════════════════════════
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return;
+    sb.from('notifications').select('*').eq('user_id', session.user.id)
+        .order('created_at', { ascending: false }).limit(20)
+        .then(function(result) { renderNotifications(result.data || []); })
+        .catch(function(){});
+}
+
+function renderNotifications(notifications) {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+    var unread = notifications.filter(function(n) { return !n.read; }).length;
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else badge.style.display = 'none';
+    if (!notifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+    var typeMap = {
+        'new_repair': { icon: 'fa-soap', cls: 'info' },
+        'ready_repair': { icon: 'fa-circle-check', cls: 'success' },
+        'out_of_stock': { icon: 'fa-circle-xmark', cls: 'danger' },
+        'low_stock': { icon: 'fa-triangle-exclamation', cls: 'warning' },
+        'info': { icon: 'fa-circle-info', cls: 'info' }
+    };
+    var html = '';
+    notifications.forEach(function(n) {
+        var t = typeMap[n.type] || typeMap.info;
+        html += '<div class="notification-item ' + (n.read ? '' : 'unread') + '">';
+        html += '<div class="notification-item-icon ' + t.cls + '"><i class="fas ' + t.icon + '"></i></div>';
+        html += '<div class="notification-item-content">';
+        html += '<div class="notification-item-title">' + escapeHtml(n.title) + '</div>';
+        html += '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>';
+        html += '<div class="notification-item-time"><i class="fas fa-clock"></i> ' + formatTimeAgo(n.created_at) + '</div>';
+        html += '</div></div>';
+    });
+    list.innerHTML = html;
+}
+
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications').update({ read: true }).eq('user_id', session.user.id).eq('read', false)
+            .then(function() { loadNotifications(); showToast('تم تعيين الكل كمقروء', 'success'); })
+            .catch(function(){});
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 User UI
+// ═══════════════════════════════════════════════════════════════
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+    document.querySelectorAll('.sidebar-link[data-perm]').forEach(function(link) {
+        if (!isAdmin && !perms[link.dataset.perm]) link.style.display = 'none';
+    });
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        var dal = document.getElementById('dropdownAdminLink');
+        if (al) al.style.display = 'flex';
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 URL Params
+// ═══════════════════════════════════════════════════════════════
+function handleUrlParams() {
+    var action = getUrlParam('action');
+    var id = getUrlParam('id');
+    var tracking = getUrlParam('tracking');
+    var customerId = getUrlParam('customer_id');
+
+    if (action === 'add') {
+        setTimeout(function() {
+            openAddModal();
+            if (customerId && isValidUUID(customerId)) {
+                setTimeout(function() { selectCustomer(customerId); }, 500);
+            }
+        }, 500);
+    }
+    if (id) {
+        setTimeout(function() {
+            var exists = state.repairs.some(function(r) { return r.id === id; });
+            if (exists) openDetailsModal(id);
+        }, 700);
+    }
+    if (tracking) {
+        setTimeout(function() {
+            var repair = state.repairs.find(function(r) { return r.tracking_code === tracking; });
+            if (repair) openDetailsModal(repair.id);
+        }, 700);
+    }
+    if (action || id) {
+        try { window.history.replaceState({}, '', window.location.pathname); } catch (e) {}
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    var session = getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    if (session.user.must_change_password) { window.location.href = 'index.html'; return; }
+
+    initTheme();
+    var tt = document.getElementById('themeToggle');
+    if (tt) tt.addEventListener('click', toggleTheme);
+
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+        loadData();
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('وضع Offline', 'warning');
+    });
+
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (menuBtn) menuBtn.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.toggle('show');
+        if (overlay) overlay.classList.toggle('show');
+    });
+    if (overlay) overlay.addEventListener('click', function() {
+        if (sidebar) sidebar.classList.remove('show');
+        if (overlay) overlay.classList.remove('show');
+    });
+
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+
+    if (userBtn) userBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (userDropdown) userDropdown.classList.toggle('show');
+        if (notifPanel) notifPanel.classList.remove('show');
+    });
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+    if (notifBtn) notifBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (notifPanel) notifPanel.classList.toggle('show');
+        if (userDropdown) userDropdown.classList.remove('show');
+    });
+    var markAllBtn = document.getElementById('markAllReadBtn');
+    if (markAllBtn) markAllBtn.addEventListener('click', markAllRead);
+
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+
+    var searchTimeout;
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        var val = e.target.value;
+        searchTimeout = setTimeout(function() {
+            state.searchQuery = val;
+            applyFilters();
+        }, 250);
+    });
+
+    document.querySelectorAll('.status-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.status-tab').forEach(function(t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+            state.statusFilter = tab.dataset.status;
+            applyFilters();
+        });
+    });
+
+    var sortF = document.getElementById('sortFilter');
+    if (sortF) sortF.addEventListener('change', function(e) {
+        state.sortFilter = e.target.value;
+        applyFilters();
+    });
+
+    var addBtn = document.getElementById('addRepairBtn');
+    if (addBtn) addBtn.addEventListener('click', openAddModal);
+
+    var closeRM = document.getElementById('closeRepairModal');
+    var cancelRM = document.getElementById('cancelRepairBtn');
+    var repairForm = document.getElementById('repairForm');
+    if (closeRM) closeRM.addEventListener('click', closeRepairModal);
+    if (cancelRM) cancelRM.addEventListener('click', closeRepairModal);
+    if (repairForm) repairForm.addEventListener('submit', saveRepair);
+
+    // Image upload
+    var deviceImageInput = document.getElementById('deviceImageInput');
+    var deviceImageBox = document.getElementById('deviceImageBox');
+    
+    if (deviceImageInput) {
+        deviceImageInput.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('حجم الصورة أكبر من 5 ميجا', 'error');
+                e.target.value = '';
+                return;
+            }
+            if (!file.type.startsWith('image/')) {
+                showToast('الملف ليس صورة', 'error');
+                e.target.value = '';
+                return;
+            }
+            state.imageFile = file;
+            var reader = new FileReader();
+            reader.onload = function(ev) { showDeviceImagePreview(ev.target.result); };
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    if (deviceImageBox) {
+        ['dragenter', 'dragover'].forEach(function(evt) {
+            deviceImageBox.addEventListener(evt, function(e) {
+                e.preventDefault(); e.stopPropagation();
+                deviceImageBox.classList.add('dragover');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function(evt) {
+            deviceImageBox.addEventListener(evt, function(e) {
+                e.preventDefault(); e.stopPropagation();
+                deviceImageBox.classList.remove('dragover');
+            });
+        });
+        deviceImageBox.addEventListener('drop', function(e) {
+            var files = e.dataTransfer.files;
+            if (files && files[0]) {
+                var input = document.getElementById('deviceImageInput');
+                input.files = files;
+                var event = new Event('change', { bubbles: true });
+                input.dispatchEvent(event);
+            }
+        });
+    }
+
+    var removeDeviceImageBtn = document.getElementById('removeDeviceImageBtn');
+    if (removeDeviceImageBtn) {
+        removeDeviceImageBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            resetDeviceImage();
+        });
+    }
+
+    var deviceTypeInput = document.getElementById('deviceType');
+    if (deviceTypeInput) {
+        deviceTypeInput.addEventListener('input', function() {
+            renderDeviceSuggestions();
+            if (deviceTypeInput.value.trim()) {
+                deviceTypeInput.classList.remove('error');
+                var dtErr = document.getElementById('deviceTypeError');
+                if (dtErr) dtErr.classList.remove('show');
+            }
+        });
+        deviceTypeInput.addEventListener('blur', renderDeviceSuggestions);
+    }
+
+    initCustomerPicker();
+
+    var closeNCM = document.getElementById('closeNewCustomerModal');
+    var cancelNCM = document.getElementById('cancelNewCustomerBtn');
+    var newCustomerForm = document.getElementById('newCustomerForm');
+    if (closeNCM) closeNCM.addEventListener('click', closeNewCustomerModal);
+    if (cancelNCM) cancelNCM.addEventListener('click', closeNewCustomerModal);
+    if (newCustomerForm) newCustomerForm.addEventListener('submit', saveNewCustomer);
+
+    var closeDM = document.getElementById('closeDetailsModal');
+    var closeDMBtn = document.getElementById('closeDetailsBtn');
+    if (closeDM) closeDM.addEventListener('click', function() {
+        document.getElementById('detailsModal').classList.remove('show');
+        state.viewingRepair = null;
+    });
+    if (closeDMBtn) closeDMBtn.addEventListener('click', function() {
+        document.getElementById('detailsModal').classList.remove('show');
+        state.viewingRepair = null;
+    });
+    var printBtn = document.getElementById('printRepairBtn');
+    if (printBtn) printBtn.addEventListener('click', printRepair);
+    var shareBtn = document.getElementById('shareRepairBtn');
+    if (shareBtn) shareBtn.addEventListener('click', shareRepair);
+    var invBtn = document.getElementById('invoiceFromRepairBtn');
+    if (invBtn) invBtn.addEventListener('click', createInvoiceFromRepair);
+
+    var closeSM = document.getElementById('closeStatusModal');
+    var cancelSM = document.getElementById('cancelStatusBtn');
+    var statusForm = document.getElementById('statusForm');
+    if (closeSM) closeSM.addEventListener('click', closeStatusModal);
+    if (cancelSM) cancelSM.addEventListener('click', closeStatusModal);
+    if (statusForm) statusForm.addEventListener('submit', saveStatus);
+
+    var closeDel = document.getElementById('closeDeleteModal');
+    var cancelDel = document.getElementById('cancelDeleteBtn');
+    var confirmDel = document.getElementById('confirmDeleteBtn');
+    if (closeDel) closeDel.addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingRepair = null;
+    });
+    if (cancelDel) cancelDel.addEventListener('click', function() {
+        document.getElementById('deleteModal').classList.remove('show');
+        state.deletingRepair = null;
+    });
+    if (confirmDel) confirmDel.addEventListener('click', confirmDelete);
+
+    var exportBtn = document.getElementById('exportExcelBtn');
+    if (exportBtn) exportBtn.addEventListener('click', exportExcel);
+
+    var lbClose = document.getElementById('lightboxClose');
+    if (lbClose) lbClose.addEventListener('click', closeLightbox);
+    var lb = document.getElementById('lightbox');
+    if (lb) lb.addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+        ov.addEventListener('click', function(e) {
+            if (e.target === ov) ov.classList.remove('show');
+        });
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.show').forEach(function(m) { m.classList.remove('show'); });
+            closeLightbox();
+            var cd = document.getElementById('customerDropdown');
+            if (cd) cd.classList.remove('show');
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            var si = document.getElementById('searchInput');
+            if (si) si.focus();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        if (winScroll > 300) {
+            if (scrollTopBtn) scrollTopBtn.classList.add('show');
+        } else {
+            if (scrollTopBtn) scrollTopBtn.classList.remove('show');
+        }
+    }, { passive: true });
+    if (scrollTopBtn) scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    if (session.user.role !== 'admin' && (!session.user.permissions || !session.user.permissions.can_edit_repairs)) {
+        var addBtn2 = document.getElementById('addRepairBtn');
+        if (addBtn2) addBtn2.style.display = 'none';
+    }
+
+    openDB()
+        .then(function() { return loadData(); })
+        .then(function() {
+            loadNotifications();
+            setInterval(loadNotifications, 60000);
+            handleUrlParams();
+        })
+        .catch(function(err) {
+            console.error('Init error:', err);
+            state.isLoading = false;
+            showToast('حدث خطأ في تحميل البيانات', 'error');
+        });
+
+    startInactivityMonitor();
+    console.log('%c🔧 TopLoad - صفحة أوامر الصيانة جاهزة ✅', 'color: #0F766E; font-size: 16px; font-weight: bold;');
+});
+
+window.RepairsApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession,
+    reload: function() { return loadData(); }
+};
+
+})();
+</script>
+
+</body>
+</html>

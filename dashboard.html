@@ -1,0 +1,4077 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F766E" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+<meta name="description" content="لوحة التحكم - TopLoad لصيانة الغسالات">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="TopLoad">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TopLoad">
+
+<title>لوحة التحكم | TopLoad - لصيانة الغسالات</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   🎨 TopLoad Design System v2.0
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+    /* Primary Palette */
+    --primary: #0F766E;
+    --primary-dark: #115E59;
+    --primary-light: #14B8A6;
+    --primary-lighter: #5EEAD4;
+    --primary-glow: rgba(15, 118, 110, 0.25);
+    --primary-soft: rgba(15, 118, 110, 0.08);
+    
+    /* Accent */
+    --accent: #F59E0B;
+    --accent-dark: #D97706;
+    --accent-light: #FBBF24;
+    
+    /* Status Colors */
+    --success: #10B981;
+    --success-dark: #059669;
+    --success-soft: rgba(16, 185, 129, 0.12);
+    
+    --danger: #EF4444;
+    --danger-dark: #DC2626;
+    --danger-soft: rgba(239, 68, 68, 0.12);
+    
+    --warning: #F59E0B;
+    --warning-dark: #D97706;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+    
+    --info: #3B82F6;
+    --info-soft: rgba(59, 130, 246, 0.12);
+    
+    --purple: #8B5CF6;
+    --purple-dark: #7C3AED;
+    --purple-soft: rgba(139, 92, 246, 0.12);
+    
+    --cyan: #06B6D4;
+    --rose: #F43F5E;
+    
+    /* Light Theme */
+    --bg-primary: #E0F7FA;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F0FDFA;
+    --bg-subtle: #F8FAFC;
+    --bg-elevated: #FFFFFF;
+    
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    
+    --border-color: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --border-light: #F1F5F9;
+    
+    /* Shadows */
+    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+    --shadow-primary: 0 8px 24px rgba(15, 118, 110, 0.25);
+    --shadow-primary-lg: 0 12px 32px rgba(15, 118, 110, 0.35);
+    
+    /* Radii */
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Layout */
+    --navbar-height: 68px;
+    --sidebar-width: 268px;
+    
+    /* Transitions */
+    --t-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --t-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Safe Areas */
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+    --bg-hover: #334155;
+    --bg-subtle: #1A2332;
+    --bg-elevated: #243447;
+    
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+    
+    --border-color: #334155;
+    --border-strong: #475569;
+    --border-light: #1E293B;
+    
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.7);
+    --shadow-primary: 0 8px 24px rgba(20, 184, 166, 0.3);
+    --shadow-primary-lg: 0 12px 32px rgba(20, 184, 166, 0.4);
+    
+    --primary: #14B8A6;
+    --primary-dark: #0F766E;
+    --primary-light: #5EEAD4;
+    --primary-glow: rgba(20, 184, 166, 0.3);
+    --primary-soft: rgba(20, 184, 166, 0.12);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Reset & Base
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html { 
+    scroll-behavior: smooth; 
+    -webkit-text-size-adjust: 100%; 
+}
+
+body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--t), color var(--t);
+    font-weight: 500;
+    font-feature-settings: 'kern' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+button { 
+    cursor: pointer; 
+    border: none; 
+    background: none; 
+}
+
+a { 
+    text-decoration: none; 
+    color: inherit; 
+}
+
+img { 
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+}
+
+::selection {
+    background: var(--primary);
+    color: white;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ═══════════════════════════════════════════════════════════════
+   Reading Progress
+   ═══════════════════════════════════════════════════════════════ */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+    width: 0%;
+    z-index: 10000;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Navbar
+   ═══════════════════════════════════════════════════════════════ */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-height);
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--t);
+}
+
+.navbar-menu-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    transition: all var(--t);
+    flex-shrink: 0;
+}
+
+.navbar-menu-btn:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+    transform: scale(1.05);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.navbar-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    transition: transform var(--t);
+}
+
+.navbar-brand:hover .navbar-logo {
+    transform: scale(1.05);
+}
+
+.navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.navbar-brand-text strong {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+.navbar-brand-text span {
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.navbar-search {
+    flex: 1;
+    max-width: 500px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.navbar-search-input {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    padding-right: 2.75rem;
+    padding-left: 3.5rem;
+    background: var(--bg-primary);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--t);
+    font-weight: 500;
+}
+
+.navbar-search-input::placeholder { color: var(--text-muted); }
+
+.navbar-search-input:focus {
+    border-color: var(--primary);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.navbar-search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    pointer-events: none;
+    transition: color var(--t);
+}
+
+.navbar-search-input:focus ~ .navbar-search-icon {
+    color: var(--primary);
+}
+
+.navbar-search-shortcut {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.2rem 0.55rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xs);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: auto;
+}
+
+.navbar-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--t);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.navbar-btn:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+    transform: scale(1.05);
+}
+
+.navbar-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg-card);
+    animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.online-dot {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    border: 2px solid var(--bg-card);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    animation: pulse-online 2s infinite;
+}
+
+.online-dot.offline {
+    background: var(--danger);
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--t);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.navbar-user:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.navbar-user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+
+.navbar-user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.navbar-user-info strong {
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.navbar-user-info span {
+    font-size: 0.65rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Sidebar
+   ═══════════════════════════════════════════════════════════════ */
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    right: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900;
+    overflow-y: auto;
+    padding: 1.25rem 0.85rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--t);
+    scrollbar-width: thin;
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 3px;
+}
+
+.sidebar-section {
+    margin-bottom: 1.4rem;
+}
+
+.sidebar-section-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0 0.85rem;
+    margin-bottom: 0.6rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all var(--t-fast);
+    margin-bottom: 0.2rem;
+    position: relative;
+}
+
+.sidebar-link:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+    transform: translateX(-3px);
+}
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    font-weight: 700;
+    box-shadow: var(--shadow-primary);
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    right: -0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: var(--accent);
+    border-radius: 4px;
+}
+
+.sidebar-link i:first-child {
+    width: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 899;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--t);
+    top: var(--navbar-height);
+}
+
+.sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Main Content
+   ═══════════════════════════════════════════════════════════════ */
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem;
+    min-height: calc(100vh - var(--navbar-height));
+    transition: margin var(--t);
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header-text h1 {
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: -0.5px;
+}
+
+.page-header-text h1 i {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-primary);
+}
+
+.page-header-text p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.page-header-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.7rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all var(--t);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary-lg);
+    filter: brightness(1.05);
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Stats Grid
+   ═══════════════════════════════════════════════════════════════ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.35rem;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--t);
+    animation: fadeInUp 0.5s ease backwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stat-card:nth-child(4) { animation-delay: 0.2s; }
+.stat-card:nth-child(5) { animation-delay: 0.25s; }
+.stat-card:nth-child(6) { animation-delay: 0.3s; }
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-color, var(--primary));
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, var(--accent-color, var(--primary)) 0%, transparent 70%);
+    opacity: 0.12;
+    border-radius: 50%;
+    transform: translate(35%, -35%);
+    pointer-events: none;
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-color, var(--primary)), transparent);
+    opacity: 0;
+    transition: opacity var(--t);
+}
+
+.stat-card:hover::after {
+    opacity: 1;
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    color: white;
+    background: linear-gradient(135deg, var(--accent-color, var(--primary)), var(--accent-color-dark, var(--primary-dark)));
+    box-shadow: 0 6px 16px var(--accent-shadow, rgba(15, 118, 110, 0.3));
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 60%);
+    pointer-events: none;
+}
+
+.stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-full);
+}
+
+.stat-trend.up {
+    background: var(--success-soft);
+    color: var(--success-dark);
+}
+
+.stat-trend.down {
+    background: var(--danger-soft);
+    color: var(--danger-dark);
+}
+
+.stat-value {
+    font-size: 1.85rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1.15;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.5px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Cards
+   ═══════════════════════════════════════════════════════════════ */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--t);
+    animation: fadeInUp 0.5s ease backwards;
+}
+
+.card-header {
+    padding: 1.15rem 1.35rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    background: var(--bg-subtle);
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-primary);
+}
+
+.card-title i {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-primary);
+}
+
+.card-body {
+    padding: 1.35rem;
+}
+
+.card-action-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    transition: all var(--t);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid transparent;
+}
+
+.card-action-btn:hover {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Dashboard Grids
+   ═══════════════════════════════════════════════════════════════ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-grid-full {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Workshop Status
+   ═══════════════════════════════════════════════════════════════ */
+.workshop-status {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.workshop-status-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: all var(--t);
+}
+
+.workshop-status-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.workshop-status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.workshop-status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.25;
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { transform: scale(1); opacity: 0.25; }
+    50% { transform: scale(1.3); opacity: 0.1; }
+}
+
+.workshop-status-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.workshop-status-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 0.1rem;
+}
+
+.workshop-status-value {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Month Comparison
+   ═══════════════════════════════════════════════════════════════ */
+.month-comparison {
+    text-align: center;
+}
+
+.month-comparison-value {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+}
+
+.month-comparison-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.month-comparison-bar {
+    height: 8px;
+    background: var(--bg-hover);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.month-comparison-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transition: width 1s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.month-comparison-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.month-comparison-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.month-comparison-change.up {
+    background: var(--success-soft);
+    color: var(--success-dark);
+}
+
+.month-comparison-change.down {
+    background: var(--danger-soft);
+    color: var(--danger-dark);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Charts
+   ═══════════════════════════════════════════════════════════════ */
+.chart-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+}
+
+.chart-doughnut {
+    position: relative;
+    height: 260px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-period-tabs {
+    display: flex;
+    gap: 0.25rem;
+    background: var(--bg-primary);
+    padding: 0.25rem;
+    border-radius: var(--radius-md);
+}
+
+.chart-period-tab {
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t);
+}
+
+.chart-period-tab.active {
+    background: var(--bg-card);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   List Items
+   ═══════════════════════════════════════════════════════════════ */
+.list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--t-fast);
+    border-radius: var(--radius-sm);
+}
+
+.list-item:last-child { border-bottom: none; }
+
+.list-item:hover {
+    background: var(--bg-hover);
+    padding-right: 0.85rem;
+    padding-left: 0.85rem;
+}
+
+.list-item-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary-soft), transparent);
+    color: var(--primary);
+    border: 1px solid var(--border-color);
+}
+
+.list-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-item-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list-item-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-weight: 600;
+}
+
+.list-item-meta {
+    text-align: left;
+    flex-shrink: 0;
+}
+
+.list-item-amount {
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: var(--primary);
+    display: block;
+}
+
+.list-item-date {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Badges
+   ═══════════════════════════════════════════════════════════════ */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.badge-success { background: var(--success-soft); color: var(--success-dark); }
+.badge-danger { background: var(--danger-soft); color: var(--danger-dark); }
+.badge-warning { background: var(--warning-soft); color: var(--warning-dark); }
+.badge-info { background: var(--info-soft); color: #2563EB; }
+.badge-purple { background: var(--purple-soft); color: var(--purple-dark); }
+.badge-gray { background: var(--bg-hover); color: var(--text-secondary); }
+.badge-primary { background: var(--primary-soft); color: var(--primary-dark); }
+
+/* ═══════════════════════════════════════════════════════════════
+   Quick Actions
+   ═══════════════════════════════════════════════════════════════ */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+    gap: 0.7rem;
+}
+
+.quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 1.1rem 0.5rem;
+    background: var(--bg-subtle);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 700;
+    transition: all var(--t);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-action::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    opacity: 0;
+    transition: opacity var(--t);
+}
+
+.quick-action > * {
+    position: relative;
+    z-index: 1;
+}
+
+.quick-action:hover {
+    border-color: var(--primary);
+    color: white;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-primary);
+}
+
+.quick-action:hover::before {
+    opacity: 1;
+}
+
+.quick-action:hover i {
+    color: white;
+    transform: scale(1.15);
+}
+
+.quick-action i {
+    font-size: 1.5rem;
+    color: var(--primary);
+    transition: all var(--t);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Notifications Panel
+   ═══════════════════════════════════════════════════════════════ */
+.notifications-panel {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem;
+    width: 400px;
+    max-width: calc(100vw - 2rem);
+    max-height: 500px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--t);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.notifications-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.notifications-header {
+    padding: 1.15rem 1.35rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-subtle);
+}
+
+.notifications-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notifications-title i { color: var(--primary); }
+
+.notifications-mark-read {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--t);
+}
+
+.notifications-mark-read:hover {
+    background: var(--primary-soft);
+}
+
+.notifications-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.notification-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.9rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--t-fast);
+    cursor: pointer;
+    position: relative;
+}
+
+.notification-item:hover {
+    background: var(--bg-hover);
+}
+
+.notification-item.unread {
+    background: var(--primary-soft);
+}
+
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.notification-item-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.notification-item-icon.info { background: var(--info-soft); color: var(--info); }
+.notification-item-icon.warning { background: var(--warning-soft); color: var(--warning); }
+.notification-item-icon.danger { background: var(--danger-soft); color: var(--danger); }
+.notification-item-icon.success { background: var(--success-soft); color: var(--success); }
+
+.notification-item-content { flex: 1; min-width: 0; }
+
+.notification-item-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+}
+
+.notification-item-message {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 500;
+}
+
+.notification-item-time {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+}
+
+.notifications-empty {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.notifications-empty i {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--primary);
+}
+
+.notifications-empty p {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   User Dropdown
+   ═══════════════════════════════════════════════════════════════ */
+.user-dropdown {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem;
+    width: 250px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--t);
+    overflow: hidden;
+}
+
+.user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.user-dropdown-header {
+    padding: 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-subtle);
+}
+
+.user-dropdown-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-primary);
+}
+
+.user-dropdown-info strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-bottom: 0.15rem;
+}
+
+.user-dropdown-info span {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.user-dropdown-menu { padding: 0.5rem; }
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--t-fast);
+    width: 100%;
+    text-align: right;
+}
+
+.user-dropdown-item:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.user-dropdown-item.danger:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.user-dropdown-item i {
+    width: 18px;
+    text-align: center;
+}
+
+.user-dropdown-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0.4rem 0.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Global Search
+   ═══════════════════════════════════════════════════════════════ */
+.global-search-panel {
+    position: fixed;
+    top: calc(var(--navbar-height) + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px) scale(0.98);
+    width: 640px;
+    max-width: calc(100vw - 2rem);
+    max-height: 70vh;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    z-index: 1300;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--t);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.global-search-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.global-search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.search-section-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0.6rem 0.85rem 0.4rem;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--t-fast);
+}
+
+.search-result-item:hover,
+.search-result-item.active {
+    background: var(--bg-hover);
+}
+
+.search-result-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.search-result-content { flex: 1; min-width: 0; }
+
+.search-result-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-title mark {
+    background: rgba(245, 158, 11, 0.3);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+
+.search-result-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.search-result-type {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-full);
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.search-empty {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.search-empty i {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 0.75rem;
+    display: block;
+    color: var(--primary);
+}
+
+.search-empty p {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.search-loading {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.search-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 0.85rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════════════════════════
+   Toast
+   ═══════════════════════════════════════════════════════════════ */
+.toast-container {
+    position: fixed;
+    top: calc(var(--navbar-height) + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 420px;
+}
+
+.toast {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-right: 4px solid var(--info);
+}
+
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+
+.toast i { font-size: 1.25rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+
+.toast.hide {
+    animation: toastOut 0.3s ease forwards;
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastOut {
+    to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Skeleton & Empty States
+   ═══════════════════════════════════════════════════════════════ */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.empty-state i {
+    font-size: 3.5rem;
+    opacity: 0.25;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--primary);
+}
+
+.empty-state h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.empty-state p {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Install Banner
+   ═══════════════════════════════════════════════════════════════ */
+.install-banner {
+    position: fixed;
+    bottom: calc(1rem + var(--safe-bottom));
+    left: 1rem;
+    right: 1rem;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: 1.15rem 1.35rem;
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1500;
+    border: 1px solid var(--border-color);
+    animation: slideUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.install-banner.show { display: flex; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(100px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.install-banner-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: 6px;
+}
+
+.install-banner-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+.install-banner-text { flex: 1; min-width: 0; }
+.install-banner-text strong {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin-bottom: 0.15rem;
+}
+.install-banner-text span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.install-banner-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+
+.install-btn {
+    padding: 0.65rem 1.1rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 800;
+    transition: all var(--t);
+    white-space: nowrap;
+    box-shadow: var(--shadow-primary);
+}
+
+.install-btn:hover { transform: translateY(-2px); }
+
+.install-dismiss {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--t);
+}
+
+.install-dismiss:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Scroll Top
+   ═══════════════════════════════════════════════════════════════ */
+.scroll-top {
+    position: fixed;
+    bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-primary);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all var(--t);
+    z-index: 1400;
+}
+
+.scroll-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-top:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-primary-lg);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Animations
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1200px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .dashboard-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 968px) {
+    .sidebar {
+        transform: translateX(100%);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    .sidebar.show { transform: translateX(0); }
+    
+    .main-content { margin-right: 0; padding: 1rem; }
+    
+    .navbar-search { display: none; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+    
+    .dashboard-grid-full { grid-template-columns: 1fr; }
+    .dashboard-grid-3 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    
+    .stat-card { padding: 1rem; }
+    .stat-value { font-size: 1.5rem; }
+    .stat-icon { width: 42px; height: 42px; font-size: 1.15rem; }
+    
+    .navbar { padding: 0 0.65rem; gap: 0.5rem; }
+    .navbar-actions { gap: 0.25rem; }
+    .navbar-btn { width: 38px; height: 38px; font-size: 0.9rem; }
+    
+    .notifications-panel,
+    .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; max-width: calc(100vw - 1rem); }
+    
+    .global-search-panel { max-height: 80vh; }
+    
+    .chart-container { height: 220px; }
+    .chart-doughnut { height: 220px; }
+    
+    .workshop-status { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الغسالات</span>
+        </div>
+    </a>
+    
+    <div class="navbar-search">
+        <input 
+            type="text" 
+            class="navbar-search-input" 
+            id="globalSearchInput" 
+            placeholder="ابحث عن غسالة، عميل، فاتورة، أمر صيانة..."
+            autocomplete="off"
+        >
+        <i class="fas fa-magnifying-glass navbar-search-icon"></i>
+        <span class="navbar-search-shortcut">Ctrl+K</span>
+    </div>
+    
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link active">
+            <i class="fas fa-house"></i>
+            <span>لوحة التحكم</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products">
+            <i class="fas fa-boxes-stacked"></i>
+            <span>الأصناف</span>
+        </a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories">
+            <i class="fas fa-tags"></i>
+            <span>الفئات</span>
+        </a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in">
+            <i class="fas fa-truck-ramp-box"></i>
+            <span>الوارد</span>
+        </a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers">
+            <i class="fas fa-handshake"></i>
+            <span>الموردين</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>الفواتير</span>
+        </a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers">
+            <i class="fas fa-users"></i>
+            <span>العملاء</span>
+        </a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts">
+            <i class="fas fa-hand-holding-dollar"></i>
+            <span>المديونيات</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs">
+            <i class="fas fa-screwdriver-wrench"></i>
+            <span>أوامر الصيانة</span>
+        </a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs">
+            <i class="fas fa-calendar-check"></i>
+            <span>الزيارات اليومية</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports">
+            <i class="fas fa-chart-pie"></i>
+            <span>التقارير</span>
+        </a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports">
+            <i class="fas fa-receipt"></i>
+            <span>المصروفات</span>
+        </a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts">
+            <i class="fas fa-clock"></i>
+            <span>الورديات</span>
+        </a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log">
+            <i class="fas fa-clipboard-list"></i>
+            <span>سجل الحركات</span>
+        </a>
+    </div>
+    
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link">
+            <i class="fas fa-star"></i>
+            <span>المفضلة</span>
+        </a>
+        <a href="admin.html" class="sidebar-link" id="adminLink" style="display: none;">
+            <i class="fas fa-shield-halved"></i>
+            <span>لوحة الأدمن</span>
+        </a>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1>
+                <i class="fas fa-house"></i>
+                لوحة التحكم
+            </h1>
+            <p id="welcomeText">أهلاً بك 👋 نظرة سريعة على أداء المركز</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="refreshBtn">
+                <i class="fas fa-rotate"></i>
+                تحديث
+            </button>
+            <button class="btn btn-primary" id="syncBtn">
+                <i class="fas fa-cloud-arrow-up"></i>
+                مزامنة
+            </button>
+        </div>
+    </div>
+    
+    <div class="stats-grid" id="statsGrid"></div>
+    
+    <div class="dashboard-grid">
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    مبيعات آخر 7 أيام
+                </h3>
+                <div class="chart-period-tabs">
+                    <button class="chart-period-tab active" data-days="7">7 أيام</button>
+                    <button class="chart-period-tab" data-days="30">30 يوم</button>
+                    <button class="chart-period-tab" data-days="90">3 شهور</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-bolt"></i>
+                    إجراءات سريعة
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="quick-actions" id="quickActions"></div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="dashboard-grid-3">
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-toolbox"></i>
+                    حالة الورشة
+                </h3>
+                <a href="repairs.html" class="card-action-btn">
+                    عرض الكل
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="workshop-status" id="workshopStatus">
+                    <div class="workshop-status-item">
+                        <div class="workshop-status-dot" style="background: var(--warning);"></div>
+                        <div class="workshop-status-content">
+                            <div class="workshop-status-label">قيد الإصلاح</div>
+                            <div class="workshop-status-value" id="wsRepairing">-</div>
+                        </div>
+                    </div>
+                    <div class="workshop-status-item">
+                        <div class="workshop-status-dot" style="background: var(--info);"></div>
+                        <div class="workshop-status-content">
+                            <div class="workshop-status-label">في الانتظار</div>
+                            <div class="workshop-status-value" id="wsReceived">-</div>
+                        </div>
+                    </div>
+                    <div class="workshop-status-item">
+                        <div class="workshop-status-dot" style="background: var(--success);"></div>
+                        <div class="workshop-status-content">
+                            <div class="workshop-status-label">جاهز للتسليم</div>
+                            <div class="workshop-status-value" id="wsReady">-</div>
+                        </div>
+                    </div>
+                    <div class="workshop-status-item">
+                        <div class="workshop-status-dot" style="background: var(--text-muted);"></div>
+                        <div class="workshop-status-content">
+                            <div class="workshop-status-label">تم التسليم اليوم</div>
+                            <div class="workshop-status-value" id="wsDelivered">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie"></i>
+                    توزيع أوامر الصيانة
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="chart-doughnut">
+                    <canvas id="repairsChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-arrow-trend-up"></i>
+                    مقارنة الشهر
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="month-comparison">
+                    <div class="month-comparison-value" id="mcCurrent">0 ج.م</div>
+                    <div class="month-comparison-label">مبيعات الشهر الحالي</div>
+                    <div class="month-comparison-bar">
+                        <div class="month-comparison-fill" id="mcBar" style="width: 0%;"></div>
+                    </div>
+                    <div class="month-comparison-change up" id="mcChange">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>0%</span>
+                    </div>
+                    <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
+                        الشهر الماضي: <span id="mcLast" style="color: var(--text-primary); font-weight: 800;">0 ج.م</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="dashboard-grid-full">
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-file-invoice"></i>
+                    أحدث الفواتير
+                </h3>
+                <a href="invoices.html" class="card-action-btn">
+                    عرض الكل
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="card-body" id="recentInvoices" style="padding: 0.5rem;">
+                <div class="skeleton" style="height: 60px; margin-bottom: 0.5rem;"></div>
+                <div class="skeleton" style="height: 60px; margin-bottom: 0.5rem;"></div>
+                <div class="skeleton" style="height: 60px;"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-screwdriver-wrench"></i>
+                    أحدث أوامر الصيانة
+                </h3>
+                <a href="repairs.html" class="card-action-btn">
+                    عرض الكل
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="card-body" id="recentRepairs" style="padding: 0.5rem;">
+                <div class="skeleton" style="height: 60px; margin-bottom: 0.5rem;"></div>
+                <div class="skeleton" style="height: 60px; margin-bottom: 0.5rem;"></div>
+                <div class="skeleton" style="height: 60px;"></div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="card" id="lowStockCard" style="display: none; margin-bottom: 1.5rem;">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--warning);"></i>
+                تنبيه: قطع غيار على وشك النفاذ
+            </h3>
+            <a href="products.html?filter=low" class="card-action-btn">
+                إدارة المخزون
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        <div class="card-body" id="lowStockList" style="padding: 0.5rem;"></div>
+    </div>
+    
+</main>
+
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title">
+            <i class="fas fa-bell"></i>
+            الإشعارات
+        </h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+</div>
+
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item">
+            <i class="fas fa-star"></i>
+            <span>المفضلة</span>
+        </a>
+        <a href="admin.html" class="user-dropdown-item" id="dropdownAdminLink" style="display: none;">
+            <i class="fas fa-shield-halved"></i>
+            <span>لوحة الأدمن</span>
+        </a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn">
+            <i class="fas fa-right-from-bracket"></i>
+            <span>تسجيل الخروج</span>
+        </button>
+    </div>
+</div>
+
+<div class="global-search-panel" id="globalSearchPanel">
+    <div class="global-search-results" id="globalSearchResults"></div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="install-banner" id="installBanner">
+    <div class="install-banner-icon">
+        <img src="logo.png" alt="TopLoad" onerror="this.parentElement.innerHTML='<i class=\'fas fa-soap\'></i>'">
+    </div>
+    <div class="install-banner-text">
+        <strong>ثبّت التطبيق</strong>
+        <span>للوصول السريع والعمل بدون إنترنت</span>
+    </div>
+    <div class="install-banner-actions">
+        <button class="install-btn" id="installBannerBtn">تثبيت</button>
+        <button class="install-dismiss" id="installDismissBtn" aria-label="إغلاق">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+
+<button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   TopLoad Dashboard Application
+   ═══════════════════════════════════════════════════════════════ */
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Supabase Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+
+var supabaseClient = null;
+
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+        console.warn('Supabase library not loaded');
+        return null;
+    }
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) {
+        console.error('Failed to create Supabase client:', e);
+        return null;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var State = {
+    currentChart: null,
+    repairsChart: null,
+    currentChartDays: 7,
+    allNotifications: [],
+    chartJsLoading: false,
+    searchTimeout: null,
+    activeSearchIndex: -1,
+    currentSearchResults: [],
+    inactivityTimer: null,
+    deferredPrompt: null,
+    chartColors: {
+        primary: '#0F766E',
+        primaryDark: '#115E59',
+        primaryLight: '#14B8A6',
+        accent: '#F59E0B',
+        success: '#10B981',
+        warning: '#F59E0B',
+        info: '#3B82F6',
+        purple: '#8B5CF6',
+        danger: '#EF4444'
+    }
+};
+
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function formatCurrency(amount) {
+    var num = parseFloat(amount) || 0;
+    try {
+        return num.toLocaleString('ar-EG', { 
+            minimumFractionDigits: 0, 
+            maximumFractionDigits: 2 
+        }) + ' ج.م';
+    } catch (e) {
+        return num.toFixed(2) + ' ج.م';
+    }
+}
+
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try {
+        return n.toLocaleString('ar-EG');
+    } catch (e) {
+        return String(n);
+    }
+}
+
+function formatDate(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    try {
+        return d.toLocaleDateString('ar-EG', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+    } catch (e) {
+        return d.toISOString().split('T')[0];
+    }
+}
+
+function formatTimeAgo(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    var seconds = Math.floor((Date.now() - d.getTime()) / 1000);
+    
+    if (seconds < 60) return 'الآن';
+    if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+    if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+    if (seconds < 604800) return 'منذ ' + Math.floor(seconds / 86400) + ' يوم';
+    return formatDate(date);
+}
+
+function getStatusBadge(status) {
+    var map = {
+        'received': { text: 'تم الاستلام', cls: 'badge-info', icon: 'fa-inbox' },
+        'repairing': { text: 'قيد الإصلاح', cls: 'badge-warning', icon: 'fa-wrench' },
+        'ready': { text: 'جاهز للتسليم', cls: 'badge-success', icon: 'fa-circle-check' },
+        'delivered': { text: 'تم التسليم', cls: 'badge-gray', icon: 'fa-truck' },
+        'cancelled': { text: 'ملغي', cls: 'badge-danger', icon: 'fa-ban' },
+        'pending': { text: 'في الانتظار', cls: 'badge-info', icon: 'fa-clock' }
+    };
+    var s = map[status] || { text: status || 'غير معروف', cls: 'badge-gray', icon: 'fa-circle' };
+    return '<span class="badge ' + s.cls + '"><i class="fas ' + s.icon + '"></i>' + s.text + '</span>';
+}
+
+function debounce(fn, delay) {
+    var timer;
+    return function() {
+        var args = arguments;
+        var ctx = this;
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            fn.apply(ctx, args);
+        }, delay);
+    };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+    
+    if (State.currentChart) loadSalesChart(State.currentChartDays);
+    if (State.repairsChart) loadRepairsChart();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    var icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+    };
+    
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    
+    container.appendChild(toast);
+    
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🌐 Online Status
+// ═══════════════════════════════════════════════════════════════
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    var btn = document.getElementById('onlineBtn');
+    if (!dot || !btn) return;
+    
+    if (navigator.onLine) {
+        dot.classList.remove('offline');
+        btn.title = 'متصل بالإنترنت';
+    } else {
+        dot.classList.add('offline');
+        btn.title = 'غير متصل - وضع Offline';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 Session
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var session = JSON.parse(raw);
+        if (!session || !session.user) return null;
+        if (session.expiresAt && Date.now() > session.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return session;
+    } catch (e) { return null; }
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⏱️ Auto Logout
+// ═══════════════════════════════════════════════════════════════
+function resetInactivity() {
+    if (State.inactivityTimer) clearTimeout(State.inactivityTimer);
+    State.inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك تلقائيًا بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+
+function startInactivityMonitor() {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 Load Stats
+// ═══════════════════════════════════════════════════════════════
+function loadStats() {
+    var session = getSession();
+    if (!session) return;
+    
+    var stats = {
+        todaySales: 0,
+        todayInvoices: 0,
+        monthSales: 0,
+        monthExpenses: 0,
+        monthNetProfit: 0,
+        monthInvoices: 0,
+        lastMonthSales: 0,
+        totalProducts: 0,
+        lowStockCount: 0,
+        activeRepairs: 0,
+        readyRepairs: 0,
+        receivedRepairs: 0,
+        repairingRepairs: 0,
+        deliveredToday: 0,
+        totalCustomers: 0,
+        totalDebts: 0
+    };
+    
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        renderStats(stats);
+        renderWorkshopStatus(stats);
+        renderMonthComparison(stats);
+        return;
+    }
+    
+    var todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    
+    var todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+    
+    var monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+    
+    var lastMonthStart = new Date();
+    lastMonthStart.setMonth(lastMonthStart.getMonth() - 1);
+    lastMonthStart.setDate(1);
+    lastMonthStart.setHours(0, 0, 0, 0);
+    
+    var lastMonthEnd = new Date();
+    lastMonthEnd.setDate(0);
+    lastMonthEnd.setHours(23, 59, 59, 999);
+
+    function toDateKey(date) {
+        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+    }
+    
+    var queries = [
+        sb.from('invoices').select('total').gte('created_at', todayStart.toISOString()),
+        sb.from('invoices').select('id, total, labor_cost').gte('created_at', monthStart.toISOString()),
+        sb.from('invoices').select('total').gte('created_at', lastMonthStart.toISOString()).lte('created_at', lastMonthEnd.toISOString()),
+        sb.from('products').select('id, cost_price, quantity, min_quantity'),
+        sb.from('repair_orders').select('status, created_at'),
+        sb.from('customers').select('*', { count: 'exact', head: true }),
+        sb.from('invoices').select('total, paid_amount').eq('paid', false),
+        sb.from('expenses').select('amount, expense_date').gte('expense_date', toDateKey(monthStart)).lte('expense_date', toDateKey(todayEnd)),
+        sb.from('invoice_items').select('invoice_id, product_id, quantity, unit_price').limit(20000)
+    ];
+    
+    Promise.allSettled(queries).then(function(results) {
+        if (results[0].status === 'fulfilled' && results[0].value.data) {
+            var todayInv = results[0].value.data;
+            stats.todayInvoices = todayInv.length;
+            stats.todaySales = todayInv.reduce(function(s, i) { 
+                return s + (parseFloat(i.total) || 0); 
+            }, 0);
+        }
+        
+        if (results[1].status === 'fulfilled' && results[1].value.data) {
+            var monthInv = results[1].value.data;
+            stats.monthInvoices = monthInv.length;
+            stats.monthSales = monthInv.reduce(function(s, i) { 
+                return s + (parseFloat(i.total) || 0); 
+            }, 0);
+        }
+        
+        if (results[2].status === 'fulfilled' && results[2].value.data) {
+            stats.lastMonthSales = results[2].value.data.reduce(function(s, i) { 
+                return s + (parseFloat(i.total) || 0); 
+            }, 0);
+        }
+        
+        if (results[3].status === 'fulfilled' && results[3].value.data) {
+            var products = results[3].value.data;
+            stats.totalProducts = products.length;
+            stats.lowStockCount = products.filter(function(p) {
+                return (p.quantity || 0) <= (p.min_quantity || 0);
+            }).length;
+        }
+        
+        if (results[4].status === 'fulfilled' && results[4].value.data) {
+            var repairs = results[4].value.data;
+            
+            stats.receivedRepairs = repairs.filter(function(r) { return r.status === 'received'; }).length;
+            stats.repairingRepairs = repairs.filter(function(r) { return r.status === 'repairing'; }).length;
+            stats.readyRepairs = repairs.filter(function(r) { return r.status === 'ready'; }).length;
+            stats.activeRepairs = stats.receivedRepairs + stats.repairingRepairs;
+            
+            stats.deliveredToday = repairs.filter(function(r) {
+                if (r.status !== 'delivered') return false;
+                var d = new Date(r.created_at);
+                return d >= todayStart && d <= todayEnd;
+            }).length;
+        }
+        
+        if (results[5].status === 'fulfilled') {
+            stats.totalCustomers = results[5].value.count || 0;
+        }
+        
+        if (results[6].status === 'fulfilled' && results[6].value.data) {
+            stats.totalDebts = results[6].value.data.reduce(function(s, i) {
+                return s + ((parseFloat(i.total) || 0) - (parseFloat(i.paid_amount) || 0));
+            }, 0);
+        }
+
+        var monthExpenses = results[7].status === 'fulfilled' && results[7].value.data ? results[7].value.data : [];
+        stats.monthExpenses = monthExpenses.reduce(function(sum, expense) {
+            return sum + (parseFloat(expense.amount) || 0);
+        }, 0);
+
+        var monthInvoices = results[1].status === 'fulfilled' && results[1].value.data ? results[1].value.data : [];
+        var monthInvoiceIds = {};
+        var monthGrossProfit = monthInvoices.reduce(function(sum, invoice) {
+            monthInvoiceIds[invoice.id] = true;
+            return sum + (parseFloat(invoice.labor_cost) || 0);
+        }, 0);
+        var productCosts = {};
+        if (results[3].status === 'fulfilled' && results[3].value.data) {
+            results[3].value.data.forEach(function(product) {
+                productCosts[product.id] = parseFloat(product.cost_price) || 0;
+            });
+        }
+        if (results[8].status === 'fulfilled' && results[8].value.data) {
+            results[8].value.data.forEach(function(item) {
+                if (!monthInvoiceIds[item.invoice_id]) return;
+                var quantity = parseFloat(item.quantity) || 0;
+                var unitPrice = parseFloat(item.unit_price) || 0;
+                monthGrossProfit += (unitPrice - (productCosts[item.product_id] || 0)) * quantity;
+            });
+        }
+        stats.monthNetProfit = monthGrossProfit - stats.monthExpenses;
+        
+        renderStats(stats);
+        renderWorkshopStatus(stats);
+        renderMonthComparison(stats);
+    });
+}
+
+function renderStats(stats) {
+    var grid = document.getElementById('statsGrid');
+    if (!grid) return;
+    
+    var session = getSession();
+    var perms = (session && session.user && session.user.permissions) || {};
+    var isAdmin = session && session.user && session.user.role === 'admin';
+    
+    var cards = [];
+    
+    if (isAdmin || perms.can_view_invoices) {
+        cards.push({
+            icon: 'fa-money-bill-wave',
+            color: '#10B981',
+            colorDark: '#059669',
+            shadow: 'rgba(16, 185, 129, 0.3)',
+            label: 'مبيعات اليوم',
+            value: formatCurrency(stats.todaySales),
+            trend: stats.todayInvoices > 0 ? stats.todayInvoices + ' فاتورة' : 'لا مبيعات',
+            trendType: stats.todayInvoices > 0 ? 'up' : 'down'
+        });
+    }
+    
+    if (isAdmin || perms.can_view_reports) {
+        cards.push({
+            icon: 'fa-chart-line',
+            color: '#0F766E',
+            colorDark: '#115E59',
+            shadow: 'rgba(15, 118, 110, 0.3)',
+            label: 'مبيعات الشهر',
+            value: formatCurrency(stats.monthSales),
+            trend: stats.monthInvoices + ' فاتورة',
+            trendType: 'up'
+        });
+
+        cards.push({
+            icon: 'fa-chart-line',
+            color: '#0F766E',
+            colorDark: '#115E59',
+            shadow: 'rgba(15, 118, 110, 0.3)',
+            label: 'صافي ربح الشهر',
+            value: formatCurrency(stats.monthNetProfit),
+            trend: 'بعد خصم المصروفات',
+            trendType: stats.monthNetProfit >= 0 ? 'up' : 'down'
+        });
+
+        cards.push({
+            icon: 'fa-receipt',
+            color: '#EF4444',
+            colorDark: '#DC2626',
+            shadow: 'rgba(239, 68, 68, 0.3)',
+            label: 'مصروفات الشهر',
+            value: formatCurrency(stats.monthExpenses),
+            trend: 'تشغيلية',
+            trendType: 'down'
+        });
+    }
+    
+    if (isAdmin || perms.can_view_repairs) {
+        cards.push({
+            icon: 'fa-screwdriver-wrench',
+            color: '#F59E0B',
+            colorDark: '#D97706',
+            shadow: 'rgba(245, 158, 11, 0.3)',
+            label: 'قيد الصيانة',
+            value: formatNumber(stats.activeRepairs),
+            trend: stats.readyRepairs > 0 ? stats.readyRepairs + ' جاهز' : 'قيد العمل',
+            trendType: stats.readyRepairs > 0 ? 'up' : 'down'
+        });
+    }
+    
+    if (isAdmin || perms.can_view_repairs) {
+        cards.push({
+            icon: 'fa-circle-check',
+            color: '#14B8A6',
+            colorDark: '#0F766E',
+            shadow: 'rgba(20, 184, 166, 0.3)',
+            label: 'جاهز للتسليم',
+            value: formatNumber(stats.readyRepairs),
+            trend: stats.deliveredToday > 0 ? stats.deliveredToday + ' سُلّم اليوم' : 'في الانتظار',
+            trendType: 'up'
+        });
+    }
+    
+    if (isAdmin || perms.can_view_products) {
+        cards.push({
+            icon: 'fa-boxes-stacked',
+            color: '#8B5CF6',
+            colorDark: '#7C3AED',
+            shadow: 'rgba(139, 92, 246, 0.3)',
+            label: 'إجمالي قطع الغيار',
+            value: formatNumber(stats.totalProducts),
+            trend: stats.lowStockCount > 0 ? stats.lowStockCount + ' نواقص' : 'المخزون جيد',
+            trendType: stats.lowStockCount > 0 ? 'down' : 'up'
+        });
+    }
+    
+    if (isAdmin || perms.can_view_debts) {
+        cards.push({
+            icon: 'fa-hand-holding-dollar',
+            color: '#EF4444',
+            colorDark: '#DC2626',
+            shadow: 'rgba(239, 68, 68, 0.3)',
+            label: 'إجمالي المديونيات',
+            value: formatCurrency(stats.totalDebts),
+            trend: stats.totalDebts > 0 ? 'تحتاج متابعة' : 'لا مديونيات',
+            trendType: stats.totalDebts > 0 ? 'down' : 'up'
+        });
+    }
+    
+    grid.innerHTML = cards.map(function(c) {
+        return '<div class="stat-card" style="--accent-color: ' + c.color + '; --accent-color-dark: ' + c.colorDark + '; --accent-shadow: ' + c.shadow + ';">' +
+            '<div class="stat-card-header">' +
+                '<div class="stat-icon"><i class="fas ' + c.icon + '"></i></div>' +
+                '<div class="stat-trend ' + c.trendType + '">' +
+                    '<i class="fas fa-arrow-' + (c.trendType === 'up' ? 'up' : 'down') + '"></i> ' +
+                    escapeHtml(c.trend) +
+                '</div>' +
+            '</div>' +
+            '<div class="stat-value">' + c.value + '</div>' +
+            '<div class="stat-label">' + escapeHtml(c.label) + '</div>' +
+        '</div>';
+    }).join('');
+}
+
+function renderWorkshopStatus(stats) {
+    var el;
+    el = document.getElementById('wsRepairing');
+    if (el) el.textContent = formatNumber(stats.repairingRepairs);
+    
+    el = document.getElementById('wsReceived');
+    if (el) el.textContent = formatNumber(stats.receivedRepairs);
+    
+    el = document.getElementById('wsReady');
+    if (el) el.textContent = formatNumber(stats.readyRepairs);
+    
+    el = document.getElementById('wsDelivered');
+    if (el) el.textContent = formatNumber(stats.deliveredToday);
+}
+
+function renderMonthComparison(stats) {
+    var currentEl = document.getElementById('mcCurrent');
+    var lastEl = document.getElementById('mcLast');
+    var barEl = document.getElementById('mcBar');
+    var changeEl = document.getElementById('mcChange');
+    
+    if (!currentEl || !lastEl || !barEl || !changeEl) return;
+    
+    currentEl.textContent = formatCurrency(stats.monthSales);
+    lastEl.textContent = formatCurrency(stats.lastMonthSales);
+    
+    var max = Math.max(stats.monthSales, stats.lastMonthSales) || 1;
+    var percent = (stats.monthSales / max) * 100;
+    barEl.style.width = percent + '%';
+    
+    var change = 0;
+    if (stats.lastMonthSales > 0) {
+        change = ((stats.monthSales - stats.lastMonthSales) / stats.lastMonthSales) * 100;
+    }
+    
+    var absChange = Math.abs(change).toFixed(1);
+    changeEl.className = 'month-comparison-change ' + (change >= 0 ? 'up' : 'down');
+    changeEl.innerHTML = '<i class="fas fa-arrow-' + (change >= 0 ? 'up' : 'down') + '"></i><span>' + 
+        (change >= 0 ? '+' : '-') + absChange + '%</span>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📈 Sales Chart
+// ═══════════════════════════════════════════════════════════════
+function loadSalesChart(days) {
+    days = days || 7;
+    var canvas = document.getElementById('salesChart');
+    if (!canvas) return;
+    
+    if (typeof Chart === 'undefined') {
+        if (State.chartJsLoading) return;
+        State.chartJsLoading = true;
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+        script.onload = function() { 
+            State.chartJsLoading = false;
+            loadSalesChart(days); 
+        };
+        script.onerror = function() {
+            State.chartJsLoading = false;
+            console.warn('Failed to load Chart.js');
+        };
+        document.head.appendChild(script);
+        return;
+    }
+    
+    var labels = [];
+    var values = [];
+    var map = {};
+    
+    for (var i = 0; i < days; i++) {
+        var d = new Date();
+        d.setDate(d.getDate() - (days - 1 - i));
+        var key = d.toISOString().split('T')[0];
+        map[key] = 0;
+        
+        var label;
+        if (days <= 7) {
+            label = d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' });
+        } else if (days <= 30) {
+            label = d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'numeric' });
+        } else {
+            label = d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' });
+        }
+        labels.push(label);
+    }
+    
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        var startDate = new Date();
+        startDate.setDate(startDate.getDate() - days + 1);
+        startDate.setHours(0, 0, 0, 0);
+        
+        sb.from('invoices')
+            .select('total, created_at')
+            .gte('created_at', startDate.toISOString())
+            .then(function(result) {
+                if (result.data) {
+                    result.data.forEach(function(inv) {
+                        var key = new Date(inv.created_at).toISOString().split('T')[0];
+                        if (map[key] !== undefined) {
+                            map[key] += parseFloat(inv.total) || 0;
+                        }
+                    });
+                }
+                values = Object.keys(map).map(function(k) { return map[k]; });
+                renderSalesChart(canvas, labels, values);
+            })
+            .catch(function() {
+                values = Object.keys(map).map(function() { return 0; });
+                renderSalesChart(canvas, labels, values);
+            });
+    } else {
+        values = Object.keys(map).map(function() { return 0; });
+        renderSalesChart(canvas, labels, values);
+    }
+}
+
+function renderSalesChart(canvas, labels, values) {
+    if (State.currentChart) {
+        State.currentChart.destroy();
+        State.currentChart = null;
+    }
+    
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var textColor = isDark ? '#CBD5E1' : '#475569';
+    var gridColor = isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.8)';
+    
+    var ctx = canvas.getContext('2d');
+    var gradient = ctx.createLinearGradient(0, 0, 0, 280);
+    gradient.addColorStop(0, 'rgba(15, 118, 110, 0.35)');
+    gradient.addColorStop(1, 'rgba(20, 184, 166, 0.02)');
+    
+    State.currentChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'المبيعات (ج.م)',
+                data: values,
+                borderColor: '#0F766E',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#0F766E',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: '#F59E0B'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDark ? '#1E293B' : '#0F172A',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    padding: 12,
+                    cornerRadius: 10,
+                    displayColors: false,
+                    titleFont: { family: 'Cairo', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                    callbacks: {
+                        label: function(ctx) { return formatCurrency(ctx.parsed.y); }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: textColor, font: { family: 'Cairo', size: 11, weight: '600' } },
+                    grid: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: textColor,
+                        font: { family: 'Cairo', size: 11, weight: '600' },
+                        callback: function(v) { return v >= 1000 ? (v / 1000) + 'K' : v; }
+                    },
+                    grid: { color: gridColor, drawBorder: false }
+                }
+            }
+        }
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 Repairs Doughnut Chart
+// ═══════════════════════════════════════════════════════════════
+function loadRepairsChart() {
+    var canvas = document.getElementById('repairsChart');
+    if (!canvas) return;
+    
+    if (typeof Chart === 'undefined') {
+        setTimeout(loadRepairsChart, 500);
+        return;
+    }
+    
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        renderRepairsChart(canvas, [0, 0, 0, 0]);
+        return;
+    }
+    
+    sb.from('repair_orders')
+        .select('status')
+        .then(function(result) {
+            var counts = { received: 0, repairing: 0, ready: 0, delivered: 0 };
+            if (result.data) {
+                result.data.forEach(function(r) {
+                    if (counts[r.status] !== undefined) counts[r.status]++;
+                });
+            }
+            renderRepairsChart(canvas, [counts.received, counts.repairing, counts.ready, counts.delivered]);
+        })
+        .catch(function() {
+            renderRepairsChart(canvas, [0, 0, 0, 0]);
+        });
+}
+
+function renderRepairsChart(canvas, data) {
+    if (State.repairsChart) {
+        State.repairsChart.destroy();
+        State.repairsChart = null;
+    }
+    
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var textColor = isDark ? '#CBD5E1' : '#475569';
+    
+    var ctx = canvas.getContext('2d');
+    var total = data.reduce(function(s, v) { return s + v; }, 0);
+    
+    State.repairsChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['في الانتظار', 'قيد الإصلاح', 'جاهز', 'تم التسليم'],
+            datasets: [{
+                data: data,
+                backgroundColor: ['#3B82F6', '#F59E0B', '#10B981', '#94A3B8'],
+                borderColor: isDark ? '#1E293B' : '#FFFFFF',
+                borderWidth: 4,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: textColor,
+                        font: { family: 'Cairo', size: 12, weight: '600' },
+                        padding: 12,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        boxWidth: 8,
+                        boxHeight: 8
+                    }
+                },
+                tooltip: {
+                    backgroundColor: isDark ? '#1E293B' : '#0F172A',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    padding: 12,
+                    cornerRadius: 10,
+                    titleFont: { family: 'Cairo', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Cairo', size: 13, weight: 'bold' },
+                    callbacks: {
+                        label: function(ctx) {
+                            var pct = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
+                            return ctx.label + ': ' + ctx.parsed + ' (' + pct + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📋 Recent Invoices
+// ═══════════════════════════════════════════════════════════════
+function loadRecentInvoices() {
+    var container = document.getElementById('recentInvoices');
+    if (!container) return;
+    
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><h3>وضع Offline</h3><p>اتصل بالإنترنت لعرض الفواتير</p></div>';
+        return;
+    }
+    
+    sb.from('invoices')
+        .select('id, invoice_number, total, paid, created_at, customer:customers(name, phone)')
+        .order('created_at', { ascending: false })
+        .limit(5)
+        .then(function(result) {
+            if (result.data && result.data.length) {
+                container.innerHTML = result.data.map(function(inv) {
+                    var custName = (inv.customer && inv.customer.name) || 'عميل';
+                    return '<div class="list-item" data-href="invoice-view.html?id=' + inv.id + '" style="cursor: pointer;">' +
+                        '<div class="list-item-icon"><i class="fas fa-file-invoice"></i></div>' +
+                        '<div class="list-item-content">' +
+                            '<div class="list-item-title">' + escapeHtml(custName) + '</div>' +
+                            '<div class="list-item-subtitle">' +
+                                '<span>' + escapeHtml(inv.invoice_number || '') + '</span>' +
+                                '<span>•</span>' +
+                                '<span>' + formatTimeAgo(inv.created_at) + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="list-item-meta">' +
+                            '<span class="list-item-amount">' + formatCurrency(inv.total) + '</span>' +
+                            '<span class="badge ' + (inv.paid ? 'badge-success' : 'badge-danger') + '" style="margin-top: 0.25rem;">' +
+                                (inv.paid ? 'مدفوع' : 'غير مدفوع') +
+                            '</span>' +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+                
+                container.querySelectorAll('[data-href]').forEach(function(el) {
+                    el.addEventListener('click', function() {
+                        window.location.href = el.dataset.href;
+                    });
+                });
+                return;
+            }
+            
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i><h3>لا توجد فواتير بعد</h3><p>ابدأ بإنشاء أول فاتورة</p><a href="invoices.html" class="btn btn-primary" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> إنشاء فاتورة</a></div>';
+        })
+        .catch(function() {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-circle-exclamation"></i><h3>فشل التحميل</h3><p>حاول مرة أخرى</p></div>';
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔧 Recent Repairs
+// ═══════════════════════════════════════════════════════════════
+function loadRecentRepairs() {
+    var container = document.getElementById('recentRepairs');
+    if (!container) return;
+    
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><h3>وضع Offline</h3><p>اتصل بالإنترنت لعرض أوامر الصيانة</p></div>';
+        return;
+    }
+    
+    sb.from('repair_orders')
+        .select('id, device_name, issue, status, created_at, customer:customers(name, phone)')
+        .order('created_at', { ascending: false })
+        .limit(5)
+        .then(function(result) {
+            if (result.data && result.data.length) {
+                container.innerHTML = result.data.map(function(r) {
+                    var device = r.device_name || 'غسالة';
+                    var custName = (r.customer && r.customer.name) || '';
+                    return '<div class="list-item" data-href="repairs.html?id=' + r.id + '" style="cursor: pointer;">' +
+                        '<div class="list-item-icon"><i class="fas fa-screwdriver-wrench"></i></div>' +
+                        '<div class="list-item-content">' +
+                            '<div class="list-item-title">' + escapeHtml(device) + '</div>' +
+                            '<div class="list-item-subtitle">' +
+                                '<span>' + escapeHtml(r.issue || '') + '</span>' +
+                                (custName ? '<span>•</span><span>' + escapeHtml(custName) + '</span>' : '') +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="list-item-meta">' +
+                            getStatusBadge(r.status) +
+                            '<div class="list-item-date" style="margin-top: 0.35rem;">' + formatTimeAgo(r.created_at) + '</div>' +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+                
+                container.querySelectorAll('[data-href]').forEach(function(el) {
+                    el.addEventListener('click', function() {
+                        window.location.href = el.dataset.href;
+                    });
+                });
+                return;
+            }
+            
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-screwdriver-wrench"></i><h3>لا توجد أوامر صيانة</h3><p>ابدأ باستلام أول غسالة</p><a href="repairs.html" class="btn btn-primary" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> استلام غسالة</a></div>';
+        })
+        .catch(function(err) {
+            console.error('Repairs error:', err);
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-circle-exclamation"></i><h3>فشل التحميل</h3></div>';
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⚠️ Low Stock
+// ═══════════════════════════════════════════════════════════════
+function loadLowStock() {
+    var card = document.getElementById('lowStockCard');
+    var container = document.getElementById('lowStockList');
+    if (!card || !container) return;
+    
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        card.style.display = 'none';
+        return;
+    }
+    
+    sb.from('products')
+        .select('id, name, quantity, min_quantity, barcode')
+        .order('quantity', { ascending: true })
+        .limit(20)
+        .then(function(result) {
+            if (!result.data) {
+                card.style.display = 'none';
+                return;
+            }
+            
+            var lowStock = result.data.filter(function(p) {
+                return (p.quantity || 0) <= (p.min_quantity || 0);
+            });
+            
+            if (lowStock.length) {
+                card.style.display = 'block';
+                container.innerHTML = lowStock.slice(0, 5).map(function(p) {
+                    var isOut = (p.quantity || 0) <= 0;
+                    return '<div class="list-item">' +
+                        '<div class="list-item-icon" style="background: ' + (isOut ? 'var(--danger-soft)' : 'var(--warning-soft)') + '; color: ' + (isOut ? 'var(--danger)' : 'var(--warning)') + '; border-color: ' + (isOut ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.2)') + ';">' +
+                            '<i class="fas ' + (isOut ? 'fa-circle-xmark' : 'fa-triangle-exclamation') + '"></i>' +
+                        '</div>' +
+                        '<div class="list-item-content">' +
+                            '<div class="list-item-title">' + escapeHtml(p.name) + '</div>' +
+                            '<div class="list-item-subtitle"><span>' + escapeHtml(p.barcode || '') + '</span></div>' +
+                        '</div>' +
+                        '<div class="list-item-meta">' +
+                            '<span class="badge ' + (isOut ? 'badge-danger' : 'badge-warning') + '">' +
+                                (isOut ? 'نفذ' : p.quantity + ' متبقي') +
+                            '</span>' +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+                return;
+            }
+            
+            card.style.display = 'none';
+        })
+        .catch(function() {
+            card.style.display = 'none';
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⚡ Quick Actions
+// ═══════════════════════════════════════════════════════════════
+function renderQuickActions() {
+    var container = document.getElementById('quickActions');
+    if (!container) return;
+    
+    var session = getSession();
+    var perms = (session && session.user && session.user.permissions) || {};
+    var isAdmin = session && session.user && session.user.role === 'admin';
+    
+    var actions = [];
+    
+    if (isAdmin || perms.can_edit_repairs) {
+        actions.push({ icon: 'fa-soap', label: 'استلام غسالة', href: 'repairs.html?action=add' });
+    }
+    if (isAdmin || perms.can_create_invoices) {
+        actions.push({ icon: 'fa-file-invoice', label: 'فاتورة جديدة', href: 'invoices.html?action=add' });
+    }
+    if (isAdmin || perms.can_edit_products) {
+        actions.push({ icon: 'fa-plus', label: 'إضافة قطعة', href: 'products.html?action=add' });
+    }
+    if (isAdmin || perms.can_edit_customers) {
+        actions.push({ icon: 'fa-user-plus', label: 'عميل جديد', href: 'customers.html?action=add' });
+    }
+    if (isAdmin || perms.can_view_reports) {
+        actions.push({ icon: 'fa-chart-pie', label: 'التقارير', href: 'reports.html' });
+    }
+    if (isAdmin || perms.can_view_shortages) {
+        actions.push({ icon: 'fa-triangle-exclamation', label: 'النواقص', href: 'products.html?filter=low' });
+    }
+    if (isAdmin || perms.can_view_debts) {
+        actions.push({ icon: 'fa-hand-holding-dollar', label: 'المديونيات', href: 'debts.html' });
+    }
+    if (isAdmin || perms.can_manage_shifts) {
+        actions.push({ icon: 'fa-clock', label: 'الورديات', href: 'shifts.html' });
+    }
+    
+    if (!actions.length) {
+        container.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1; padding: 1rem;"><i class="fas fa-lock"></i><p>لا توجد صلاحيات متاحة</p></div>';
+        return;
+    }
+    
+    container.innerHTML = actions.map(function(a) {
+        return '<a href="' + a.href + '" class="quick-action">' +
+            '<i class="fas ' + a.icon + '"></i>' +
+            '<span>' + escapeHtml(a.label) + '</span>' +
+        '</a>';
+    }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔔 Notifications
+// ═══════════════════════════════════════════════════════════════
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return;
+    
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        State.allNotifications = [];
+        renderNotifications();
+        return;
+    }
+    
+    sb.from('notifications')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
+        .limit(20)
+        .then(function(result) {
+            State.allNotifications = result.data || [];
+            renderNotifications();
+        })
+        .catch(function() {
+            State.allNotifications = [];
+            renderNotifications();
+        });
+}
+
+function renderNotifications() {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+    
+    var unread = State.allNotifications.filter(function(n) { return !n.read; }).length;
+    
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+    
+    if (!State.allNotifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+    
+    var typeMap = {
+        'out_of_stock': { icon: 'fa-circle-xmark', cls: 'danger' },
+        'low_stock': { icon: 'fa-triangle-exclamation', cls: 'warning' },
+        'unpaid_invoice': { icon: 'fa-file-invoice-dollar', cls: 'danger' },
+        'new_repair': { icon: 'fa-soap', cls: 'info' },
+        'ready_repair': { icon: 'fa-circle-check', cls: 'success' },
+        'info': { icon: 'fa-circle-info', cls: 'info' }
+    };
+    
+    list.innerHTML = State.allNotifications.map(function(n) {
+        var t = typeMap[n.type] || typeMap.info;
+        return '<div class="notification-item ' + (n.read ? '' : 'unread') + '" data-id="' + n.id + '">' +
+            '<div class="notification-item-icon ' + t.cls + '">' +
+                '<i class="fas ' + t.icon + '"></i>' +
+            '</div>' +
+            '<div class="notification-item-content">' +
+                '<div class="notification-item-title">' + escapeHtml(n.title) + '</div>' +
+                '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>' +
+                '<div class="notification-item-time">' +
+                    '<i class="fas fa-clock"></i> ' +
+                    formatTimeAgo(n.created_at) +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+    
+    list.querySelectorAll('.notification-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            var id = item.dataset.id;
+            var notif = State.allNotifications.find(function(n) { return n.id === id; });
+            if (!notif || notif.read) return;
+            
+            notif.read = true;
+            item.classList.remove('unread');
+            renderNotifications();
+            
+            var sb = getSupabaseClient();
+            if (sb) sb.from('notifications').update({ read: true }).eq('id', id).then(function(){});
+        });
+    });
+}
+
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+    
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications')
+            .update({ read: true })
+            .eq('user_id', session.user.id)
+            .eq('read', false)
+            .then(function() {
+                State.allNotifications.forEach(function(n) { n.read = true; });
+                renderNotifications();
+                showToast('تم تعيين الكل كمقروء', 'success');
+            });
+    } else {
+        State.allNotifications.forEach(function(n) { n.read = true; });
+        renderNotifications();
+        showToast('تم محليًا (Offline)', 'info');
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔍 Global Search
+// ═══════════════════════════════════════════════════════════════
+function initGlobalSearch() {
+    var input = document.getElementById('globalSearchInput');
+    var panel = document.getElementById('globalSearchPanel');
+    var results = document.getElementById('globalSearchResults');
+    
+    if (!input || !panel || !results) return;
+    
+    var debouncedSearch = debounce(function(query) {
+        performGlobalSearch(query);
+    }, 300);
+    
+    input.addEventListener('input', function(e) {
+        var query = e.target.value.trim();
+        
+        if (query.length < 2) {
+            panel.classList.remove('show');
+            return;
+        }
+        
+        debouncedSearch(query);
+    });
+    
+    input.addEventListener('focus', function() {
+        if (input.value.trim().length >= 2) {
+            panel.classList.add('show');
+        }
+    });
+    
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            panel.classList.remove('show');
+            input.blur();
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            State.activeSearchIndex = Math.min(State.activeSearchIndex + 1, State.currentSearchResults.length - 1);
+            highlightActiveResult();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            State.activeSearchIndex = Math.max(State.activeSearchIndex - 1, -1);
+            highlightActiveResult();
+        } else if (e.key === 'Enter' && State.activeSearchIndex >= 0) {
+            e.preventDefault();
+            var item = State.currentSearchResults[State.activeSearchIndex];
+            if (item) window.location.href = item.url;
+        }
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (!panel.contains(e.target) && !input.contains(e.target)) {
+            panel.classList.remove('show');
+        }
+    });
+}
+
+function highlightActiveResult() {
+    var items = document.querySelectorAll('.search-result-item');
+    items.forEach(function(el, i) {
+        el.classList.toggle('active', i === State.activeSearchIndex);
+    });
+}
+
+function performGlobalSearch(query) {
+    var panel = document.getElementById('globalSearchPanel');
+    var results = document.getElementById('globalSearchResults');
+    if (!panel || !results) return;
+    
+    panel.classList.add('show');
+    results.innerHTML = '<div class="search-loading"><div class="search-spinner"></div><p>جاري البحث...</p></div>';
+    
+    State.currentSearchResults = [];
+    State.activeSearchIndex = -1;
+    
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        results.innerHTML = '<div class="search-empty"><i class="fas fa-wifi"></i><p>البحث يحتاج اتصال بالإنترنت</p></div>';
+        return;
+    }
+    
+    var searchTerm = '%' + query + '%';
+    
+    Promise.all([
+        sb.from('products').select('id, name, barcode, sell_price, quantity').or('name.ilike.' + searchTerm + ',barcode.ilike.' + searchTerm).limit(5),
+        sb.from('customers').select('id, name, phone').or('name.ilike.' + searchTerm + ',phone.ilike.' + searchTerm).limit(5),
+        sb.from('invoices').select('id, invoice_number, total, created_at').ilike('invoice_number', searchTerm).limit(5),
+        sb.from('repair_orders').select('id, device_name, issue, status').or('device_name.ilike.' + searchTerm + ',issue.ilike.' + searchTerm).limit(5)
+    ]).then(function(res) {
+        var html = [];
+        var products = res[0].data || [];
+        var customers = res[1].data || [];
+        var invoices = res[2].data || [];
+        var repairs = res[3].data || [];
+        
+        if (products.length) {
+            html.push('<div class="search-section-title">قطع الغيار</div>');
+            products.forEach(function(p) {
+                var url = 'products.html?search=' + encodeURIComponent(p.name);
+                State.currentSearchResults.push({ url: url });
+                html.push('<div class="search-result-item" data-url="' + url + '">' +
+                    '<div class="search-result-icon"><i class="fas fa-cog"></i></div>' +
+                    '<div class="search-result-content">' +
+                        '<div class="search-result-title">' + highlightMatch(p.name, query) + '</div>' +
+                        '<div class="search-result-subtitle">' + escapeHtml(p.barcode || '') + ' • ' + formatCurrency(p.sell_price) + ' • متبقي ' + (p.quantity || 0) + '</div>' +
+                    '</div>' +
+                    '<span class="search-result-type">قطعة</span>' +
+                '</div>');
+            });
+        }
+        
+        if (customers.length) {
+            html.push('<div class="search-section-title">العملاء</div>');
+            customers.forEach(function(c) {
+                var url = 'customers.html?search=' + encodeURIComponent(c.phone);
+                State.currentSearchResults.push({ url: url });
+                html.push('<div class="search-result-item" data-url="' + url + '">' +
+                    '<div class="search-result-icon"><i class="fas fa-user"></i></div>' +
+                    '<div class="search-result-content">' +
+                        '<div class="search-result-title">' + highlightMatch(c.name, query) + '</div>' +
+                        '<div class="search-result-subtitle">' + escapeHtml(c.phone || '') + '</div>' +
+                    '</div>' +
+                    '<span class="search-result-type">عميل</span>' +
+                '</div>');
+            });
+        }
+        
+        if (invoices.length) {
+            html.push('<div class="search-section-title">الفواتير</div>');
+            invoices.forEach(function(i) {
+                var url = 'invoice-view.html?id=' + i.id;
+                State.currentSearchResults.push({ url: url });
+                html.push('<div class="search-result-item" data-url="' + url + '">' +
+                    '<div class="search-result-icon"><i class="fas fa-file-invoice"></i></div>' +
+                    '<div class="search-result-content">' +
+                        '<div class="search-result-title">' + highlightMatch(i.invoice_number || '', query) + '</div>' +
+                        '<div class="search-result-subtitle">' + formatCurrency(i.total) + ' • ' + formatDate(i.created_at) + '</div>' +
+                    '</div>' +
+                    '<span class="search-result-type">فاتورة</span>' +
+                '</div>');
+            });
+        }
+        
+        if (repairs.length) {
+            html.push('<div class="search-section-title">أوامر الصيانة</div>');
+            repairs.forEach(function(r) {
+                var url = 'repairs.html?id=' + r.id;
+                State.currentSearchResults.push({ url: url });
+                html.push('<div class="search-result-item" data-url="' + url + '">' +
+                    '<div class="search-result-icon"><i class="fas fa-soap"></i></div>' +
+                    '<div class="search-result-content">' +
+                        '<div class="search-result-title">' + highlightMatch(r.device_name || '', query) + '</div>' +
+                        '<div class="search-result-subtitle">' + escapeHtml(r.issue || '') + '</div>' +
+                    '</div>' +
+                    '<span class="search-result-type">صيانة</span>' +
+                '</div>');
+            });
+        }
+        
+        if (html.length) {
+            results.innerHTML = html.join('');
+            results.querySelectorAll('[data-url]').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    window.location.href = el.dataset.url;
+                });
+            });
+        } else {
+            results.innerHTML = '<div class="search-empty"><i class="fas fa-search"></i><p>لا توجد نتائج مطابقة لـ "' + escapeHtml(query) + '"</p></div>';
+        }
+    }).catch(function(err) {
+        console.warn(err);
+        results.innerHTML = '<div class="search-empty"><i class="fas fa-circle-exclamation"></i><p>حدث خطأ أثناء البحث</p></div>';
+    });
+}
+
+function highlightMatch(text, query) {
+    if (!text) return '';
+    var escaped = escapeHtml(text);
+    try {
+        var safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        var regex = new RegExp('(' + safeQuery + ')', 'gi');
+        return escaped.replace(regex, '<mark>$1</mark>');
+    } catch (e) {
+        return escaped;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📱 PWA
+// ═══════════════════════════════════════════════════════════════
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        console.log('Service Worker not supported');
+        return;
+    }
+    
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js', { scope: './' })
+            .then(function(registration) {
+                console.log('✅ Service Worker registered:', registration.scope);
+                
+                registration.addEventListener('updatefound', function() {
+                    var newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', function() {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            showToast('تم تحديث التطبيق! أعد التحميل لتطبيق التغييرات', 'info', 6000);
+                        }
+                    });
+                });
+            })
+            .catch(function(err) {
+                console.log('❌ Service Worker registration failed:', err);
+            });
+    });
+}
+
+function initPWAInstall() {
+    var banner = document.getElementById('installBanner');
+    var installBtn = document.getElementById('installBannerBtn');
+    var dismissBtn = document.getElementById('installDismissBtn');
+    
+    if (localStorage.getItem('pwa_install_dismissed') === 'true') return;
+    
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        State.deferredPrompt = e;
+        if (banner) banner.classList.add('show');
+    });
+    
+    if (installBtn) {
+        installBtn.addEventListener('click', function() {
+            if (!State.deferredPrompt) return;
+            State.deferredPrompt.prompt();
+            State.deferredPrompt.userChoice.then(function(choice) {
+                if (choice.outcome === 'accepted') {
+                    showToast('تم تثبيت التطبيق بنجاح 🎉', 'success');
+                }
+                State.deferredPrompt = null;
+                if (banner) banner.classList.remove('show');
+            });
+        });
+    }
+    
+    if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+            localStorage.setItem('pwa_install_dismissed', 'true');
+            if (banner) banner.classList.remove('show');
+        });
+    }
+    
+    window.addEventListener('appinstalled', function() {
+        showToast('تم تثبيت التطبيق بنجاح 🎉', 'success');
+        if (banner) banner.classList.remove('show');
+        State.deferredPrompt = null;
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+function init() {
+    var session = getSession();
+    if (!session) {
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    if (session.user.must_change_password) {
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    initTheme();
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+    
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+        loadAllData();
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('انقطع الاتصال - وضع Offline', 'warning');
+    });
+    
+    updateUserUI(session.user);
+    applyPermissions(session.user);
+    
+    setupSidebar();
+    setupDropdowns();
+    setupChartTabs();
+    setupPageHeader();
+    setupKeyboardShortcuts();
+    setupScrollProgress();
+    
+    initGlobalSearch();
+    registerServiceWorker();
+    initPWAInstall();
+    startInactivityMonitor();
+    
+    setupGreeting(session.user);
+    
+    loadAllData();
+    
+    setInterval(loadNotifications, 60000);
+    
+    console.log('%c⚡ TopLoad - لوحة التحكم جاهزة', 'color: #0F766E; font-size: 16px; font-weight: bold;');
+}
+
+function setupSidebar() {
+    var menuBtn = document.getElementById('menuBtn');
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    
+    if (menuBtn) {
+        menuBtn.addEventListener('click', function() {
+            if (sidebar) sidebar.classList.toggle('show');
+            if (overlay) overlay.classList.toggle('show');
+        });
+    }
+    
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            if (sidebar) sidebar.classList.remove('show');
+            if (overlay) overlay.classList.remove('show');
+        });
+    }
+}
+
+function setupDropdowns() {
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+    
+    if (userBtn) {
+        userBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (userDropdown) userDropdown.classList.toggle('show');
+            if (notifPanel) notifPanel.classList.remove('show');
+        });
+    }
+    
+    if (notifBtn) {
+        notifBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (notifPanel) notifPanel.classList.toggle('show');
+            if (userDropdown) userDropdown.classList.remove('show');
+        });
+    }
+    
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                logout();
+            }
+        });
+    }
+    
+    var markAllBtn = document.getElementById('markAllReadBtn');
+    if (markAllBtn) markAllBtn.addEventListener('click', markAllRead);
+    
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+}
+
+function setupChartTabs() {
+    document.querySelectorAll('.chart-period-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.chart-period-tab').forEach(function(t) { 
+                t.classList.remove('active'); 
+            });
+            tab.classList.add('active');
+            State.currentChartDays = parseInt(tab.dataset.days) || 7;
+            loadSalesChart(State.currentChartDays);
+        });
+    });
+}
+
+function setupPageHeader() {
+    var refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            window.location.reload();
+        });
+    }
+    
+    var syncBtn = document.getElementById('syncBtn');
+    if (syncBtn) {
+        syncBtn.addEventListener('click', function() {
+            showToast('جاري المزامنة...', 'info');
+            loadAllData();
+            setTimeout(function() {
+                showToast('تم تحديث البيانات', 'success');
+            }, 800);
+        });
+    }
+}
+
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            var si = document.getElementById('globalSearchInput');
+            if (si) si.focus();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+}
+
+function setupScrollProgress() {
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        
+        if (winScroll > 300) {
+            if (scrollTopBtn) scrollTopBtn.classList.add('show');
+        } else {
+            if (scrollTopBtn) scrollTopBtn.classList.remove('show');
+        }
+    }, { passive: true });
+    
+    if (scrollTopBtn) {
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+}
+
+function setupGreeting(user) {
+    var hour = new Date().getHours();
+    var greeting = 'مساءً';
+    if (hour < 12) greeting = 'صباحاً';
+    else if (hour < 18) greeting = 'بعد الظهر';
+    
+    var welcomeEl = document.getElementById('welcomeText');
+    if (welcomeEl) {
+        welcomeEl.textContent = 'أهلاً بك ' + (user.full_name || user.username) + ' 👋 نتمنى لك ' + greeting + ' سعيداً';
+    }
+}
+
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+    
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+
+function applyPermissions(user) {
+    var perms = user.permissions || {};
+    var isAdmin = user.role === 'admin';
+    
+    document.querySelectorAll('.sidebar-link[data-perm]').forEach(function(link) {
+        var perm = link.dataset.perm;
+        if (!isAdmin && !perms[perm]) {
+            link.style.display = 'none';
+        }
+    });
+    
+    if (isAdmin) {
+        var al = document.getElementById('adminLink');
+        if (al) al.style.display = 'flex';
+        var dal = document.getElementById('dropdownAdminLink');
+        if (dal) dal.style.display = 'flex';
+    }
+}
+
+function loadAllData() {
+    loadStats();
+    loadSalesChart(State.currentChartDays);
+    loadRepairsChart();
+    loadRecentInvoices();
+    loadRecentRepairs();
+    loadLowStock();
+    loadNotifications();
+    renderQuickActions();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🚀 Start
+// ═══════════════════════════════════════════════════════════════
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🌐 Expose API globally
+// ═══════════════════════════════════════════════════════════════
+window.DashboardApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession,
+    formatCurrency: formatCurrency,
+    formatDate: formatDate,
+    formatTimeAgo: formatTimeAgo,
+    escapeHtml: escapeHtml,
+    getSupabaseClient: getSupabaseClient,
+    loadAllData: loadAllData,
+    toggleTheme: toggleTheme
+};
+
+})();
+</script>
+
+</body>
+</html>

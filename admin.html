@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d5b8e">
+<meta name="description" content="لوحة الأدمن - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>لوحة الأدمن | TopLoad</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+:root {
+    --tech-blue: #1d5b8e; --tech-blue-dark: #154668; --tech-blue-light: #2d7ab8;
+    --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
+    --purple: #8b5cf6; --pink: #ec4899;
+    --bg-primary: #E0F7FA; --bg-card: #ffffff; --bg-hover: #f1f5f9;
+    --text-primary: #0a1f33; --text-secondary: #475569; --text-muted: #94a3b8;
+    --border-color: #e1e8f0;
+    --shadow-sm: 0 1px 3px rgba(10,31,51,0.06);
+    --shadow-md: 0 4px 12px rgba(10,31,51,0.08);
+    --shadow-lg: 0 12px 32px rgba(10,31,51,0.12);
+    --shadow-xl: 0 24px 48px rgba(10,31,51,0.16);
+    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px; --radius-full: 9999px;
+    --navbar-height: 64px; --sidebar-width: 260px;
+    --transition-fast: 0.15s ease; --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    --safe-top: env(safe-area-inset-top,0); --safe-bottom: env(safe-area-inset-bottom,0);
+    --safe-left: env(safe-area-inset-left,0); --safe-right: env(safe-area-inset-right,0);
+}
+[data-theme="dark"] {
+    --bg-primary: #0a1628; --bg-card: #142f4a; --bg-hover: #1a3a5c;
+    --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b;
+    --border-color: #1e3a5f;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    --shadow-xl: 0 24px 48px rgba(0,0,0,0.6);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Cairo', system-ui, sans-serif;
+    background: var(--bg-primary); color: var(--text-primary);
+    min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+    transition: background var(--transition), color var(--transition);
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+.reading-progress {
+    position: fixed; top: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--tech-blue), var(--tech-blue-light), var(--success));
+    width: 0%; z-index: 10000; transition: width 0.1s linear;
+    box-shadow: 0 0 10px rgba(29,91,142,0.6);
+}
+
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--navbar-height); background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000; display: flex; align-items: center;
+    padding: 0 1rem; padding-top: var(--safe-top);
+    padding-left: calc(1rem + var(--safe-left));
+    padding-right: calc(1rem + var(--safe-right));
+    gap: 1rem; box-shadow: var(--shadow-sm);
+}
+.navbar-menu-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1.1rem;
+    transition: all var(--transition); flex-shrink: 0;
+}
+.navbar-menu-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.navbar-brand { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.navbar-logo {
+    width: 40px; height: 40px; object-fit: contain;
+    border-radius: var(--radius-md); background: var(--bg-primary);
+    padding: 4px; border: 1px solid var(--border-color);
+}
+.navbar-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-brand-text strong { font-size: 1rem; font-weight: 800; }
+.navbar-brand-text span { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+.navbar-actions { display: flex; align-items: center; gap: 0.5rem; margin-right: auto; }
+.navbar-btn {
+    width: 40px; height: 40px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-primary); font-size: 1rem;
+    transition: all var(--transition); position: relative; flex-shrink: 0;
+}
+.navbar-btn:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.navbar-badge {
+    position: absolute; top: 4px; left: 4px;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 9px; background: var(--danger); color: white;
+    font-size: 0.65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--bg-card);
+}
+.online-dot {
+    position: absolute; top: 6px; left: 6px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--success); border: 2px solid var(--bg-card);
+    animation: pulse-online 2s infinite;
+}
+.online-dot.offline { background: var(--danger); animation: none; }
+@keyframes pulse-online {
+    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+    100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+.navbar-user {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.35rem 0.85rem 0.35rem 0.5rem;
+    background: var(--bg-primary); border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition); cursor: pointer; flex-shrink: 0;
+}
+.navbar-user:hover { background: var(--bg-hover); border-color: var(--tech-blue); }
+.navbar-user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
+}
+.navbar-user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.navbar-user-info strong { font-size: 0.8rem; font-weight: 700; }
+.navbar-user-info span { font-size: 0.65rem; color: var(--text-muted); }
+
+.sidebar {
+    position: fixed; top: var(--navbar-height); right: 0; bottom: 0;
+    width: var(--sidebar-width); background: var(--bg-card);
+    border-left: 1px solid var(--border-color);
+    z-index: 900; overflow-y: auto;
+    padding: 1rem 0.75rem calc(1rem + var(--safe-bottom));
+    transition: transform var(--transition);
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+.sidebar-section { margin-bottom: 1.25rem; }
+.sidebar-section-title {
+    font-size: 0.7rem; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 0 0.75rem; margin-bottom: 0.5rem;
+}
+.sidebar-link {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 0.85rem; border-radius: var(--radius-md);
+    color: var(--text-secondary); font-size: 0.9rem; font-weight: 600;
+    transition: all var(--transition-fast);
+    margin-bottom: 0.15rem; position: relative;
+}
+.sidebar-link:hover { background: var(--bg-hover); color: var(--tech-blue); transform: translateX(-3px); }
+.sidebar-link.active {
+    background: linear-gradient(135deg, rgba(29,91,142,0.12), rgba(45,122,184,0.08));
+    color: var(--tech-blue); font-weight: 700;
+}
+.sidebar-link.active::before {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 4px; height: 60%;
+    background: var(--tech-blue); border-radius: 4px;
+}
+.sidebar-link i:first-child { width: 20px; text-align: center; font-size: 0.95rem; flex-shrink: 0; }
+.sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(10,31,51,0.5);
+    backdrop-filter: blur(4px); z-index: 899;
+    opacity: 0; visibility: hidden;
+    transition: all var(--transition); top: var(--navbar-height);
+}
+.sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+.main-content {
+    margin-top: var(--navbar-height);
+    margin-right: var(--sidebar-width);
+    padding: 1.5rem; min-height: calc(100vh - var(--navbar-height));
+}
+.page-header {
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+}
+.page-header-text h1 {
+    font-size: 1.65rem; font-weight: 800; margin-bottom: 0.25rem;
+    display: flex; align-items: center; gap: 0.6rem;
+}
+.page-header-text h1 i { color: var(--tech-blue); }
+.page-header-text p { font-size: 0.9rem; color: var(--text-secondary); }
+.page-header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.btn {
+    padding: 0.65rem 1.15rem; border-radius: var(--radius-md);
+    font-size: 0.9rem; font-weight: 600;
+    transition: all var(--transition);
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    justify-content: center; white-space: nowrap;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,91,142,0.4); }
+.btn-secondary {
+    background: var(--bg-card); color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover { background: var(--bg-hover); border-color: var(--tech-blue); color: var(--tech-blue); }
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger), #dc2626);
+    color: white;
+}
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239,68,68,0.4); }
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+}
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,0.4); }
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning), #d97706);
+    color: white;
+}
+.btn-warning:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,158,11,0.4); }
+.btn-sm { padding: 0.45rem 0.8rem; font-size: 0.8rem; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* Stats */
+.stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.85rem; margin-bottom: 1.5rem;
+}
+.stat-card {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 1.15rem;
+    display: flex; align-items: center; gap: 0.85rem;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease backwards;
+}
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stat-card:nth-child(4) { animation-delay: 0.2s; }
+.stat-card:nth-child(5) { animation-delay: 0.25s; }
+.stat-card:nth-child(6) { animation-delay: 0.3s; }
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--tech-blue); }
+.stat-card-icon {
+    width: 48px; height: 48px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; color: white; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.stat-card-icon.success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+.stat-card-icon.warning { background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+.stat-card-icon.danger { background: linear-gradient(135deg, var(--danger), #dc2626); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+.stat-card-icon.purple { background: linear-gradient(135deg, var(--purple), #7c3aed); box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
+.stat-card-content { flex: 1; min-width: 0; }
+.stat-card-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); line-height: 1.2; }
+.stat-card-value small { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+.stat-card-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+
+/* Tabs */
+.tabs-nav {
+    display: flex; gap: 0.35rem;
+    background: var(--bg-card); padding: 0.35rem;
+    border-radius: var(--radius-lg); margin-bottom: 1.25rem;
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.tabs-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+    flex: 1; min-width: 130px;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem; font-weight: 700;
+    color: var(--text-secondary);
+    transition: all var(--transition);
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    white-space: nowrap;
+}
+.tab-btn:hover:not(.active) { background: var(--bg-hover); color: var(--tech-blue); }
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white;
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.tab-btn i { font-size: 0.9rem; }
+
+.tab-content { display: none; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.card {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden; margin-bottom: 1.25rem;
+}
+.card-header {
+    padding: 1.15rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.75rem; flex-wrap: wrap;
+}
+.card-title {
+    font-size: 1rem; font-weight: 800;
+    display: flex; align-items: center; gap: 0.5rem;
+}
+.card-title i { color: var(--tech-blue); }
+.card-body { padding: 1.25rem; }
+
+/* Employees Grid */
+.employees-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+.employee-card {
+    background: var(--bg-card); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-lg); padding: 1.15rem;
+    transition: all var(--transition);
+    animation: fadeInUp 0.4s ease backwards;
+    position: relative; overflow: hidden;
+}
+.employee-card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, var(--tech-blue) 0%, transparent 70%);
+    opacity: 0.05; border-radius: 50%;
+    transform: translate(30%, -30%);
+}
+.employee-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--tech-blue);
+}
+.employee-card.inactive { opacity: 0.6; border-color: var(--border-color); }
+.employee-card-header {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 0.85rem; position: relative; z-index: 1;
+}
+.employee-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; font-weight: 800; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+}
+.employee-avatar.admin { background: linear-gradient(135deg, var(--purple), #7c3aed); box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
+.employee-info { flex: 1; min-width: 0; }
+.employee-name {
+    font-size: 1rem; font-weight: 800; margin-bottom: 0.15rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.employee-username {
+    font-size: 0.75rem; color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+}
+.employee-role-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.25rem 0.6rem; border-radius: var(--radius-full);
+    font-size: 0.7rem; font-weight: 800;
+}
+.employee-role-badge.admin { background: rgba(139,92,246,0.15); color: var(--purple); }
+.employee-role-badge.employee { background: rgba(29,91,142,0.15); color: var(--tech-blue); }
+.employee-role-badge.inactive { background: rgba(239,68,68,0.15); color: var(--danger); }
+
+.employee-meta {
+    display: flex; flex-direction: column; gap: 0.35rem;
+    padding: 0.75rem 0; margin-bottom: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    position: relative; z-index: 1;
+}
+.employee-meta-row {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.78rem; gap: 0.5rem;
+}
+.employee-meta-label {
+    color: var(--text-muted); font-weight: 600;
+    display: flex; align-items: center; gap: 0.35rem;
+}
+.employee-meta-label i { width: 14px; text-align: center; font-size: 0.7rem; }
+.employee-meta-value {
+    color: var(--text-primary); font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 60%;
+}
+
+.employee-perms-count {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.3rem 0.65rem; border-radius: var(--radius-full);
+    font-size: 0.7rem; font-weight: 700;
+    background: var(--bg-primary); color: var(--tech-blue);
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.75rem;
+}
+
+.employee-actions {
+    display: flex; gap: 0.35rem;
+    position: relative; z-index: 1;
+}
+.employee-actions .btn { flex: 1; padding: 0.45rem 0.5rem; font-size: 0.75rem; }
+
+/* Permissions Grid */
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.5rem;
+}
+.perm-group {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.85rem;
+}
+.perm-group-title {
+    font-size: 0.75rem; font-weight: 800;
+    color: var(--tech-blue); margin-bottom: 0.6rem;
+    display: flex; align-items: center; gap: 0.4rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.perm-group-title i { font-size: 0.8rem; }
+.perm-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.35rem 0;
+    cursor: pointer;
+    font-size: 0.8rem; font-weight: 600;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+.perm-item:hover { color: var(--tech-blue); }
+.perm-item input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--tech-blue);
+    cursor: pointer; flex-shrink: 0;
+}
+.perm-item input:checked + span { color: var(--tech-blue); font-weight: 700; }
+
+/* Settings Form */
+.settings-form {
+    max-width: 720px;
+}
+.settings-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-bottom: 1rem;
+}
+.settings-grid .full { grid-column: 1 / -1; }
+
+.form-group { margin-bottom: 0; }
+.form-label {
+    display: block; font-size: 0.85rem; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 0.5rem;
+}
+.form-label .required { color: var(--danger); }
+.form-label i { color: var(--tech-blue); margin-left: 0.35rem; font-size: 0.8rem; }
+.form-input, .form-textarea, .form-select {
+    width: 100%; padding: 0.75rem 0.95rem;
+    background: var(--bg-primary); border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 500;
+    color: var(--text-primary); outline: none;
+    transition: all var(--transition); font-family: inherit;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--tech-blue); background: var(--bg-card);
+    box-shadow: 0 0 0 4px rgba(29,91,142,0.12);
+}
+.form-textarea { resize: vertical; min-height: 80px; max-height: 200px; line-height: 1.6; }
+.form-input.error { border-color: var(--danger); animation: shake 0.4s ease; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+.form-error {
+    font-size: 0.75rem; color: var(--danger); margin-top: 0.4rem;
+    display: none; align-items: center; gap: 0.35rem; font-weight: 600;
+}
+.form-error.show { display: flex; }
+.form-hint {
+    font-size: 0.72rem; color: var(--text-muted); margin-top: 0.4rem;
+    display: flex; align-items: center; gap: 0.35rem; line-height: 1.5;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(10,31,51,0.75);
+    backdrop-filter: blur(8px); display: none;
+    align-items: center; justify-content: center;
+    z-index: 2000; padding: 1rem;
+    animation: fadeIn 0.3s ease; overflow-y: auto;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+    background: var(--bg-card); border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 640px; width: 100%; max-height: 92vh;
+    overflow: hidden;
+    animation: modalIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    display: flex; flex-direction: column; margin: auto;
+    border: 1px solid var(--border-color);
+}
+.modal-sm { max-width: 480px; }
+.modal-lg { max-width: 900px; }
+.modal-xl { max-width: 1100px; }
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-shrink: 0;
+}
+.modal-title {
+    font-size: 1.15rem; font-weight: 700;
+    display: flex; align-items: center; gap: 0.6rem;
+}
+.modal-title i { color: var(--tech-blue); }
+.modal-close {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all var(--transition);
+    flex-shrink: 0;
+}
+.modal-close:hover { background: rgba(239,68,68,0.1); color: var(--danger); transform: rotate(90deg); }
+.modal-body {
+    padding: 1.5rem; overflow-y: auto;
+    flex: 1; min-height: 0;
+    max-height: calc(92vh - 180px);
+    scrollbar-width: thin;
+}
+.modal-body::-webkit-scrollbar { width: 8px; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex; gap: 0.75rem; justify-content: flex-end;
+    flex-shrink: 0; background: var(--bg-primary); flex-wrap: wrap;
+}
+.modal-footer .btn { flex: 1; min-width: 120px; }
+@media (min-width: 480px) { .modal-footer .btn { flex: initial; min-width: auto; } }
+
+/* Audit log */
+.audit-list {
+    max-height: 500px; overflow-y: auto;
+}
+.audit-item {
+    display: flex; gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+.audit-item:hover { background: var(--bg-hover); }
+.audit-item:last-child { border-bottom: none; }
+.audit-item-icon {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+}
+.audit-item-icon.insert { background: rgba(16,185,129,0.15); color: var(--success); }
+.audit-item-icon.update { background: rgba(245,158,11,0.15); color: var(--warning); }
+.audit-item-icon.delete { background: rgba(239,68,68,0.15); color: var(--danger); }
+.audit-item-content { flex: 1; min-width: 0; }
+.audit-item-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.15rem; }
+.audit-item-meta { font-size: 0.72rem; color: var(--text-muted); }
+.audit-item-time { font-size: 0.7rem; color: var(--text-muted); flex-shrink: 0; }
+
+/* Toast */
+.toast-container {
+    position: fixed; top: calc(var(--navbar-height) + 1rem);
+    left: 50%; transform: translateX(-50%);
+    z-index: 3000; display: flex; flex-direction: column;
+    gap: 0.75rem; pointer-events: none;
+    max-width: 90vw; width: 400px;
+}
+.toast {
+    background: var(--bg-card); color: var(--text-primary);
+    padding: 1rem 1.25rem; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl); border: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.9rem; font-weight: 500; pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    border-right: 4px solid var(--info);
+}
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast i { font-size: 1.2rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+.toast.hide { animation: toastOut 0.3s ease forwards; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut { to { opacity: 0; transform: translateY(-20px) scale(0.95); } }
+
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-lg);
+}
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.skeleton-card { height: 240px; }
+
+.empty-state {
+    padding: 3rem 1rem; text-align: center; color: var(--text-muted);
+}
+.empty-state i {
+    font-size: 3rem; opacity: 0.25; margin-bottom: 1rem;
+    display: block; color: var(--tech-blue);
+}
+.empty-state h3 {
+    font-size: 1rem; font-weight: 700;
+    color: var(--text-secondary); margin-bottom: 0.35rem;
+}
+.empty-state p { font-size: 0.85rem; margin-bottom: 1rem; }
+
+.scroll-top {
+    position: fixed; bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; box-shadow: var(--shadow-lg);
+    opacity: 0; visibility: hidden; transform: translateY(20px);
+    transition: all var(--transition); z-index: 1400;
+}
+.scroll-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.scroll-top:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(29,91,142,0.5); }
+
+/* Notifications + User Dropdown */
+.notifications-panel, .user-dropdown {
+    position: fixed; top: calc(var(--navbar-height) + 0.5rem);
+    left: 1rem; width: 360px; max-width: calc(100vw - 2rem);
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
+    z-index: 1200; opacity: 0; visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all var(--transition); overflow: hidden;
+}
+.user-dropdown { width: 240px; }
+.notifications-panel.show, .user-dropdown.show {
+    opacity: 1; visibility: visible; transform: translateY(0) scale(1);
+}
+.notifications-header {
+    padding: 1rem 1.15rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.notifications-title { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+.notifications-title i { color: var(--tech-blue); }
+.notifications-mark-read {
+    font-size: 0.75rem; font-weight: 600; color: var(--tech-blue);
+    padding: 0.35rem 0.65rem; border-radius: var(--radius-sm);
+    transition: all var(--transition);
+}
+.notifications-mark-read:hover { background: rgba(29,91,142,0.1); }
+.notifications-list { max-height: 400px; overflow-y: auto; }
+.notification-item {
+    display: flex; gap: 0.75rem; padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all var(--transition-fast); cursor: pointer; position: relative;
+}
+.notification-item:hover { background: var(--bg-hover); }
+.notification-item.unread { background: rgba(29,91,142,0.04); }
+.notification-item.unread::before {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 3px; height: 60%;
+    background: var(--tech-blue); border-radius: 3px;
+}
+.notification-item-icon {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+}
+.notification-item-icon.info { background: rgba(59,130,246,0.12); color: var(--info); }
+.notification-item-icon.warning { background: rgba(245,158,11,0.12); color: var(--warning); }
+.notification-item-icon.danger { background: rgba(239,68,68,0.12); color: var(--danger); }
+.notification-item-icon.success { background: rgba(16,185,129,0.12); color: var(--success); }
+.notification-item-content { flex: 1; min-width: 0; }
+.notification-item-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.15rem; }
+.notification-item-message {
+    font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.25rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.notification-item-time { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.25rem; }
+.notifications-empty { padding: 2.5rem 1rem; text-align: center; color: var(--text-muted); }
+.notifications-empty i { font-size: 2.5rem; opacity: 0.3; margin-bottom: 0.75rem; display: block; }
+.user-dropdown-header {
+    padding: 1rem; border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; gap: 0.75rem;
+}
+.user-dropdown-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
+}
+.user-dropdown-info strong { display: block; font-size: 0.9rem; font-weight: 700; }
+.user-dropdown-info span { font-size: 0.75rem; color: var(--text-muted); }
+.user-dropdown-menu { padding: 0.5rem; }
+.user-dropdown-item {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.65rem 0.75rem; border-radius: var(--radius-sm);
+    font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);
+    transition: all var(--transition-fast); width: 100%; text-align: right;
+}
+.user-dropdown-item:hover { background: var(--bg-hover); color: var(--tech-blue); }
+.user-dropdown-item.danger:hover { background: rgba(239,68,68,0.1); color: var(--danger); }
+.user-dropdown-divider { height: 1px; background: var(--border-color); margin: 0.35rem 0.5rem; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@media (max-width: 968px) {
+    .sidebar { transform: translateX(100%); box-shadow: var(--shadow-xl); }
+    .sidebar.show { transform: translateX(0); }
+    .main-content { margin-right: 0; padding: 1rem; }
+    .navbar-brand-text { display: none; }
+    .navbar-user-info { display: none; }
+    .navbar-user { padding: 0.35rem; }
+}
+@media (max-width: 640px) {
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .page-header-actions { width: 100%; }
+    .page-header-actions .btn { flex: 1; }
+    .settings-grid { grid-template-columns: 1fr; }
+    .settings-grid .full { grid-column: 1; }
+    .notifications-panel, .user-dropdown { left: 0.5rem; right: 0.5rem; width: auto; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .stat-card { padding: 0.85rem; gap: 0.6rem; }
+    .stat-card-icon { width: 40px; height: 40px; font-size: 1.05rem; }
+    .stat-card-value { font-size: 1.15rem; }
+    .stat-card-label { font-size: 0.68rem; }
+    .modal-body { padding: 1rem; max-height: calc(92vh - 160px); }
+    .modal-header { padding: 1rem 1.25rem; }
+    .modal-footer { padding: 0.85rem 1.25rem; gap: 0.5rem; }
+    .employees-grid { grid-template-columns: 1fr; }
+    .permissions-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="navbar">
+    <button class="navbar-menu-btn" id="menuBtn" aria-label="القائمة">
+        <i class="fas fa-bars"></i>
+    </button>
+    <a href="dashboard.html" class="navbar-brand">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <div class="navbar-brand-text">
+            <strong>TopLoad</strong>
+            <span>لصيانة الأجهزة الإلكترونية</span>
+        </div>
+    </a>
+    <div class="navbar-actions">
+        <button class="navbar-btn" id="onlineBtn" title="حالة الاتصال">
+            <i class="fas fa-wifi"></i>
+            <span class="online-dot" id="onlineDot"></span>
+        </button>
+        <button class="navbar-btn" id="themeToggle" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="navbar-btn" id="notificationsBtn" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="navbar-badge" id="notifBadge" style="display: none;">0</span>
+        </button>
+        <button class="navbar-user" id="userBtn">
+            <div class="navbar-user-avatar" id="userAvatar">م</div>
+            <div class="navbar-user-info">
+                <strong id="userName">المستخدم</strong>
+                <span id="userRole">موظف</span>
+            </div>
+        </button>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الرئيسية</div>
+        <a href="dashboard.html" class="sidebar-link"><i class="fas fa-house"></i><span>لوحة التحكم</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المخزون</div>
+        <a href="products.html" class="sidebar-link" data-perm="can_view_products"><i class="fas fa-boxes-stacked"></i><span>الأصناف</span></a>
+        <a href="categories.html" class="sidebar-link" data-perm="can_view_categories"><i class="fas fa-tags"></i><span>الفئات</span></a>
+        <a href="stock-in.html" class="sidebar-link" data-perm="can_view_warehouse_in"><i class="fas fa-truck-ramp-box"></i><span>الوارد</span></a>
+        <a href="suppliers.html" class="sidebar-link" data-perm="can_view_suppliers"><i class="fas fa-handshake"></i><span>الموردين</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">المبيعات</div>
+        <a href="invoices.html" class="sidebar-link" data-perm="can_view_invoices"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></a>
+        <a href="customers.html" class="sidebar-link" data-perm="can_view_customers"><i class="fas fa-users"></i><span>العملاء</span></a>
+        <a href="debts.html" class="sidebar-link" data-perm="can_view_debts"><i class="fas fa-hand-holding-dollar"></i><span>المديونيات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">الصيانة</div>
+        <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span></a>
+        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">التقارير</div>
+        <a href="reports.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-chart-pie"></i><span>التقارير</span></a>
+        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
+        <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts"><i class="fas fa-clock"></i><span>الورديات</span></a>
+        <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log"><i class="fas fa-clipboard-list"></i><span>سجل الحركات</span></a>
+    </div>
+    <div class="sidebar-section">
+        <div class="sidebar-section-title">أدوات</div>
+        <a href="favorites.html" class="sidebar-link"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <a href="admin.html" class="sidebar-link active"><i class="fas fa-shield-halved"></i><span>لوحة الأدمن</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    
+    <div class="page-header">
+        <div class="page-header-text">
+            <h1><i class="fas fa-shield-halved"></i> لوحة الأدمن</h1>
+            <p id="pageSubtitle">إدارة الموظفين والصلاحيات والإعدادات</p>
+        </div>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" id="exportBtn">
+                <i class="fas fa-file-excel"></i> تصدير
+            </button>
+        </div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <div class="stat-card-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-card-content">
+                <div class="stat-card-value" id="totalEmployees">0</div>
+                <div class="stat-card-label">إجمالي الموظفين</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-icon success"><i class="fas fa-user-check"></i></div>
+            <div class="stat-card-content">
+                <div class="stat-card-value" id="activeEmployees">0</div>
+                <div class="stat-card-label">نشطين</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-icon purple"><i class="fas fa-user-shield"></i></div>
+            <div class="stat-card-content">
+                <div class="stat-card-value" id="adminCount">0</div>
+                <div class="stat-card-label">أدمن</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-icon warning"><i class="fas fa-clipboard-list"></i></div>
+            <div class="stat-card-content">
+                <div class="stat-card-value" id="auditCount">0</div>
+                <div class="stat-card-label">حركات مسجلة</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-icon danger"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="stat-card-content">
+                <div class="stat-card-value" id="lowStockCount">0</div>
+                <div class="stat-card-label">نواقص مخزون</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-icon success"><i class="fas fa-coins"></i></div>
+            <div class="stat-card-content">
+                <div class="stat-card-value" id="totalSales">0 <small>ج.م</small></div>
+                <div class="stat-card-label">إجمالي المبيعات</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="employees">
+            <i class="fas fa-users"></i> الموظفين
+        </button>
+        <button class="tab-btn" data-tab="settings">
+            <i class="fas fa-gear"></i> الإعدادات
+        </button>
+        <button class="tab-btn" data-tab="audit">
+            <i class="fas fa-clipboard-list"></i> آخر الحركات
+        </button>
+    </div>
+    
+    <!-- Employees Tab -->
+    <div class="tab-content active" data-tab-content="employees">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-users"></i> إدارة الموظفين</h3>
+                <button class="btn btn-primary btn-sm" id="addEmployeeBtn">
+                    <i class="fas fa-user-plus"></i> موظف جديد
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="employees-grid" id="employeesGrid">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Tab -->
+    <div class="tab-content" data-tab-content="settings">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-gear"></i> الإعدادات العامة</h3>
+            </div>
+            <div class="card-body">
+                <form class="settings-form" id="settingsForm" autocomplete="off">
+                    <div class="settings-grid">
+                        <div class="form-group full">
+                            <label class="form-label">
+                                <i class="fas fa-store"></i> اسم المركز <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-input" id="settingName" placeholder="TopLoad - لصيانة الأجهزة الإلكترونية" maxlength="200">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-phone"></i> رقم الموبايل
+                            </label>
+                            <input type="tel" class="form-input" id="settingPhone" placeholder="01XXXXXXXXX" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-envelope"></i> الإيميل
+                            </label>
+                            <input type="email" class="form-input" id="settingEmail" placeholder="info@electronic.com" maxlength="200">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">
+                                <i class="fas fa-location-dot"></i> العنوان
+                            </label>
+                            <input type="text" class="form-input" id="settingAddress" placeholder="المقر الرئيسي..." maxlength="300">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">
+                                <i class="fas fa-align-right"></i> ملاحظات الفاتورة
+                            </label>
+                            <textarea class="form-textarea" id="settingInvoiceNotes" placeholder="ملاحظات تظهر أسفل الفاتورة..." maxlength="500"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-money-bill-wave"></i> العملة
+                            </label>
+                            <input type="text" class="form-input" id="settingCurrency" value="ج.م" maxlength="10">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-percent"></i> خصم افتراضي (%)
+                            </label>
+                            <input type="number" class="form-input" id="settingDefaultDiscount" placeholder="0" min="0" max="100" step="0.01" value="0">
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" id="saveSettingsBtn">
+                            <span class="spinner" style="display: none;"></span>
+                            <i class="fas fa-check"></i>
+                            <span id="saveSettingsText">حفظ الإعدادات</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetSettingsBtn">
+                            <i class="fas fa-rotate-left"></i> إعادة تعيين
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Audit Tab -->
+    <div class="tab-content" data-tab-content="audit">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-clipboard-list"></i> آخر 50 حركة</h3>
+                <a href="audit-log.html" class="btn btn-secondary btn-sm">
+                    عرض الكل <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="audit-list" id="auditList">
+                    <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>جاري التحميل...</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</main>
+
+<!-- Employee Modal -->
+<div class="modal-overlay" id="employeeModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-user-plus" id="employeeModalIcon"></i>
+                <span id="employeeModalTitle">موظف جديد</span>
+            </h3>
+            <button class="modal-close" id="closeEmployeeModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="employeeForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="settings-grid">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-user"></i> الاسم الكامل <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="empFullName" placeholder="اسم الموظف" required maxlength="100">
+                        <div class="form-error" id="empFullNameError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال الاسم</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-at"></i> اسم المستخدم <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="empUsername" placeholder="username" required maxlength="50" style="direction: ltr; text-align: left;">
+                        <div class="form-error" id="empUsernameError">
+                            <i class="fas fa-circle-exclamation"></i>
+                            <span>الرجاء إدخال اسم المستخدم</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-key"></i> كلمة السر <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="empPassword" placeholder="كلمة السر" required maxlength="100" style="direction: ltr; text-align: left;">
+                        <div class="form-hint">
+                            <i class="fas fa-info-circle"></i>
+                            سيُطلب من الموظف تغييرها عند أول دخول
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-phone"></i> الموبايل
+                        </label>
+                        <input type="tel" class="form-input" id="empPhone" placeholder="01XXXXXXXXX" maxlength="20" style="direction: ltr; text-align: left;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-user-tag"></i> الدور
+                        </label>
+                        <select class="form-select" id="empRole">
+                            <option value="employee">موظف</option>
+                            <option value="admin">أدمن</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-toggle-on"></i> الحالة
+                        </label>
+                        <select class="form-select" id="empActive">
+                            <option value="true">نشط</option>
+                            <option value="false">معطّل</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                        <i class="fas fa-shield-halved" style="color: var(--tech-blue);"></i>
+                        الصلاحيات
+                    </h4>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        حدّد الصلاحيات المسموح بها لهذا الموظف
+                    </p>
+                    <div class="permissions-grid" id="permissionsGrid"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelEmployeeBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="submit" class="btn btn-primary" id="saveEmployeeBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="saveEmployeeText">حفظ</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-triangle-exclamation" style="color: var(--danger);"></i>
+                تأكيد الحذف
+            </h3>
+            <button class="modal-close" id="closeDeleteModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem;">
+                هل أنت متأكد من حذف الموظف 
+                <strong id="deleteEmployeeName" style="color: var(--danger);"></strong>؟
+            </p>
+            <div style="padding: 0.75rem 1rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); color: var(--danger); font-size: 0.85rem; font-weight: 600;">
+                <i class="fas fa-exclamation-triangle"></i>
+                لا يمكن التراجع عن هذه العملية
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">إلغاء</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> حذف نهائي
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="passwordModal">
+    <div class="modal modal-sm">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-key"></i>
+                تغيير كلمة السر
+            </h3>
+            <button class="modal-close" id="closePasswordModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="passwordForm" autocomplete="off">
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    تغيير كلمة سر الموظف: <strong id="passwordEmployeeName"></strong>
+                </p>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label class="form-label">
+                        <i class="fas fa-key"></i> كلمة السر الجديدة <span class="required">*</span>
+                    </label>
+                    <input type="text" class="form-input" id="newPassword" placeholder="كلمة السر الجديدة" required maxlength="100" style="direction: ltr; text-align: left;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-shield"></i> إجبار التغيير عند الدخول
+                    </label>
+                    <select class="form-select" id="forceChange">
+                        <option value="true">نعم</option>
+                        <option value="false">لا</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelPasswordBtn">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="savePasswordBtn">
+                    <span class="spinner" style="display: none;"></span>
+                    <i class="fas fa-check"></i>
+                    <span id="savePasswordText">تحديث</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+        <h3 class="notifications-title"><i class="fas fa-bell"></i> الإشعارات</h3>
+        <button class="notifications-mark-read" id="markAllReadBtn">تعيين الكل كمقروء</button>
+    </div>
+    <div class="notifications-list" id="notificationsList"></div>
+</div>
+
+<div class="user-dropdown" id="userDropdown">
+    <div class="user-dropdown-header">
+        <div class="user-dropdown-avatar" id="dropdownAvatar">م</div>
+        <div class="user-dropdown-info">
+            <strong id="dropdownName">المستخدم</strong>
+            <span id="dropdownRole">موظف</span>
+        </div>
+    </div>
+    <div class="user-dropdown-menu">
+        <a href="favorites.html" class="user-dropdown-item"><i class="fas fa-star"></i><span>المفضلة</span></a>
+        <div class="user-dropdown-divider"></div>
+        <button class="user-dropdown-item danger" id="logoutBtn"><i class="fas fa-right-from-bracket"></i><span>تسجيل الخروج</span></button>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+(function() {
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+var DB_NAME = 'electronic_db';
+var DB_VERSION = 5;
+
+// ═══════════════════════════════════════════════════════════════
+// 📋 Permissions Definition
+// ═══════════════════════════════════════════════════════════════
+var PERMISSION_GROUPS = [
+    {
+        title: 'المخزون',
+        icon: 'fa-boxes-stacked',
+        items: [
+            { key: 'can_view_products', label: 'عرض الأصناف' },
+            { key: 'can_edit_products', label: 'إضافة/تعديل الأصناف' },
+            { key: 'can_delete_products', label: 'حذف الأصناف' },
+            { key: 'can_view_categories', label: 'عرض الفئات' },
+            { key: 'can_edit_categories', label: 'إدارة الفئات' },
+            { key: 'can_view_warehouse_in', label: 'الوارد' },
+            { key: 'can_view_suppliers', label: 'الموردين' }
+        ]
+    },
+    {
+        title: 'المبيعات',
+        icon: 'fa-file-invoice-dollar',
+        items: [
+            { key: 'can_view_invoices', label: 'عرض الفواتير' },
+            { key: 'can_create_invoices', label: 'إنشاء فواتير' },
+            { key: 'can_cancel_invoices', label: 'إلغاء الفواتير' },
+            { key: 'can_view_customers', label: 'عرض العملاء' },
+            { key: 'can_edit_customers', label: 'إدارة العملاء' },
+            { key: 'can_view_debts', label: 'المديونيات' }
+        ]
+    },
+    {
+        title: 'الصيانة',
+        icon: 'fa-screwdriver-wrench',
+        items: [
+            { key: 'can_view_repairs', label: 'عرض أوامر الصيانة' },
+            { key: 'can_edit_repairs', label: 'إدارة أوامر الصيانة' },
+            { key: 'can_view_ratings', label: 'تقييمات العملاء' }
+        ]
+    },
+    {
+        title: 'التقارير والإدارة',
+        icon: 'fa-chart-pie',
+        items: [
+            { key: 'can_view_reports', label: 'التقارير' },
+            { key: 'can_view_shortages', label: 'النواقص' },
+            { key: 'can_view_purchase_suggestions', label: 'اقتراحات الشراء' },
+            { key: 'can_manage_shifts', label: 'الورديات' },
+            { key: 'can_view_audit_log', label: 'سجل الحركات' }
+        ]
+    }
+];
+
+// ═══════════════════════════════════════════════════════════════
+// 🗄️ Supabase
+// ═══════════════════════════════════════════════════════════════
+var supabaseClient = null;
+function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) return null;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+function formatNumber(num) {
+    var n = parseInt(num) || 0;
+    try { return n.toLocaleString('ar-EG'); } catch (e) { return String(n); }
+}
+function formatCurrencyShort(amount) {
+    var num = parseFloat(amount) || 0;
+    try { return num.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
+    catch (e) { return num.toFixed(0); }
+}
+function formatDate(date) {
+    if (!date) return '—';
+    try { return new Date(date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }); }
+    catch (e) { return '—'; }
+}
+function formatDateTime(date) {
+    if (!date) return '—';
+    try {
+        return new Date(date).toLocaleDateString('ar-EG', { 
+            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+    } catch (e) { return '—'; }
+}
+function formatTimeAgo(date) {
+    if (!date) return '';
+    try {
+        var seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+        if (seconds < 60) return 'الآن';
+        if (seconds < 3600) return 'منذ ' + Math.floor(seconds / 60) + ' دقيقة';
+        if (seconds < 86400) return 'منذ ' + Math.floor(seconds / 3600) + ' ساعة';
+        if (seconds < 604800) return 'منذ ' + Math.floor(seconds / 86400) + ' يوم';
+        return formatDate(date);
+    } catch (e) { return ''; }
+}
+function getInitials(name) {
+    if (!name) return '؟';
+    var parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var saved = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+}
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon(next);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var icons = {
+        success: 'fa-circle-check', error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation', info: 'fa-circle-info'
+    };
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🌐 Online
+// ═══════════════════════════════════════════════════════════════
+function updateOnlineStatus() {
+    var dot = document.getElementById('onlineDot');
+    if (!dot) return;
+    dot.classList.toggle('offline', !navigator.onLine);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 Session
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var s = JSON.parse(raw);
+        if (!s || !s.user) return null;
+        if (s.expiresAt && Date.now() > s.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return s;
+    } catch (e) { return null; }
+}
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() { window.location.href = 'index.html'; }, 1000);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⏱️ Inactivity
+// ═══════════════════════════════════════════════════════════════
+var INACTIVITY_TIMEOUT = 30 * 60 * 1000;
+var inactivityTimer = null;
+function resetInactivity() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(function() {
+        logout('تم تسجيل خروجك بسبب عدم النشاط');
+    }, INACTIVITY_TIMEOUT);
+}
+function startInactivityMonitor() {
+    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetInactivity, { passive: true });
+    });
+    resetInactivity();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📦 IndexedDB
+// ═══════════════════════════════════════════════════════════════
+var dbInstance = null;
+var dbPromise = null;
+var dbFailed = false;
+function openDB() {
+    if (dbFailed) return Promise.resolve(null);
+    if (dbInstance) return Promise.resolve(dbInstance);
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise(function(resolve) {
+        try {
+            var req = indexedDB.open(DB_NAME, DB_VERSION);
+            req.onupgradeneeded = function(e) {
+                var db = e.target.result;
+                var stores = ['accounts', 'cache', 'settings', 'products', 'categories',
+                              'customers', 'invoices', 'repairs', 'suppliers',
+                              'stock_movements', 'notifications', 'payments', 'invoice_items'];
+                stores.forEach(function(name) {
+                    if (!db.objectStoreNames.contains(name)) {
+                        db.createObjectStore(name, { keyPath: 'id' });
+                    }
+                });
+                if (!db.objectStoreNames.contains('outbox')) {
+                    var s = db.createObjectStore('outbox', { keyPath: 'id', autoIncrement: true });
+                    s.createIndex('status', 'status');
+                }
+            };
+            req.onsuccess = function() {
+                dbInstance = req.result;
+                dbInstance.onversionchange = function() {
+                    try { dbInstance.close(); } catch(e) {}
+                    dbInstance = null; dbPromise = null;
+                };
+                resolve(dbInstance);
+            };
+            req.onerror = function() { dbFailed = true; dbPromise = null; resolve(null); };
+            req.onblocked = function() { setTimeout(function() { dbFailed = true; dbPromise = null; resolve(null); }, 500); };
+        } catch (e) { dbFailed = true; resolve(null); }
+    });
+    return dbPromise;
+}
+function dbPut(store, data) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return null;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).put(data);
+                r.onsuccess = function() { resolve(r.result); };
+                r.onerror = function() { resolve(null); };
+            } catch (e) { resolve(null); }
+        });
+    });
+}
+function dbBulkPut(store, items) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var os = tx.objectStore(store);
+                items.forEach(function(item) { try { os.put(item); } catch(e) {} });
+                tx.oncomplete = function() { resolve(); };
+                tx.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+function dbGetAll(store) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return [];
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readonly');
+                var r = tx.objectStore(store).getAll();
+                r.onsuccess = function() { resolve(r.result || []); };
+                r.onerror = function() { resolve([]); };
+            } catch (e) { resolve([]); }
+        });
+    });
+}
+function dbDelete(store, key) {
+    return openDB().then(function(db) {
+        if (!db || !db.objectStoreNames.contains(store)) return;
+        return new Promise(function(resolve) {
+            try {
+                var tx = db.transaction(store, 'readwrite');
+                var r = tx.objectStore(store).delete(key);
+                r.onsuccess = function() { resolve(); };
+                r.onerror = function() { resolve(); };
+            } catch (e) { resolve(); }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 State
+// ═══════════════════════════════════════════════════════════════
+var state = {
+    employees: [],
+    settings: {},
+    auditLog: [],
+    stats: {
+        totalEmployees: 0,
+        activeEmployees: 0,
+        adminCount: 0,
+        auditCount: 0,
+        lowStockCount: 0,
+        totalSales: 0
+    },
+    editingEmployee: null,
+    deletingEmployee: null,
+    changingPasswordFor: null
+};
+
+// ═══════════════════════════════════════════════════════════════
+// 📥 Load Data
+// ═══════════════════════════════════════════════════════════════
+function loadAllData() {
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        return loadFromCache();
+    }
+    
+    return Promise.all([
+        sb.from('accounts').select('*').order('created_at', { ascending: false }),
+        sb.from('settings').select('*'),
+        sb.from('audit_log').select('*').order('created_at', { ascending: false }).limit(50),
+        sb.from('products').select('quantity, min_quantity'),
+        sb.from('invoices').select('total')
+    ]).then(function(results) {
+        state.employees = results[0].data || [];
+        var settingsRows = results[1].data || [];
+        state.settings = {};
+        settingsRows.forEach(function(row) { state.settings[row.key] = row.value; });
+        state.auditLog = results[2].data || [];
+        
+        var products = results[3].data || [];
+        state.stats.lowStockCount = products.filter(function(p) {
+            return (p.quantity || 0) <= (p.min_quantity || 5);
+        }).length;
+        
+        var invoices = results[4].data || [];
+        state.stats.totalSales = invoices.reduce(function(sum, inv) {
+            return sum + (parseFloat(inv.total) || 0);
+        }, 0);
+        
+        return Promise.all([
+            dbBulkPut('accounts', state.employees)
+        ]);
+    }).catch(function(err) {
+        console.warn('Load failed:', err);
+        return loadFromCacheInternal();
+    }).then(function() {
+        updateStats();
+        renderEmployees();
+        renderAuditLog();
+        fillSettingsForm();
+    });
+}
+function loadFromCache() {
+    return loadFromCacheInternal().then(function() {
+        updateStats();
+        renderEmployees();
+        renderAuditLog();
+        fillSettingsForm();
+    });
+}
+function loadFromCacheInternal() {
+    return Promise.all([
+        dbGetAll('accounts'),
+        dbGetAll('settings')
+    ]).then(function(cached) {
+        state.employees = cached[0] || [];
+        state.settings = cached[1] || {};
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 Stats
+// ═══════════════════════════════════════════════════════════════
+function updateStats() {
+    var total = state.employees.length;
+    var active = state.employees.filter(function(e) { return e.is_active !== false; }).length;
+    var admins = state.employees.filter(function(e) { return e.role === 'admin'; }).length;
+    
+    var setEl = function(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+    
+    setEl('totalEmployees', formatNumber(total));
+    setEl('activeEmployees', formatNumber(active));
+    setEl('adminCount', formatNumber(admins));
+    setEl('auditCount', formatNumber(state.auditLog.length));
+    setEl('lowStockCount', formatNumber(state.stats.lowStockCount));
+    
+    var salesEl = document.getElementById('totalSales');
+    if (salesEl) salesEl.innerHTML = formatCurrencyShort(state.stats.totalSales) + ' <small>ج.م</small>';
+    
+    var subtitle = document.getElementById('pageSubtitle');
+    if (subtitle) subtitle.textContent = total + ' موظف مسجل';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👥 Render Employees
+// ═══════════════════════════════════════════════════════════════
+function renderEmployees() {
+    var container = document.getElementById('employeesGrid');
+    if (!container) return;
+    
+    if (!state.employees.length) {
+        container.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;">' +
+            '<i class="fas fa-users"></i>' +
+            '<h3>لا يوجد موظفين بعد</h3>' +
+            '<p>ابدأ بإضافة أول موظف</p>' +
+            '</div>';
+        return;
+    }
+    
+    container.innerHTML = state.employees.map(renderEmployeeCard).join('');
+    bindEmployeeEvents();
+}
+
+function renderEmployeeCard(emp) {
+    var initial = getInitials(emp.full_name || emp.username);
+    var roleText = emp.role === 'admin' ? 'أدمن' : 'موظف';
+    var roleCls = emp.role === 'admin' ? 'admin' : 'employee';
+    var isActive = emp.is_active !== false;
+    var permsCount = emp.permissions ? Object.keys(emp.permissions).filter(function(k) {
+        return emp.permissions[k] === true;
+    }).length : 0;
+    
+    var cardCls = isActive ? 'employee-card' : 'employee-card inactive';
+    var avatarCls = emp.role === 'admin' ? 'employee-avatar admin' : 'employee-avatar';
+    
+    return '<div class="' + cardCls + '" data-id="' + emp.id + '">' +
+        '<div class="employee-card-header">' +
+            '<div class="' + avatarCls + '">' + escapeHtml(initial) + '</div>' +
+            '<div class="employee-info">' +
+                '<div class="employee-name">' + escapeHtml(emp.full_name || 'بدون اسم') + '</div>' +
+                '<div class="employee-username">@' + escapeHtml(emp.username || '') + '</div>' +
+            '</div>' +
+            '<span class="employee-role-badge ' + roleCls + '">' +
+                '<i class="fas ' + (emp.role === 'admin' ? 'fa-crown' : 'fa-user') + '"></i> ' + roleText +
+            '</span>' +
+        '</div>' +
+        
+        '<div class="employee-meta">' +
+            '<div class="employee-meta-row">' +
+                '<span class="employee-meta-label"><i class="fas fa-phone"></i> الموبايل</span>' +
+                '<span class="employee-meta-value" style="direction: ltr; font-family: monospace;">' + escapeHtml(emp.phone || '—') + '</span>' +
+            '</div>' +
+            '<div class="employee-meta-row">' +
+                '<span class="employee-meta-label"><i class="fas fa-calendar"></i> التسجيل</span>' +
+                '<span class="employee-meta-value">' + formatDate(emp.created_at) + '</span>' +
+            '</div>' +
+            '<div class="employee-meta-row">' +
+                '<span class="employee-meta-label"><i class="fas fa-toggle-on"></i> الحالة</span>' +
+                '<span class="employee-meta-value" style="color: var(--' + (isActive ? 'success' : 'danger') + ');">' +
+                    (isActive ? 'نشط' : 'معطّل') +
+                '</span>' +
+            '</div>' +
+        '</div>' +
+        
+        '<div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">' +
+            '<span class="employee-perms-count">' +
+                '<i class="fas fa-shield-halved"></i> ' + permsCount + ' صلاحية' +
+            '</span>' +
+        '</div>' +
+        
+        '<div class="employee-actions">' +
+            '<button class="btn btn-secondary btn-sm" data-action="edit" data-id="' + emp.id + '" title="تعديل">' +
+                '<i class="fas fa-pen"></i> تعديل' +
+            '</button>' +
+            '<button class="btn btn-warning btn-sm" data-action="password" data-id="' + emp.id + '" title="تغيير كلمة السر">' +
+                '<i class="fas fa-key"></i>' +
+            '</button>' +
+            (emp.username === 'admin' ? '' : 
+                '<button class="btn btn-danger btn-sm" data-action="delete" data-id="' + emp.id + '" title="حذف">' +
+                    '<i class="fas fa-trash"></i>' +
+                '</button>') +
+        '</div>' +
+    '</div>';
+}
+
+function bindEmployeeEvents() {
+    document.querySelectorAll('.employee-card').forEach(function(card) {
+        card.querySelectorAll('[data-action]').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var action = btn.dataset.action;
+                var id = btn.dataset.id;
+                if (action === 'edit') openEditEmployee(id);
+                else if (action === 'delete') openDeleteModal(id);
+                else if (action === 'password') openPasswordModal(id);
+            });
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Render Permissions Grid
+// ═══════════════════════════════════════════════════════════════
+function renderPermissionsGrid(selectedPerms) {
+    var container = document.getElementById('permissionsGrid');
+    if (!container) return;
+    
+    selectedPerms = selectedPerms || {};
+    
+    container.innerHTML = PERMISSION_GROUPS.map(function(group) {
+        return '<div class="perm-group">' +
+            '<div class="perm-group-title">' +
+                '<i class="fas ' + group.icon + '"></i> ' + group.title +
+            '</div>' +
+            group.items.map(function(item) {
+                var checked = selectedPerms[item.key] === true ? 'checked' : '';
+                return '<label class="perm-item">' +
+                    '<input type="checkbox" data-perm="' + item.key + '" ' + checked + '>' +
+                    '<span>' + item.label + '</span>' +
+                '</label>';
+            }).join('') +
+        '</div>';
+    }).join('');
+}
+
+function getPermissionsFromForm() {
+    var perms = {};
+    document.querySelectorAll('#permissionsGrid input[type="checkbox"]').forEach(function(cb) {
+        perms[cb.dataset.perm] = cb.checked;
+    });
+    return perms;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🪟 Employee Modal
+// ═══════════════════════════════════════════════════════════════
+function openAddEmployee() {
+    state.editingEmployee = null;
+    
+    document.getElementById('employeeModalTitle').textContent = 'موظف جديد';
+    document.getElementById('employeeModalIcon').className = 'fas fa-user-plus';
+    document.getElementById('saveEmployeeText').textContent = 'حفظ';
+    
+    document.getElementById('employeeForm').reset();
+    document.getElementById('empRole').value = 'employee';
+    document.getElementById('empActive').value = 'true';
+    document.getElementById('empPassword').value = '';
+    
+    clearFormErrors();
+    renderPermissionsGrid({});
+    
+    document.getElementById('employeeModal').classList.add('show');
+    setTimeout(function() {
+        var el = document.getElementById('empFullName');
+        if (el) el.focus();
+    }, 300);
+}
+
+function openEditEmployee(id) {
+    var emp = null;
+    for (var i = 0; i < state.employees.length; i++) {
+        if (state.employees[i].id === id) { emp = state.employees[i]; break; }
+    }
+    if (!emp) return;
+    
+    state.editingEmployee = emp;
+    
+    document.getElementById('employeeModalTitle').textContent = 'تعديل الموظف';
+    document.getElementById('employeeModalIcon').className = 'fas fa-user-pen';
+    document.getElementById('saveEmployeeText').textContent = 'حفظ التعديلات';
+    
+    document.getElementById('empFullName').value = emp.full_name || '';
+    document.getElementById('empUsername').value = emp.username || '';
+    document.getElementById('empPassword').value = emp.password || '';
+    document.getElementById('empPhone').value = emp.phone || '';
+    document.getElementById('empRole').value = emp.role || 'employee';
+    document.getElementById('empActive').value = (emp.is_active !== false) ? 'true' : 'false';
+    
+    clearFormErrors();
+    renderPermissionsGrid(emp.permissions || {});
+    
+    document.getElementById('employeeModal').classList.add('show');
+    setTimeout(function() {
+        var el = document.getElementById('empFullName');
+        if (el) el.focus();
+    }, 300);
+}
+
+function closeEmployeeModal() {
+    document.getElementById('employeeModal').classList.remove('show');
+    state.editingEmployee = null;
+}
+
+function clearFormErrors() {
+    document.querySelectorAll('#employeeModal .form-error').forEach(function(el) { el.classList.remove('show'); });
+    document.querySelectorAll('#employeeModal .form-input.error').forEach(function(el) { el.classList.remove('error'); });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 💾 Save Employee
+// ═══════════════════════════════════════════════════════════════
+function saveEmployee(e) {
+    e.preventDefault();
+    clearFormErrors();
+    
+    var fullName = document.getElementById('empFullName').value.trim();
+    var username = document.getElementById('empUsername').value.trim().toLowerCase();
+    var password = document.getElementById('empPassword').value.trim();
+    var phone = document.getElementById('empPhone').value.trim() || null;
+    var role = document.getElementById('empRole').value;
+    var isActive = document.getElementById('empActive').value === 'true';
+    var permissions = getPermissionsFromForm();
+    
+    var hasError = false;
+    if (!fullName) {
+        document.getElementById('empFullName').classList.add('error');
+        document.getElementById('empFullNameError').classList.add('show');
+        hasError = true;
+    }
+    if (!username) {
+        document.getElementById('empUsername').classList.add('error');
+        var unErr = document.getElementById('empUsernameError');
+        unErr.querySelector('span').textContent = 'الرجاء إدخال اسم المستخدم';
+        unErr.classList.add('show');
+        hasError = true;
+    }
+    if (!password) {
+        showToast('الرجاء إدخال كلمة السر', 'error');
+        hasError = true;
+    }
+    if (hasError) return;
+    
+    // فحص اسم المستخدم المكرر
+    var duplicate = false;
+    for (var i = 0; i < state.employees.length; i++) {
+        var emp = state.employees[i];
+        if (emp.username === username) {
+            if (!state.editingEmployee || emp.id !== state.editingEmployee.id) {
+                duplicate = true;
+                break;
+            }
+        }
+    }
+    if (duplicate) {
+        document.getElementById('empUsername').classList.add('error');
+        var dupErr = document.getElementById('empUsernameError');
+        dupErr.querySelector('span').textContent = 'اسم المستخدم مستخدم بالفعل';
+        dupErr.classList.add('show');
+        return;
+    }
+    
+    var btn = document.getElementById('saveEmployeeBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveEmployeeText');
+    
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    var isEditing = !!state.editingEmployee;
+    
+    var empData = {
+        full_name: fullName,
+        username: username,
+        password: password,
+        phone: phone,
+        role: role,
+        permissions: permissions,
+        is_active: isActive
+    };
+    
+    var promise;
+    
+    if (isEditing) {
+        promise = sb.from('accounts').update(empData).eq('id', state.editingEmployee.id)
+            .then(function(result) {
+                if (result.error) throw result.error;
+                sb.from('audit_log').insert({
+                    user_id: session && session.user ? session.user.id : null,
+                    action: 'UPDATE',
+                    table_name: 'accounts',
+                    record_id: state.editingEmployee.id,
+                    old_data: state.editingEmployee,
+                    new_data: empData
+                }).then(function(){}, function(){});
+            });
+    } else {
+        empData.must_change_password = true;
+        promise = sb.from('accounts').insert(empData).select().single()
+            .then(function(result) {
+                if (result.error) throw result.error;
+                sb.from('audit_log').insert({
+                    user_id: session && session.user ? session.user.id : null,
+                    action: 'INSERT',
+                    table_name: 'accounts',
+                    record_id: result.data.id,
+                    new_data: result.data
+                }).then(function(){}, function(){});
+            });
+    }
+    
+    promise.then(function() {
+        showToast('✅ تم حفظ الموظف بنجاح', 'success');
+        closeEmployeeModal();
+        loadAllData();
+    }).catch(function(err) {
+        console.error('Save employee error:', err);
+        var msg = err.message || 'حدث خطأ في الحفظ';
+        if (err.code === '23505') msg = 'اسم المستخدم مستخدم بالفعل';
+        showToast(msg, 'error', 5000);
+    }).then(function() {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        icon.style.display = '';
+        text.textContent = isEditing ? 'حفظ التعديلات' : 'حفظ';
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Change Password
+// ═══════════════════════════════════════════════════════════════
+function openPasswordModal(id) {
+    var emp = null;
+    for (var i = 0; i < state.employees.length; i++) {
+        if (state.employees[i].id === id) { emp = state.employees[i]; break; }
+    }
+    if (!emp) return;
+    
+    state.changingPasswordFor = emp;
+    document.getElementById('passwordEmployeeName').textContent = emp.full_name || emp.username;
+    document.getElementById('passwordForm').reset();
+    document.getElementById('forceChange').value = 'true';
+    document.getElementById('passwordModal').classList.add('show');
+    setTimeout(function() {
+        var el = document.getElementById('newPassword');
+        if (el) el.focus();
+    }, 300);
+}
+
+function closePasswordModal() {
+    document.getElementById('passwordModal').classList.remove('show');
+    state.changingPasswordFor = null;
+}
+
+function savePassword(e) {
+    e.preventDefault();
+    var emp = state.changingPasswordFor;
+    if (!emp) return;
+    
+    var newPassword = document.getElementById('newPassword').value.trim();
+    var forceChange = document.getElementById('forceChange').value === 'true';
+    
+    if (!newPassword) {
+        showToast('الرجاء إدخال كلمة السر الجديدة', 'error');
+        return;
+    }
+    
+    var btn = document.getElementById('savePasswordBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('savePasswordText');
+    
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري التحديث...';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    
+    sb.from('accounts').update({
+        password: newPassword,
+        must_change_password: forceChange
+    }).eq('id', emp.id)
+        .then(function(result) {
+            if (result.error) throw result.error;
+            sb.from('audit_log').insert({
+                user_id: session && session.user ? session.user.id : null,
+                action: 'UPDATE',
+                table_name: 'accounts',
+                record_id: emp.id,
+                old_data: { password: '***' },
+                new_data: { password: 'CHANGED' }
+            }).then(function(){}, function(){});
+        })
+        .then(function() {
+            showToast('✅ تم تحديث كلمة السر', 'success');
+            closePasswordModal();
+            loadAllData();
+        })
+        .catch(function(err) {
+            console.error(err);
+            showToast('حدث خطأ في التحديث', 'error');
+        })
+        .then(function() {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            icon.style.display = '';
+            text.textContent = 'تحديث';
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🗑️ Delete Employee
+// ═══════════════════════════════════════════════════════════════
+function openDeleteModal(id) {
+    var emp = null;
+    for (var i = 0; i < state.employees.length; i++) {
+        if (state.employees[i].id === id) { emp = state.employees[i]; break; }
+    }
+    if (!emp) return;
+    
+    if (emp.username === 'admin') {
+        showToast('لا يمكن حذف الأدمن الرئيسي', 'error');
+        return;
+    }
+    
+    state.deletingEmployee = emp;
+    document.getElementById('deleteEmployeeName').textContent = emp.full_name || emp.username;
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+    state.deletingEmployee = null;
+}
+
+function confirmDelete() {
+    var emp = state.deletingEmployee;
+    if (!emp) return;
+    
+    var btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="display:block;width:16px;height:16px;"></span>';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    
+    sb.from('accounts').delete().eq('id', emp.id)
+        .then(function(result) {
+            if (result.error) throw result.error;
+            sb.from('audit_log').insert({
+                user_id: session && session.user ? session.user.id : null,
+                action: 'DELETE',
+                table_name: 'accounts',
+                record_id: emp.id,
+                old_data: emp
+            }).then(function(){}, function(){});
+        })
+        .then(function() {
+            showToast('✅ تم حذف الموظف', 'success');
+            closeDeleteModal();
+            loadAllData();
+        })
+        .catch(function(err) {
+            console.error(err);
+            showToast('حدث خطأ في الحذف', 'error');
+        })
+        .then(function() {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-trash"></i> حذف نهائي';
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⚙️ Settings
+// ═══════════════════════════════════════════════════════════════
+function fillSettingsForm() {
+    var s = state.settings || {};
+    var setVal = function(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.value = val || '';
+    };
+    
+    setVal('settingName', s.center_name || 'TopLoad - لصيانة الأجهزة الإلكترونية');
+    setVal('settingPhone', s.phone || '');
+    setVal('settingEmail', s.email || '');
+    setVal('settingAddress', s.address || '');
+    setVal('settingInvoiceNotes', s.invoice_notes || '');
+    setVal('settingCurrency', s.currency || 'ج.م');
+    setVal('settingDefaultDiscount', s.default_discount || 0);
+}
+
+function saveSettings(e) {
+    e.preventDefault();
+    
+    var btn = document.getElementById('saveSettingsBtn');
+    var spinner = btn.querySelector('.spinner');
+    var icon = btn.querySelector('i');
+    var text = document.getElementById('saveSettingsText');
+    
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    icon.style.display = 'none';
+    text.textContent = 'جاري الحفظ...';
+    
+    var session = getSession();
+    var sb = getSupabaseClient();
+    
+    var settingsData = {
+        center_name: document.getElementById('settingName').value.trim(),
+        phone: document.getElementById('settingPhone').value.trim(),
+        email: document.getElementById('settingEmail').value.trim(),
+        address: document.getElementById('settingAddress').value.trim(),
+        invoice_notes: document.getElementById('settingInvoiceNotes').value.trim(),
+        currency: document.getElementById('settingCurrency').value.trim() || 'ج.م',
+        default_discount: parseFloat(document.getElementById('settingDefaultDiscount').value) || 0
+    };
+    
+    // حفظ كل إعداد بشكل منفصل
+    var promises = Object.keys(settingsData).map(function(key) {
+        return sb.from('settings').upsert({
+            key: key,
+            value: settingsData[key],
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'key' });
+    });
+    
+    Promise.all(promises)
+        .then(function() {
+            state.settings = settingsData;
+            showToast('✅ تم حفظ الإعدادات', 'success');
+            
+            sb.from('audit_log').insert({
+                user_id: session && session.user ? session.user.id : null,
+                action: 'UPDATE',
+                table_name: 'settings',
+                record_id: 'global',
+                new_data: settingsData
+            }).then(function(){}, function(){});
+        })
+        .catch(function(err) {
+            console.error(err);
+            showToast('حدث خطأ في الحفظ', 'error');
+        })
+        .then(function() {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            icon.style.display = '';
+            text.textContent = 'حفظ الإعدادات';
+        });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📋 Audit Log
+// ═══════════════════════════════════════════════════════════════
+function renderAuditLog() {
+    var container = document.getElementById('auditList');
+    if (!container) return;
+    
+    if (!state.auditLog.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i>' +
+            '<h3>لا توجد حركات</h3><p>لم تُسجَّل أي حركات بعد</p></div>';
+        return;
+    }
+    
+    var actionMap = {
+        'INSERT': { text: 'إضافة', cls: 'insert', icon: 'fa-plus' },
+        'UPDATE': { text: 'تعديل', cls: 'update', icon: 'fa-pen' },
+        'DELETE': { text: 'حذف', cls: 'delete', icon: 'fa-trash' }
+    };
+    
+    var tableNames = {
+        'products': 'الأصناف',
+        'categories': 'الفئات',
+        'invoices': 'الفواتير',
+        'customers': 'العملاء',
+        'repair_orders': 'أوامر الصيانة',
+        'stock_movements': 'حركات المخزون',
+        'payments': 'الدفعات',
+        'accounts': 'الموظفين',
+        'settings': 'الإعدادات',
+        'suppliers': 'الموردين'
+    };
+    
+    container.innerHTML = state.auditLog.map(function(log) {
+        var action = actionMap[log.action] || { text: log.action, cls: 'update', icon: 'fa-circle' };
+        var tableName = tableNames[log.table_name] || log.table_name || 'غير معروف';
+        var userName = '—';
+        // محاولة إيجاد اسم المستخدم
+        for (var i = 0; i < state.employees.length; i++) {
+            if (state.employees[i].id === log.user_id) {
+                userName = state.employees[i].full_name || state.employees[i].username;
+                break;
+            }
+        }
+        
+        return '<div class="audit-item">' +
+            '<div class="audit-item-icon ' + action.cls + '"><i class="fas ' + action.icon + '"></i></div>' +
+            '<div class="audit-item-content">' +
+                '<div class="audit-item-title">' + action.text + ' في ' + escapeHtml(tableName) + '</div>' +
+                '<div class="audit-item-meta">' +
+                    '<i class="fas fa-user"></i> ' + escapeHtml(userName) +
+                '</div>' +
+            '</div>' +
+            '<div class="audit-item-time">' + formatTimeAgo(log.created_at) + '</div>' +
+        '</div>';
+    }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📤 Export
+// ═══════════════════════════════════════════════════════════════
+function exportData() {
+    var loadLib = Promise.resolve();
+    if (typeof XLSX === 'undefined') {
+        loadLib = new Promise(function(resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+    loadLib.then(function() {
+        var data = state.employees.map(function(e) {
+            return {
+                'الاسم': e.full_name || '',
+                'اسم المستخدم': e.username || '',
+                'الموبايل': e.phone || '',
+                'الدور': e.role === 'admin' ? 'أدمن' : 'موظف',
+                'الحالة': e.is_active !== false ? 'نشط' : 'معطّل',
+                'عدد الصلاحيات': e.permissions ? Object.keys(e.permissions).filter(function(k) { return e.permissions[k]; }).length : 0,
+                'تاريخ التسجيل': formatDate(e.created_at)
+            };
+        });
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'الموظفين');
+        XLSX.writeFile(wb, 'employees_' + new Date().toISOString().split('T')[0] + '.xlsx');
+        showToast('تم التصدير بنجاح', 'success');
+    }).catch(function(err) {
+        console.error(err);
+        showToast('فشل التصدير', 'error');
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔔 Notifications
+// ═══════════════════════════════════════════════════════════════
+function loadNotifications() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) return;
+    sb.from('notifications').select('*').eq('user_id', session.user.id)
+        .order('created_at', { ascending: false }).limit(20)
+        .then(function(result) { renderNotifications(result.data || []); })
+        .catch(function(){});
+}
+function renderNotifications(notifications) {
+    var list = document.getElementById('notificationsList');
+    var badge = document.getElementById('notifBadge');
+    if (!list || !badge) return;
+    var unread = notifications.filter(function(n) { return !n.read; }).length;
+    if (unread > 0) {
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = 'flex';
+    } else badge.style.display = 'none';
+    
+    if (!notifications.length) {
+        list.innerHTML = '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>لا توجد إشعارات</p></div>';
+        return;
+    }
+    list.innerHTML = notifications.map(function(n) {
+        return '<div class="notification-item ' + (n.read ? '' : 'unread') + '">' +
+            '<div class="notification-item-icon info"><i class="fas fa-bell"></i></div>' +
+            '<div class="notification-item-content">' +
+                '<div class="notification-item-title">' + escapeHtml(n.title) + '</div>' +
+                '<div class="notification-item-message">' + escapeHtml(n.message || '') + '</div>' +
+                '<div class="notification-item-time"><i class="fas fa-clock"></i> ' + formatTimeAgo(n.created_at) + '</div>' +
+            '</div></div>';
+    }).join('');
+}
+function markAllRead() {
+    var session = getSession();
+    if (!session) return;
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        sb.from('notifications').update({ read: true }).eq('user_id', session.user.id).eq('read', false)
+            .then(function() { loadNotifications(); showToast('تم تعيين الكل كمقروء', 'success'); })
+            .catch(function(){});
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 👤 User UI
+// ═══════════════════════════════════════════════════════════════
+function updateUserUI(user) {
+    var initial = ((user.full_name || user.username || 'م') + '').charAt(0).toUpperCase();
+    var roleText = user.role === 'admin' ? 'مدير' : 'موظف';
+    ['userAvatar', 'dropdownAvatar'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = initial;
+    });
+    ['userName', 'dropdownName'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = user.full_name || user.username;
+    });
+    ['userRole', 'dropdownRole'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = roleText;
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    var session = getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    if (session.user.must_change_password) { window.location.href = 'index.html'; return; }
+    
+    // ⚠️ فقط الأدمن يدخل
+    if (session.user.role !== 'admin') {
+        window.location.href = 'unauthorized.html';
+        return;
+    }
+    
+    initTheme();
+    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+    
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال', 'success');
+        loadAllData();
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('وضع Offline', 'warning');
+    });
+    
+    updateUserUI(session.user);
+    
+    // Sidebar
+    document.getElementById('menuBtn')?.addEventListener('click', function() {
+        document.getElementById('sidebar')?.classList.toggle('show');
+        document.getElementById('sidebarOverlay')?.classList.toggle('show');
+    });
+    document.getElementById('sidebarOverlay')?.addEventListener('click', function() {
+        document.getElementById('sidebar')?.classList.remove('show');
+        document.getElementById('sidebarOverlay')?.classList.remove('show');
+    });
+    
+    // User dropdown
+    var userBtn = document.getElementById('userBtn');
+    var userDropdown = document.getElementById('userDropdown');
+    var notifBtn = document.getElementById('notificationsBtn');
+    var notifPanel = document.getElementById('notificationsPanel');
+    userBtn?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userDropdown?.classList.toggle('show');
+        notifPanel?.classList.remove('show');
+    });
+    document.getElementById('logoutBtn')?.addEventListener('click', function() {
+        if (confirm('هل أنت متأكد من تسجيل الخروج؟')) logout();
+    });
+    notifBtn?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notifPanel?.classList.toggle('show');
+        userDropdown?.classList.remove('show');
+    });
+    document.getElementById('markAllReadBtn')?.addEventListener('click', markAllRead);
+    
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && userBtn && !userBtn.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+        if (notifPanel && !notifPanel.contains(e.target) && notifBtn && !notifBtn.contains(e.target)) {
+            notifPanel.classList.remove('show');
+        }
+    });
+    
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var tabName = tab.dataset.tab;
+            document.querySelectorAll('.tab-btn').forEach(function(t) { t.classList.toggle('active', t === tab); });
+            document.querySelectorAll('.tab-content').forEach(function(c) {
+                c.classList.toggle('active', c.dataset.tabContent === tabName);
+            });
+        });
+    });
+    
+    // Employee modal
+    document.getElementById('addEmployeeBtn')?.addEventListener('click', openAddEmployee);
+    document.getElementById('closeEmployeeModal')?.addEventListener('click', closeEmployeeModal);
+    document.getElementById('cancelEmployeeBtn')?.addEventListener('click', closeEmployeeModal);
+    document.getElementById('employeeForm')?.addEventListener('submit', saveEmployee);
+    
+    // Delete modal
+    document.getElementById('closeDeleteModal')?.addEventListener('click', closeDeleteModal);
+    document.getElementById('cancelDeleteBtn')?.addEventListener('click', closeDeleteModal);
+    document.getElementById('confirmDeleteBtn')?.addEventListener('click', confirmDelete);
+    
+    // Password modal
+    document.getElementById('closePasswordModal')?.addEventListener('click', closePasswordModal);
+    document.getElementById('cancelPasswordBtn')?.addEventListener('click', closePasswordModal);
+    document.getElementById('passwordForm')?.addEventListener('submit', savePassword);
+    
+    // Settings
+    document.getElementById('settingsForm')?.addEventListener('submit', saveSettings);
+    document.getElementById('resetSettingsBtn')?.addEventListener('click', function() {
+        if (confirm('هل تريد إعادة تعيين الإعدادات؟')) fillSettingsForm();
+    });
+    
+    // Export
+    document.getElementById('exportBtn')?.addEventListener('click', exportData);
+    
+    // Overlay close
+    document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+        ov.addEventListener('click', function(e) {
+            if (e.target === ov) {
+                ov.classList.remove('show');
+                if (ov.id === 'employeeModal') state.editingEmployee = null;
+                if (ov.id === 'deleteModal') state.deletingEmployee = null;
+                if (ov.id === 'passwordModal') state.changingPasswordFor = null;
+            }
+        });
+    });
+    
+    // Keyboard
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.show').forEach(function(m) { m.classList.remove('show'); });
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+    
+    // Scroll
+    var progressBar = document.getElementById('readingProgress');
+    var scrollTopBtn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+        if (winScroll > 300) scrollTopBtn?.classList.add('show');
+        else scrollTopBtn?.classList.remove('show');
+    }, { passive: true });
+    scrollTopBtn?.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    
+    // Load
+    openDB()
+        .then(function() { return loadAllData(); })
+        .then(function() {
+            loadNotifications();
+            setInterval(loadNotifications, 60000);
+        })
+        .catch(function(err) {
+            console.error('Init error:', err);
+            showToast('حدث خطأ في تحميل البيانات', 'error');
+        });
+    
+    startInactivityMonitor();
+    console.log('%c🛡️ لوحة الأدمن جاهزة', 'color: #1d5b8e; font-size: 16px; font-weight: bold;');
+});
+
+window.AdminApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession,
+    reload: function() { return loadAllData(); }
+};
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F766E" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+
+<!-- ═══════════ SEO ═══════════ -->
+<title>TopLoad | نظام إدارة مركز صيانة الغسالات</title>
+<meta name="description" content="TopLoad - نظام إدارة متكامل لمراكز صيانة الغسالات. إدارة الصيانة، المخزون، الفواتير، والعملاء.">
+<meta name="keywords" content="TopLoad, صيانة غسالات, إدارة مراكز صيانة, نظام صيانة">
+<meta name="author" content="TopLoad">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://topload.vercel.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="TopLoad | نظام إدارة مركز صيانة الغسالات">
+<meta property="og:description" content="نظام إدارة متكامل لمراكز صيانة الغسالات">
+<meta property="og:url" content="https://topload.vercel.app/">
+<meta property="og:image" content="https://topload.vercel.app/logo.png">
+<meta property="og:locale" content="ar_EG">
+
+<!-- Schema Markup -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "TopLoad",
+    "alternateName": "نظام إدارة صيانة الغسالات",
+    "url": "https://topload.vercel.app/",
+    "applicationCategory": "BusinessApplication"
+}
+</script>
+
+<!-- ═══════════ PWA ═══════════ -->
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="TopLoad">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TopLoad">
+
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   🎨 TopLoad Design System v2.0 - Login Page
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+    --primary: #0F766E;
+    --primary-dark: #115E59;
+    --primary-light: #14B8A6;
+    --primary-lighter: #5EEAD4;
+    --primary-glow: rgba(15, 118, 110, 0.25);
+    --primary-soft: rgba(15, 118, 110, 0.08);
+    
+    --accent: #F59E0B;
+    --accent-dark: #D97706;
+    --accent-light: #FBBF24;
+    
+    --success: #10B981;
+    --success-dark: #059669;
+    --success-soft: rgba(16, 185, 129, 0.12);
+    
+    --danger: #EF4444;
+    --danger-dark: #DC2626;
+    --danger-soft: rgba(239, 68, 68, 0.12);
+    
+    --warning: #F59E0B;
+    --warning-dark: #D97706;
+    
+    --info: #3B82F6;
+    --info-soft: rgba(59, 130, 246, 0.12);
+    
+    --purple: #8B5CF6;
+    --cyan: #06B6D4;
+    
+    --bg-primary: #E0F7FA;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F0FDFA;
+    --bg-subtle: #F8FAFC;
+    
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    
+    --border-color: #E2E8F0;
+    --border-strong: #CBD5E1;
+    
+    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.16);
+    --shadow-primary: 0 8px 24px rgba(15, 118, 110, 0.25);
+    --shadow-primary-lg: 0 12px 32px rgba(15, 118, 110, 0.35);
+    
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    
+    --t-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --t-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bottom: env(safe-area-inset-bottom, 0);
+    --safe-left: env(safe-area-inset-left, 0);
+    --safe-right: env(safe-area-inset-right, 0);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+    --bg-hover: #334155;
+    --bg-subtle: #1A2332;
+    
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+    
+    --border-color: #334155;
+    --border-strong: #475569;
+    
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.7);
+    
+    --primary: #14B8A6;
+    --primary-dark: #0F766E;
+    --primary-light: #5EEAD4;
+    --primary-glow: rgba(20, 184, 166, 0.3);
+    --primary-soft: rgba(20, 184, 166, 0.12);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    min-height: 100dvh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background var(--t), color var(--t);
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+button { cursor: pointer; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+
+::selection { background: var(--primary); color: white; }
+
+.reading-progress {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Login Wrapper
+   ═══════════════════════════════════════════════════════════════ */
+.login-wrapper {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Brand Side (Left)
+   ═══════════════════════════════════════════════════════════════ */
+.login-brand {
+    background: linear-gradient(135deg, #0F172A 0%, #115E59 50%, #0F766E 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.login-brand::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(20, 184, 166, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(94, 234, 212, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+    animation: pulseGlow 8s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.login-brand::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+/* Floating bubbles decoration */
+.brand-bubbles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(94, 234, 212, 0.3), rgba(15, 118, 110, 0.05));
+    animation: floatBubble 15s ease-in-out infinite;
+}
+
+.bubble:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s; }
+.bubble:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 80%; animation-delay: 2s; }
+.bubble:nth-child(3) { width: 60px; height: 60px; top: 80%; left: 20%; animation-delay: 4s; }
+.bubble:nth-child(4) { width: 100px; height: 100px; top: 30%; left: 70%; animation-delay: 6s; }
+.bubble:nth-child(5) { width: 70px; height: 70px; top: 50%; left: 40%; animation-delay: 8s; }
+
+@keyframes floatBubble {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    33% { transform: translate(20px, -30px) scale(1.1); opacity: 0.8; }
+    66% { transform: translate(-20px, 20px) scale(0.9); opacity: 0.5; }
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 520px;
+    animation: fadeInUp 0.8s ease;
+}
+
+.brand-logo-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-logo-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(94, 234, 212, 0.3);
+    animation: spinSlow 20s linear infinite;
+}
+
+.brand-logo-ring::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--accent);
+    transform: translateX(-50%);
+}
+
+@keyframes spinSlow {
+    to { transform: rotate(360deg); }
+}
+
+.brand-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.4));
+    animation: float 4s ease-in-out infinite;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-2xl);
+    padding: 14px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.brand-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff, #5EEAD4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-subtitle {
+    font-size: 1.15rem;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+    color: #5EEAD4;
+}
+
+.brand-description {
+    font-size: 0.95rem;
+    opacity: 0.7;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+}
+
+.brand-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    text-align: right;
+}
+
+.brand-feature {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    transition: all var(--t);
+    animation: fadeInRight 0.6s ease backwards;
+}
+
+.brand-feature:nth-child(1) { animation-delay: 0.2s; }
+.brand-feature:nth-child(2) { animation-delay: 0.3s; }
+.brand-feature:nth-child(3) { animation-delay: 0.4s; }
+.brand-feature:nth-child(4) { animation-delay: 0.5s; }
+
+.brand-feature:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-6px);
+    border-color: rgba(94, 234, 212, 0.3);
+    box-shadow: 0 8px 24px rgba(15, 118, 110, 0.3);
+}
+
+.brand-feature i {
+    font-size: 1.35rem;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(15, 118, 110, 0.2));
+    border-radius: var(--radius-md);
+    color: #5EEAD4;
+    flex-shrink: 0;
+    border: 1px solid rgba(94, 234, 212, 0.2);
+}
+
+.brand-feature-text strong {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin-bottom: 0.15rem;
+}
+
+.brand-feature-text span {
+    font-size: 0.78rem;
+    opacity: 0.7;
+    font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Form Side (Right)
+   ═══════════════════════════════════════════════════════════════ */
+.login-form-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 2rem;
+    background: var(--bg-primary);
+    position: relative;
+}
+
+.login-form-side::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle at 90% 10%, var(--primary-soft) 0%, transparent 40%),
+        radial-gradient(circle at 10% 90%, var(--accent-light) 0%, transparent 30%);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.6s ease 0.1s backwards;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-logo-mobile {
+    display: none;
+    width: 84px;
+    height: 84px;
+    object-fit: contain;
+    margin: 0 auto 1rem;
+    padding: 10px;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}
+
+.form-title {
+    font-size: 1.85rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.form-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.login-form {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    transition: all var(--t);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--accent));
+}
+
+.form-group {
+    margin-bottom: 1.35rem;
+    position: relative;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 0.55rem;
+}
+
+.form-label i {
+    color: var(--primary);
+    margin-left: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.input-wrapper { position: relative; }
+
+.form-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    padding-left: 3rem;
+    padding-right: 1rem;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all var(--t);
+    outline: none;
+    font-family: inherit;
+}
+
+.form-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.form-input:focus {
+    border-color: var(--primary);
+    background: var(--bg-card);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.form-input.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px var(--danger-soft);
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: color var(--t);
+}
+
+.form-input:focus ~ .input-icon {
+    color: var(--primary);
+}
+
+.toggle-password {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--t);
+    z-index: 2;
+}
+
+.toggle-password:hover {
+    color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all var(--t);
+    background: var(--bg-primary);
+    flex-shrink: 0;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: white;
+    font-size: 0.7rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox-wrapper label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 800;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    transition: all var(--t);
+    box-shadow: var(--shadow-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn-submit:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary-lg);
+}
+
+.btn-submit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-submit.loading {
+    pointer-events: none;
+}
+
+.btn-submit .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+}
+
+.btn-submit.loading .spinner { display: block; }
+.btn-submit.loading .btn-text,
+.btn-submit.loading > i { display: none; }
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    display: none;
+    padding: 0.85rem 1rem;
+    background: var(--danger-soft);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--danger);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    align-items: center;
+    gap: 0.6rem;
+    animation: fadeInUp 0.3s ease;
+}
+
+.error-message.show { display: flex; }
+.error-message i { font-size: 1.1rem; }
+
+.login-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.login-footer a {
+    color: var(--primary);
+    font-weight: 800;
+    transition: color var(--t);
+}
+
+.login-footer a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+/* Top Controls */
+.top-controls {
+    position: fixed;
+    top: calc(1rem + var(--safe-top));
+    left: calc(1rem + var(--safe-left));
+    display: flex;
+    gap: 0.5rem;
+    z-index: 100;
+}
+
+.control-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: all var(--t);
+    position: relative;
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: var(--primary);
+}
+
+/* Online Indicator */
+.online-indicator {
+    position: fixed;
+    top: calc(1rem + var(--safe-top));
+    right: calc(1rem + var(--safe-right));
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 800;
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    transition: all var(--t);
+}
+
+.online-indicator .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    animation: pulse 2s infinite;
+}
+
+.online-indicator.offline .dot {
+    background: var(--danger);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.online-indicator.offline .status-text { color: var(--danger); }
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Toast */
+.toast-container {
+    position: fixed;
+    top: calc(1rem + var(--safe-top));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 90vw;
+    width: 400px;
+}
+
+.toast {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-right: 4px solid var(--info);
+}
+
+.toast.success { border-right-color: var(--success); }
+.toast.error { border-right-color: var(--danger); }
+.toast.warning { border-right-color: var(--warning); }
+.toast.info { border-right-color: var(--info); }
+.toast i { font-size: 1.2rem; flex-shrink: 0; }
+.toast.success i { color: var(--success); }
+.toast.error i { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i { color: var(--info); }
+.toast.hide { animation: toastOut 0.3s ease forwards; }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastOut {
+    to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.show { display: flex; }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal {
+    background: var(--bg-card);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 1px solid var(--border-color);
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-subtle);
+}
+
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.modal-title i {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: var(--shadow-primary);
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--t);
+}
+
+.modal-close:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+    transform: rotate(90deg);
+}
+
+.modal-body { padding: 1.5rem; }
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    background: var(--bg-subtle);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 800;
+    transition: all var(--t);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-primary-lg);
+}
+
+.btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1.5px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Install Banner */
+.install-banner {
+    position: fixed;
+    bottom: calc(1rem + var(--safe-bottom));
+    left: 1rem;
+    right: 1rem;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: 1.15rem 1.35rem;
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    z-index: 9998;
+    border: 1px solid var(--border-color);
+    animation: slideUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.install-banner.show { display: flex; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(100px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.install-banner-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: 6px;
+    box-shadow: var(--shadow-primary);
+}
+
+.install-banner-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.install-banner-text { flex: 1; min-width: 0; }
+
+.install-banner-text strong {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 900;
+    margin-bottom: 0.15rem;
+}
+
+.install-banner-text span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.install-banner-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.install-btn {
+    padding: 0.65rem 1.1rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 800;
+    transition: all var(--t);
+    white-space: nowrap;
+    box-shadow: var(--shadow-primary);
+}
+
+.install-btn:hover { transform: translateY(-2px); }
+
+.install-dismiss {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all var(--t);
+}
+
+.install-dismiss:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+/* PWA Install Toast (iOS) */
+.ios-install-hint {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    max-width: 380px;
+    width: calc(100% - 2rem);
+    z-index: 9998;
+    display: none;
+    animation: slideUp 0.5s ease;
+}
+
+.ios-install-hint.show { display: block; }
+
+.ios-install-hint .hint-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.ios-install-hint .hint-content i {
+    color: var(--primary);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .login-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
+    .login-brand {
+        display: none;
+    }
+    
+    .login-form-side {
+        padding: 5rem 1.5rem 2rem;
+    }
+    
+    .form-logo-mobile {
+        display: block;
+    }
+    
+    .form-title {
+        font-size: 1.55rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-form-side { padding: 4.5rem 1rem 1.5rem; }
+    .login-form { padding: 1.5rem; }
+    .form-title { font-size: 1.4rem; }
+    
+    .top-controls {
+        top: calc(0.75rem + var(--safe-top));
+        left: calc(0.75rem + var(--safe-left));
+    }
+    
+    .online-indicator {
+        top: calc(0.75rem + var(--safe-top));
+        right: calc(0.75rem + var(--safe-right));
+        padding: 0.4rem 0.75rem;
+        font-size: 0.72rem;
+    }
+    
+    .control-btn {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .install-banner {
+        padding: 1rem;
+        left: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .install-banner-text strong { font-size: 0.85rem; }
+    .install-banner-text span { font-size: 0.72rem; }
+    .install-btn { padding: 0.55rem 0.9rem; font-size: 0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<div class="top-controls">
+    <button class="control-btn" id="themeToggle" title="تبديل الوضع (Ctrl+D)" aria-label="تبديل الوضع">
+        <i class="fas fa-moon"></i>
+    </button>
+</div>
+
+<div class="online-indicator" id="onlineIndicator">
+    <span class="dot"></span>
+    <span class="status-text" id="statusText">متصل</span>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="login-wrapper">
+    
+    <!-- ═══════════ Brand Side ═══════════ -->
+    <div class="login-brand">
+        <div class="brand-bubbles">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+        
+        <div class="brand-content">
+            <div class="brand-logo-wrapper">
+                <div class="brand-logo-ring"></div>
+                <img src="logo.png" alt="TopLoad" class="brand-logo" onerror="this.parentElement.innerHTML='<i class=\'fas fa-soap\' style=\'font-size:4rem;color:#5EEAD4;\'></i>'">
+            </div>
+            
+            <h1 class="brand-title">TopLoad</h1>
+            <p class="brand-subtitle">لصيانة الغسالات</p>
+            <p class="brand-description">
+                نظام إدارة متكامل لمراكز صيانة الغسالات
+            </p>
+            
+            <div class="brand-features">
+                <div class="brand-feature">
+                    <i class="fas fa-screwdriver-wrench"></i>
+                    <div class="brand-feature-text">
+                        <strong>إدارة صيانة متكاملة</strong>
+                        <span>تتبع كل غسالة من الاستلام للتسليم</span>
+                    </div>
+                </div>
+                <div class="brand-feature">
+                    <i class="fas fa-boxes-stacked"></i>
+                    <div class="brand-feature-text">
+                        <strong>مخزون ذكي</strong>
+                        <span>تنبيهات تلقائية واقتراحات شراء</span>
+                    </div>
+                </div>
+                <div class="brand-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="brand-feature-text">
+                        <strong>تقارير احترافية</strong>
+                        <span>أرباح، مبيعات، وتقييمات فورية</span>
+                    </div>
+                </div>
+                <div class="brand-feature">
+                    <i class="fas fa-cloud-arrow-down"></i>
+                    <div class="brand-feature-text">
+                        <strong>يعمل بدون إنترنت</strong>
+                        <span>Offline First مع مزامنة تلقائية</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ═══════════ Form Side ═══════════ -->
+    <div class="login-form-side">
+        <div class="login-form-container">
+            
+            <div class="form-header">
+                <img src="logo.png" alt="TopLoad" class="form-logo-mobile" onerror="this.style.display='none'">
+                <h2 class="form-title">أهلاً بك 👋</h2>
+                <p class="form-subtitle">سجّل دخولك للمتابعة إلى النظام</p>
+            </div>
+            
+            <form class="login-form" id="loginForm" autocomplete="on">
+                
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <span id="errorText">بيانات الدخول غير صحيحة</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="username">
+                        <i class="fas fa-user"></i>
+                        اسم المستخدم
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            class="form-input" 
+                            placeholder="أدخل اسم المستخدم"
+                            autocomplete="username"
+                            required
+                            autofocus
+                        >
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">
+                        <i class="fas fa-lock"></i>
+                        كلمة السر
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="أدخل كلمة السر"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <i class="fas fa-lock input-icon"></i>
+                        <button type="button" class="toggle-password" id="togglePassword" aria-label="إظهار كلمة السر">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="rememberMe" checked>
+                        <label for="rememberMe">تذكرني لمدة 7 أيام</label>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span class="spinner"></span>
+                    <i class="fas fa-right-to-bracket"></i>
+                    <span class="btn-text">تسجيل الدخول</span>
+                </button>
+                
+            </form>
+            
+            <div class="login-footer">
+                <p>© <span id="year"></span> TopLoad — جميع الحقوق محفوظة</p>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+<!-- ═══════════ Change Password Modal ═══════════ -->
+<div class="modal-overlay" id="changePasswordModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-key"></i>
+                تغيير كلمة السر
+            </h3>
+        </div>
+        <div class="modal-body">
+            <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.9rem; font-weight: 600;">
+                <i class="fas fa-info-circle" style="color: var(--info);"></i>
+                لأمان حسابك، يجب تغيير كلمة السر عند أول تسجيل دخول.
+            </p>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i>
+                    كلمة السر الجديدة
+                </label>
+                <div class="input-wrapper">
+                    <input type="password" id="newPassword" class="form-input" placeholder="6 أحرف على الأقل" minlength="6">
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i>
+                    تأكيد كلمة السر
+                </label>
+                <div class="input-wrapper">
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="أعد كتابة كلمة السر" minlength="6">
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+            </div>
+            
+            <div class="error-message" id="changePassError">
+                <i class="fas fa-circle-exclamation"></i>
+                <span id="changePassErrorText"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="savePasswordBtn">
+                <i class="fas fa-check"></i>
+                حفظ ومتابعة
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ PWA Install Banner ═══════════ -->
+<div class="install-banner" id="installBanner">
+    <div class="install-banner-icon">
+        <img src="logo.png" alt="TopLoad" onerror="this.parentElement.innerHTML='<i class=\'fas fa-soap\'></i>'">
+    </div>
+    <div class="install-banner-text">
+        <strong>ثبّت التطبيق</strong>
+        <span>للوصول السريع والعمل بدون إنترنت</span>
+    </div>
+    <div class="install-banner-actions">
+        <button class="install-btn" id="installBannerBtn">تثبيت</button>
+        <button class="install-dismiss" id="installDismissBtn" aria-label="إغلاق">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+
+<!-- ═══════════ iOS Install Hint ═══════════ -->
+<div class="ios-install-hint" id="iosInstallHint">
+    <div class="hint-content">
+        <i class="fas fa-arrow-up-from-bracket"></i>
+        <span>لتثبيت التطبيق: اضغط على <strong>مشاركة</strong> ثم <strong>إضافة إلى الشاشة الرئيسية</strong></span>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Supabase Config
+// ═══════════════════════════════════════════════════════════════
+var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+
+var supabaseClient = null;
+
+function getSupabase() {
+    if (supabaseClient) return supabaseClient;
+    if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+        console.warn('Supabase library not loaded');
+        return null;
+    }
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false, autoRefreshToken: false }
+        });
+        return supabaseClient;
+    } catch (err) {
+        console.warn('فشل تهيئة Supabase:', err);
+        return null;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🧰 Helpers
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 Theme
+// ═══════════════════════════════════════════════════════════════
+function initTheme() {
+    var savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+function updateThemeIcon(theme) {
+    var icon = document.querySelector('#themeToggle i');
+    if (icon) {
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+}
+
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var newTheme = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════════════
+function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3500;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    var icons = {
+        success: 'fa-circle-check',
+        error: 'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation',
+        info: 'fa-circle-info'
+    };
+    
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span>' + escapeHtml(message) + '</span>';
+    
+    container.appendChild(toast);
+    
+    setTimeout(function() {
+        toast.classList.add('hide');
+        setTimeout(function() { toast.remove(); }, 300);
+    }, duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🌐 Online Status
+// ═══════════════════════════════════════════════════════════════
+function updateOnlineStatus() {
+    var indicator = document.getElementById('onlineIndicator');
+    var statusText = document.getElementById('statusText');
+    if (!indicator || !statusText) return;
+    
+    if (navigator.onLine) {
+        indicator.classList.remove('offline');
+        statusText.textContent = 'متصل';
+    } else {
+        indicator.classList.add('offline');
+        statusText.textContent = 'غير متصل';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔐 Session
+// ═══════════════════════════════════════════════════════════════
+function getSession() {
+    try {
+        var raw = localStorage.getItem('session');
+        if (!raw) return null;
+        var session = JSON.parse(raw);
+        if (!session || !session.user) return null;
+        if (session.expiresAt && Date.now() > session.expiresAt) {
+            localStorage.removeItem('session');
+            return null;
+        }
+        return session;
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveSession(user, remember) {
+    var duration = remember ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+    var session = {
+        user: {
+            id: user.id,
+            username: user.username,
+            full_name: user.full_name,
+            role: user.role,
+            permissions: user.permissions,
+            must_change_password: user.must_change_password
+        },
+        expiresAt: Date.now() + duration,
+        loginAt: Date.now()
+    };
+    localStorage.setItem('session', JSON.stringify(session));
+}
+
+function logout(message) {
+    localStorage.removeItem('session');
+    if (message) {
+        showToast(message, 'info');
+        setTimeout(function() {
+            window.location.href = 'index.html';
+        }, 1200);
+    } else {
+        window.location.href = 'index.html';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Login Logic
+// ═══════════════════════════════════════════════════════════════
+async function login(username, password) {
+    if (!navigator.onLine) {
+        return { 
+            success: false, 
+            error: 'يجب الاتصال بالإنترنت لتسجيل الدخول' 
+        };
+    }
+    
+    try {
+        var sb = getSupabase();
+        if (!sb) {
+            return { success: false, error: 'فشل الاتصال بالخدمة' };
+        }
+        
+        var result = await sb
+            .from('accounts')
+            .select('*')
+            .eq('username', username.trim().toLowerCase())
+            .eq('is_active', true)
+            .maybeSingle();
+        
+        if (result.error) throw result.error;
+        
+        if (result.data && result.data.password === password) {
+            return { success: true, user: result.data };
+        }
+        
+        return { success: false, error: 'اسم المستخدم أو كلمة السر غير صحيحة' };
+        
+    } catch (err) {
+        console.error('Login error:', err);
+        return { 
+            success: false, 
+            error: 'حدث خطأ في الاتصال. حاول مرة أخرى.' 
+        };
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎬 Init
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+    
+    var yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+    
+    initTheme();
+    var themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+    
+    updateOnlineStatus();
+    window.addEventListener('online', function() {
+        updateOnlineStatus();
+        showToast('تم استعادة الاتصال بالإنترنت', 'success');
+    });
+    window.addEventListener('offline', function() {
+        updateOnlineStatus();
+        showToast('انقطع الاتصال - يجب الاتصال بالإنترنت', 'warning');
+    });
+    
+    // Check existing session
+    var existingSession = getSession();
+    if (existingSession) {
+        if (existingSession.user.must_change_password) {
+            openChangePasswordModal(existingSession.user);
+        } else {
+            window.location.href = 'dashboard.html';
+            return;
+        }
+    }
+    
+    // Toggle Password
+    var togglePassword = document.getElementById('togglePassword');
+    var passwordInput = document.getElementById('password');
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function() {
+            var type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.innerHTML = '<i class="fas fa-eye' + (type === 'password' ? '' : '-slash') + '"></i>';
+        });
+    }
+    
+    // Login Form
+    var loginForm = document.getElementById('loginForm');
+    var submitBtn = document.getElementById('submitBtn');
+    var errorMessage = document.getElementById('errorMessage');
+    var errorText = document.getElementById('errorText');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            var username = document.getElementById('username').value.trim();
+            var password = document.getElementById('password').value;
+            var remember = document.getElementById('rememberMe').checked;
+            
+            errorMessage.classList.remove('show');
+            document.getElementById('username').classList.remove('error');
+            document.getElementById('password').classList.remove('error');
+            
+            if (!username) {
+                document.getElementById('username').classList.add('error');
+                errorText.textContent = 'من فضلك أدخل اسم المستخدم';
+                errorMessage.classList.add('show');
+                return;
+            }
+            
+            if (!password) {
+                document.getElementById('password').classList.add('error');
+                errorText.textContent = 'من فضلك أدخل كلمة السر';
+                errorMessage.classList.add('show');
+                return;
+            }
+            
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            
+            try {
+                var result = await login(username, password);
+                
+                if (result.success) {
+                    saveSession(result.user, remember);
+                    
+                    showToast('أهلاً بك ' + (result.user.full_name || result.user.username) + ' 👋', 'success');
+                    
+                    if (result.user.must_change_password) {
+                        setTimeout(function() { openChangePasswordModal(result.user); }, 600);
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+                        return;
+                    }
+                    
+                    setTimeout(function() {
+                        window.location.href = 'dashboard.html';
+                    }, 800);
+                } else {
+                    errorText.textContent = result.error;
+                    errorMessage.classList.add('show');
+                    document.getElementById('username').classList.add('error');
+                    document.getElementById('password').classList.add('error');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                errorText.textContent = 'حدث خطأ غير متوقع. حاول مرة أخرى.';
+                errorMessage.classList.add('show');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Reading Progress
+    var progressBar = document.getElementById('readingProgress');
+    window.addEventListener('scroll', function() {
+        var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        if (progressBar) progressBar.style.width = scrolled + '%';
+    }, { passive: true });
+    
+    // PWA Install
+    initPWAInstall();
+    
+    // Service Worker
+    registerServiceWorker();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 🔑 Change Password
+// ═══════════════════════════════════════════════════════════════
+var currentUserForPasswordChange = null;
+
+function openChangePasswordModal(user) {
+    currentUserForPasswordChange = user;
+    var modal = document.getElementById('changePasswordModal');
+    if (!modal) return;
+    modal.classList.add('show');
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+    document.getElementById('changePassError').classList.remove('show');
+    setTimeout(function() {
+        var el = document.getElementById('newPassword');
+        if (el) el.focus();
+    }, 300);
+}
+
+document.addEventListener('click', async function(e) {
+    if (e.target && e.target.id === 'savePasswordBtn') {
+        var newPass = document.getElementById('newPassword').value;
+        var confirmPass = document.getElementById('confirmPassword').value;
+        var errorEl = document.getElementById('changePassError');
+        var errorTextEl = document.getElementById('changePassErrorText');
+        
+        errorEl.classList.remove('show');
+        
+        if (!newPass || newPass.length < 6) {
+            errorTextEl.textContent = 'كلمة السر يجب أن تكون 6 أحرف على الأقل';
+            errorEl.classList.add('show');
+            return;
+        }
+        
+        if (newPass !== confirmPass) {
+            errorTextEl.textContent = 'كلمتا السر غير متطابقتين';
+            errorEl.classList.add('show');
+            return;
+        }
+        
+        if (!currentUserForPasswordChange) return;
+        
+        var btn = document.getElementById('savePasswordBtn');
+        var originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;"></span> جاري الحفظ...';
+        
+        try {
+            var sb = getSupabase();
+            if (sb) {
+                var result = await sb
+                    .from('accounts')
+                    .update({
+                        password: newPass,
+                        must_change_password: false
+                    })
+                    .eq('id', currentUserForPasswordChange.id);
+                
+                if (result.error) throw result.error;
+            }
+            
+            var session = getSession();
+            if (session) {
+                session.user.must_change_password = false;
+                localStorage.setItem('session', JSON.stringify(session));
+            }
+            
+            showToast('✅ تم تغيير كلمة السر بنجاح', 'success');
+            document.getElementById('changePasswordModal').classList.remove('show');
+            
+            setTimeout(function() {
+                window.location.href = 'dashboard.html';
+            }, 900);
+            
+        } catch (err) {
+            console.error(err);
+            errorTextEl.textContent = 'فشل تغيير كلمة السر. حاول مرة أخرى.';
+            errorEl.classList.add('show');
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+        }
+    }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 📱 PWA Install (كامل)
+// ═══════════════════════════════════════════════════════════════
+var deferredPrompt = null;
+
+function initPWAInstall() {
+    var banner = document.getElementById('installBanner');
+    var installBtn = document.getElementById('installBannerBtn');
+    var dismissBtn = document.getElementById('installDismissBtn');
+    var iosHint = document.getElementById('iosInstallHint');
+    
+    // Already installed?
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                       window.navigator.standalone === true;
+    
+    if (isStandalone) {
+        console.log('✅ التطبيق مثبت بالفعل (Standalone)');
+        return;
+    }
+    
+    // Dismissed before?
+    if (localStorage.getItem('pwa_install_dismissed') === 'true') {
+        console.log('ℹ️ تم تجاهل طلب التثبيت سابقاً');
+        return;
+    }
+    
+    // Check if iOS
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    // iOS: show custom hint
+    if (isIOS && isSafari) {
+        setTimeout(function() {
+            if (iosHint) iosHint.classList.add('show');
+        }, 5000);
+        
+        // Auto-hide after 15s
+        setTimeout(function() {
+            if (iosHint) iosHint.classList.remove('show');
+        }, 20000);
+        
+        return;
+    }
+    
+    // Android/Desktop: use beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('📱 PWA install available');
+        
+        setTimeout(function() {
+            if (banner) banner.classList.add('show');
+        }, 3000);
+    });
+    
+    if (installBtn) {
+        installBtn.addEventListener('click', async function() {
+            if (!deferredPrompt) {
+                showToast('التثبيت غير متاح حالياً', 'info');
+                return;
+            }
+            
+            deferredPrompt.prompt();
+            var choice = await deferredPrompt.userChoice;
+            
+            if (choice.outcome === 'accepted') {
+                showToast('🎉 تم تثبيت التطبيق بنجاح', 'success');
+            } else {
+                showToast('تم إلغاء التثبيت', 'info');
+            }
+            
+            deferredPrompt = null;
+            if (banner) banner.classList.remove('show');
+        });
+    }
+    
+    if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+            localStorage.setItem('pwa_install_dismissed', 'true');
+            if (banner) banner.classList.remove('show');
+        });
+    }
+    
+    window.addEventListener('appinstalled', function() {
+        showToast('🎉 تم تثبيت التطبيق بنجاح', 'success');
+        if (banner) banner.classList.remove('show');
+        deferredPrompt = null;
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⚙️ Service Worker
+// ═══════════════════════════════════════════════════════════════
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        console.log('ℹ️ Service Worker not supported');
+        return;
+    }
+    
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+            .then(function(reg) {
+                console.log('✅ Service Worker registered:', reg.scope);
+                
+                reg.addEventListener('updatefound', function() {
+                    var newWorker = reg.installing;
+                    newWorker.addEventListener('statechange', function() {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            showToast('🔄 تم تحديث التطبيق - أعد التحميل', 'info', 5000);
+                        }
+                    });
+                });
+            })
+            .catch(function(err) {
+                console.info('ℹ️ Service Worker registration failed:', err.message || err);
+            });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ⌨️ Keyboard Shortcuts
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'd') {
+        e.preventDefault();
+        toggleTheme();
+    }
+    if (e.key === 'Escape') {
+        var m = document.getElementById('changePasswordModal');
+        if (m) m.classList.remove('show');
+    }
+});
+
+window.TopLoadApp = {
+    showToast: showToast,
+    logout: logout,
+    getSession: getSession,
+    escapeHtml: escapeHtml,
+    getSupabase: getSupabase
+};
+
+console.log('%c⚡ TopLoad - نظام إدارة مركز صيانة الغسالات', 
+    'color: #0F766E; font-size: 16px; font-weight: bold;');
+console.log('%c🔐 صفحة تسجيل الدخول جاهزة', 
+    'color: #10B981; font-size: 12px;');
+</script>
+
+</body>
+</html>
