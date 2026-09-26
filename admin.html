@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <meta name="theme-color" content="#1d5b8e">
-<meta name="description" content="لوحة الأدمن - TopLoad لصيانة الأجهزة الإلكترونية">
+<meta name="description" content="لوحة الأدمن - إلكترونك لصيانة الأجهزة الإلكترونية">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>لوحة الأدمن | TopLoad</title>
+<title>لوحة الأدمن | إلكترونك</title>
 
 <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
 <link rel="icon" type="image/png" sizes="16x16" href="logo.png">
@@ -27,7 +27,7 @@
     --tech-blue: #1d5b8e; --tech-blue-dark: #154668; --tech-blue-light: #2d7ab8;
     --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
     --purple: #8b5cf6; --pink: #ec4899;
-    --bg-primary: #E0F7FA; --bg-card: #ffffff; --bg-hover: #f1f5f9;
+    --bg-primary: #f6f8fb; --bg-card: #ffffff; --bg-hover: #f1f5f9;
     --text-primary: #0a1f33; --text-secondary: #475569; --text-muted: #94a3b8;
     --border-color: #e1e8f0;
     --shadow-sm: 0 1px 3px rgba(10,31,51,0.06);
@@ -460,6 +460,34 @@ img { max-width: 100%; height: auto; display: block; }
     gap: 1rem; margin-bottom: 1rem;
 }
 .settings-grid .full { grid-column: 1 / -1; }
+.cleanup-panel {
+    background: linear-gradient(135deg, rgba(29,91,142,0.05), rgba(16,185,129,0.04));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+.cleanup-panel .card-title {
+    margin-bottom: 0.9rem;
+    color: var(--tech-blue);
+    font-size: 1rem;
+}
+.toggle-row {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.75rem 0.9rem; background: var(--bg-primary);
+    border: 1px solid var(--border-color); border-radius: var(--radius-md);
+    min-height: 48px;
+}
+.toggle-row input[type="checkbox"] {
+    width: 18px; height: 18px; accent-color: var(--tech-blue);
+    cursor: pointer; flex-shrink: 0;
+}
+.toggle-row span {
+    font-size: 0.85rem; font-weight: 700; color: var(--text-primary);
+}
+.cleanup-actions {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;
+}
 
 .form-group { margin-bottom: 0; }
 .form-label {
@@ -789,9 +817,9 @@ img { max-width: 100%; height: auto; display: block; }
         <i class="fas fa-bars"></i>
     </button>
     <a href="dashboard.html" class="navbar-brand">
-        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
+        <img src="logo.png" alt="إلكترونك" class="navbar-logo" onerror="this.style.display='none'">
         <div class="navbar-brand-text">
-            <strong>TopLoad</strong>
+            <strong>إلكترونك</strong>
             <span>لصيانة الأجهزة الإلكترونية</span>
         </div>
     </a>
@@ -840,12 +868,10 @@ img { max-width: 100%; height: auto; display: block; }
     <div class="sidebar-section">
         <div class="sidebar-section-title">الصيانة</div>
         <a href="repairs.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-screwdriver-wrench"></i><span>أوامر الصيانة</span></a>
-        <a href="visits.html" class="sidebar-link" data-perm="can_view_repairs"><i class="fas fa-calendar-check"></i><span>الزيارات اليومية</span></a>
     </div>
     <div class="sidebar-section">
         <div class="sidebar-section-title">التقارير</div>
         <a href="reports.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-chart-pie"></i><span>التقارير</span></a>
-        <a href="expenses.html" class="sidebar-link" data-perm="can_view_reports"><i class="fas fa-receipt"></i><span>المصروفات</span></a>
         <a href="shifts.html" class="sidebar-link" data-perm="can_manage_shifts"><i class="fas fa-clock"></i><span>الورديات</span></a>
         <a href="audit-log.html" class="sidebar-link" data-perm="can_view_audit_log"><i class="fas fa-clipboard-list"></i><span>سجل الحركات</span></a>
     </div>
@@ -961,7 +987,7 @@ img { max-width: 100%; height: auto; display: block; }
                             <label class="form-label">
                                 <i class="fas fa-store"></i> اسم المركز <span class="required">*</span>
                             </label>
-                            <input type="text" class="form-input" id="settingName" placeholder="TopLoad - لصيانة الأجهزة الإلكترونية" maxlength="200">
+                            <input type="text" class="form-input" id="settingName" placeholder="إلكترونك - لصيانة الأجهزة الإلكترونية" maxlength="200">
                         </div>
                         <div class="form-group">
                             <label class="form-label">
@@ -998,6 +1024,40 @@ img { max-width: 100%; height: auto; display: block; }
                                 <i class="fas fa-percent"></i> خصم افتراضي (%)
                             </label>
                             <input type="number" class="form-input" id="settingDefaultDiscount" placeholder="0" min="0" max="100" step="0.01" value="0">
+                        </div>
+                        <div class="form-group full">
+                            <div class="cleanup-panel">
+                                <h4 class="card-title"><i class="fas fa-database"></i> تنظيف بيانات التشغيل</h4>
+                                <div class="settings-grid">
+                                    <div class="form-group">
+                                        <label class="form-label" for="cleanupDateFrom">من تاريخ</label>
+                                        <input type="date" class="form-input" id="cleanupDateFrom">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="cleanupDateTo">إلى تاريخ</label>
+                                        <input type="date" class="form-input" id="cleanupDateTo">
+                                    </div>
+                                    <div class="form-group full">
+                                        <div class="cleanup-actions">
+                                            <button type="button" class="btn btn-secondary btn-sm" id="backupCleanupBtn">
+                                                <i class="fas fa-file-excel"></i> تنزيل نسخة Excel كاملة
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" id="runFullCleanupBtn">
+                                                <i class="fas fa-trash"></i> نسخ احتياطي ثم حذف الكل
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" id="runAllMovementsCleanupBtn">
+                                                <i class="fas fa-bell-slash"></i> حذف كل الحركات والإشعارات
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group full">
+                                        <div class="form-hint" style="margin-top: 0.25rem;">
+                                            <i class="fas fa-shield-halved"></i>
+                                            اختر تاريخ البداية والنهاية؛ سيتم حفظ السجلات المطابقة في Excel قبل حذفها. السجلات بلا تاريخ، والأصناف والفئات وكميات المخزون وحسابات الدخول والإعدادات لا تتأثر.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1234,8 +1294,8 @@ img { max-width: 100%; height: auto; display: block; }
 // ═══════════════════════════════════════════════════════════════
 // 🔑 Config
 // ═══════════════════════════════════════════════════════════════
-var SUPABASE_URL = 'https://nlcgbazlqfqyyawvsgio.supabase.co';
-var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sY2diYXpscWZxeXlhd3ZzZ2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzYzNTMsImV4cCI6MjEwNTkxMjM1M30.kePOnMFsyq11rrqGa2mkKSKmB0XmWbC7C6OSzkQhmnI';
+var SUPABASE_URL = 'https://zguajkmjeujhuimnmdde.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpndWFqa21qZXVqaHVpbW5tZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxNzc5MjksImV4cCI6MjEwNTc1MzkyOX0.0jg8FqHVgN_DG84SGzRKuvHpXJtJVMxN8KhnTNxvy6o';
 var DB_NAME = 'electronic_db';
 var DB_VERSION = 5;
 
@@ -2128,13 +2188,260 @@ function fillSettingsForm() {
         if (el) el.value = val || '';
     };
     
-    setVal('settingName', s.center_name || 'TopLoad - لصيانة الأجهزة الإلكترونية');
+    setVal('settingName', s.center_name || 'إلكترونك - لصيانة الأجهزة الإلكترونية');
     setVal('settingPhone', s.phone || '');
     setVal('settingEmail', s.email || '');
     setVal('settingAddress', s.address || '');
     setVal('settingInvoiceNotes', s.invoice_notes || '');
     setVal('settingCurrency', s.currency || 'ج.م');
     setVal('settingDefaultDiscount', s.default_discount || 0);
+}
+
+function getCleanupTableNames() {
+    return ['invoice_items', 'payments', 'repair_timeline', 'favorites', 'stock_movements',
+        'supplier_orders', 'service_ratings', 'notifications', 'shifts', 'invoices',
+        'repair_orders', 'customers', 'suppliers', 'audit_log'];
+}
+
+async function collectCleanupData(sb, tableNames) {
+    var tables = tableNames || getCleanupTableNames();
+    var data = {};
+    var pageSize = 1000;
+
+    for (var i = 0; i < tables.length; i++) {
+        var tableName = tables[i];
+        var rows = [];
+        var offset = 0;
+        while (true) {
+            var result = await sb.from(tableName).select('*').order('id', { ascending: true }).range(offset, offset + pageSize - 1);
+            if (result.error) throw new Error('تعذرت قراءة جدول ' + tableName);
+            var page = result.data || [];
+            rows = rows.concat(page);
+            if (page.length < pageSize) break;
+            offset += pageSize;
+        }
+        data[tableName] = rows;
+    }
+    return data;
+}
+
+async function downloadCleanupWorkbook(data, filePrefix) {
+    if (typeof XLSX === 'undefined') await ensureXlsxLib();
+
+    var wb = XLSX.utils.book_new();
+    var manifest = [['اسم الجدول', 'عدد السجلات']];
+    Object.keys(data).forEach(function(tableName) {
+        var rows = data[tableName];
+        manifest.push([tableName, rows.length]);
+        if (rows.length) {
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), tableName.slice(0, 31));
+        }
+    });
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(manifest), 'ملخص النسخة');
+    var timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    XLSX.writeFile(wb, (filePrefix || 'backup_full_cleanup') + '_' + timestamp + '.xlsx');
+}
+
+function getCleanupDateRange() {
+    var fromValue = document.getElementById('cleanupDateFrom')?.value;
+    var toValue = document.getElementById('cleanupDateTo')?.value;
+    if (!fromValue || !toValue) {
+        showToast('حدد تاريخ البداية والنهاية أولاً', 'warning');
+        return null;
+    }
+
+    var from = new Date(fromValue + 'T00:00:00').getTime();
+    var to = new Date(toValue + 'T23:59:59.999').getTime();
+    if (!Number.isFinite(from) || !Number.isFinite(to) || from > to) {
+        showToast('تاريخ البداية يجب ألا يأتي بعد تاريخ النهاية', 'warning');
+        return null;
+    }
+    return { from: from, to: to, fromValue: fromValue, toValue: toValue };
+}
+
+function getCleanupRowTimestamp(row) {
+    var dateFields = ['created_at', 'createdAt', 'date', 'invoice_date', 'payment_date',
+        'order_date', 'issue_date', 'movement_date', 'start_time', 'end_time',
+        'received_at', 'delivered_at', 'event_date', 'timestamp', 'updated_at', 'deleted_at'];
+    for (var i = 0; i < dateFields.length; i++) {
+        var value = row && row[dateFields[i]];
+        if (!value) continue;
+        var timestamp = typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
+            ? new Date(value + 'T12:00:00').getTime()
+            : Date.parse(value);
+        if (Number.isFinite(timestamp)) return timestamp;
+    }
+    return null;
+}
+
+function filterCleanupDataByDate(data, range) {
+    var filtered = {};
+    var total = 0;
+    Object.keys(data).forEach(function(tableName) {
+        filtered[tableName] = data[tableName].filter(function(row) {
+            var timestamp = getCleanupRowTimestamp(row);
+            var matches = timestamp !== null && timestamp >= range.from && timestamp <= range.to;
+            if (matches) total += 1;
+            return matches;
+        });
+    });
+    return { data: filtered, total: total };
+}
+
+async function deleteCleanupData(sb, data) {
+    var tables = Object.keys(data);
+    var totalDeleted = 0;
+
+    for (var i = 0; i < tables.length; i++) {
+        var tableName = tables[i];
+        var rows = data[tableName];
+        for (var j = 0; j < rows.length; j += 200) {
+            var batch = rows.slice(j, j + 200);
+            var ids = batch.map(function(row) { return row && row.id; });
+            if (ids.some(function(id) { return id === undefined || id === null; })) {
+                return { totalDeleted: totalDeleted, tableName: tableName, error: 'missing_id' };
+            }
+
+            var deleteResult;
+            try {
+                deleteResult = await sb.from(tableName).delete().in('id', ids).select('id');
+            } catch (err) {
+                console.error('فشل حذف الجدول', tableName, err);
+                return { totalDeleted: totalDeleted, tableName: tableName, error: 'request_failed' };
+            }
+            if (deleteResult.error || (deleteResult.data || []).length !== batch.length) {
+                console.error('فشل حذف الجدول', tableName, deleteResult.error);
+                return { totalDeleted: totalDeleted, tableName: tableName, error: 'delete_incomplete' };
+            }
+            totalDeleted += batch.length;
+        }
+    }
+    return { totalDeleted: totalDeleted, tableName: null, error: null };
+}
+
+function ensureXlsxLib() {
+    if (typeof XLSX !== 'undefined') return Promise.resolve();
+    return new Promise(function(resolve, reject) {
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+async function exportCleanupBackup() {
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        showToast('لا يوجد اتصال بالخادم، لا يمكن إنشاء النسخة الاحتياطية الآن', 'error');
+        return false;
+    }
+
+    try {
+        var data = await collectCleanupData(sb);
+        await downloadCleanupWorkbook(data, 'backup_full_cleanup');
+        showToast('تم إنشاء نسخة Excel كاملة', 'success');
+        return true;
+    } catch (err) {
+        console.error(err);
+        showToast(err.message || 'تعذر إنشاء النسخة الاحتياطية', 'error');
+        return false;
+    }
+}
+
+async function runFullCleanup() {
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        showToast('لا يوجد اتصال بالخادم للحذف', 'error');
+        return;
+    }
+
+    var range = getCleanupDateRange();
+    if (!range) return;
+    if (!confirm('سيتم تنزيل نسخة Excel للسجلات من ' + range.fromValue + ' إلى ' + range.toValue + ' ثم حذفها. السجلات بلا تاريخ والأصناف والفئات وكميات المخزون وحسابات الدخول والإعدادات ستظل كما هي. هل تريد الاستمرار؟')) {
+        return;
+    }
+
+    var data;
+    try {
+        var collected = await collectCleanupData(sb);
+        var selection = filterCleanupDataByDate(collected, range);
+        if (!selection.total) {
+            showToast('لا توجد سجلات مؤرخة داخل الفترة المحددة', 'info');
+            return;
+        }
+        data = selection.data;
+        await downloadCleanupWorkbook(data, 'backup_cleanup_' + range.fromValue + '_to_' + range.toValue);
+    } catch (err) {
+        console.error(err);
+        showToast(err.message || 'فشلت النسخة الاحتياطية، لم يتم حذف أي بيانات', 'error');
+        return;
+    }
+
+    var session = getSession();
+    var deletion = await deleteCleanupData(sb, data);
+    if (deletion.error) {
+        showToast('تعطل الحذف عند جدول ' + deletion.tableName + '. النسخة الاحتياطية تم تنزيلها وقد يكون بعض ما سبق قد حُذف.', 'error', 7000);
+        return;
+    }
+
+    sb.from('audit_log').insert({
+        user_id: session && session.user ? session.user.id : null,
+        action: 'DELETE',
+        table_name: 'full_cleanup',
+        record_id: 'cleanup',
+        new_data: { deleted_count: deletion.totalDeleted, backup_created: true }
+    }).then(function(){}, function(){})
+
+    showToast('تم تنزيل النسخة الاحتياطية وحذف ' + deletion.totalDeleted + ' سجل من الفترة المحددة', 'success', 6000);
+}
+
+async function runAllMovementsCleanup() {
+    var sb = getSupabaseClient();
+    if (!sb || !navigator.onLine) {
+        showToast('لا يوجد اتصال بالخادم للحذف', 'error');
+        return;
+    }
+
+    var tables = ['stock_movements', 'notifications', 'audit_log'];
+    if (!confirm('سيتم تنزيل نسخة Excel كاملة لحركات المخزون وسجل الحركات والإشعارات، ثم حذفها كلها بغض النظر عن التاريخ. الأصناف والفئات وكميات المخزون ستظل كما هي. هل تريد الاستمرار؟')) {
+        return;
+    }
+
+    var data;
+    try {
+        data = await collectCleanupData(sb, tables);
+        await downloadCleanupWorkbook(data, 'backup_all_movements_notifications');
+    } catch (err) {
+        console.error(err);
+        showToast(err.message || 'فشلت النسخة الاحتياطية، لم يتم حذف أي بيانات', 'error');
+        return;
+    }
+
+    var totalRecords = Object.keys(data).reduce(function(total, tableName) {
+        return total + data[tableName].length;
+    }, 0);
+    if (!totalRecords) {
+        showToast('لا توجد حركات أو إشعارات لحذفها', 'info');
+        return;
+    }
+
+    var deletion = await deleteCleanupData(sb, data);
+    if (deletion.error) {
+        showToast('تعطل الحذف عند جدول ' + deletion.tableName + '. النسخة الاحتياطية تم تنزيلها وقد يكون بعض ما سبق قد حُذف.', 'error', 7000);
+        return;
+    }
+
+    var session = getSession();
+    sb.from('audit_log').insert({
+        user_id: session && session.user ? session.user.id : null,
+        action: 'DELETE',
+        table_name: 'movement_notification_cleanup',
+        record_id: 'cleanup',
+        new_data: { deleted_count: deletion.totalDeleted, backup_created: true }
+    }).then(function(){}, function(){})
+
+    showToast('تم تنزيل النسخة الاحتياطية وحذف ' + deletion.totalDeleted + ' سجل حركة وإشعار', 'success', 6000);
 }
 
 function saveSettings(e) {
@@ -2160,7 +2467,7 @@ function saveSettings(e) {
         address: document.getElementById('settingAddress').value.trim(),
         invoice_notes: document.getElementById('settingInvoiceNotes').value.trim(),
         currency: document.getElementById('settingCurrency').value.trim() || 'ج.م',
-        default_discount: parseFloat(document.getElementById('settingDefaultDiscount').value) || 0
+        default_discount: parseFloat(document.getElementById('settingDefaultDiscount').value) || 0,
     };
     
     // حفظ كل إعداد بشكل منفصل
@@ -2460,6 +2767,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('resetSettingsBtn')?.addEventListener('click', function() {
         if (confirm('هل تريد إعادة تعيين الإعدادات؟')) fillSettingsForm();
     });
+    document.getElementById('backupCleanupBtn')?.addEventListener('click', exportCleanupBackup);
+    document.getElementById('runFullCleanupBtn')?.addEventListener('click', runFullCleanup);
+    document.getElementById('runAllMovementsCleanupBtn')?.addEventListener('click', runAllMovementsCleanup);
     
     // Export
     document.getElementById('exportBtn')?.addEventListener('click', exportData);
