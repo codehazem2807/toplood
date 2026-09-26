@@ -608,7 +608,7 @@ img { max-width: 100%; height: auto; display: block; }
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
-    overflow: hidden;
+    overflow-x: auto;
     box-shadow: var(--shadow-sm);
 }
 
@@ -1063,6 +1063,17 @@ img { max-width: 100%; height: auto; display: block; }
     .modal-body { padding: 1rem; max-height: calc(92vh - 160px); }
     .modal-header { padding: 1rem 1.25rem; }
     .modal-footer { padding: 0.85rem 1.25rem; gap: 0.5rem; }
+    .table-wrap th.actions-cell,
+    .table-wrap td.actions-cell {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background: var(--bg-card);
+    }
+    .table-wrap th.actions-cell {
+        z-index: 2;
+        background: var(--bg-subtle);
+    }
 }
 
 @media (max-width: 400px) {
@@ -1775,7 +1786,7 @@ function render() {
             '<td>' + formatDate(item.expense_date) + '</td>' +
             '<td>' + getPaymentMethodText(item.payment_method) + '</td>' +
             '<td class="amount">' + formatCurrency(item.amount) + '</td>' +
-            '<td>' +
+            '<td class="actions-cell">' +
                 '<div class="actions">' +
                     '<button class="btn btn-sm btn-secondary" data-action="edit" data-id="' + escapeHtml(item.id) + '" title="تعديل">' +
                         '<i class="fas fa-pen"></i>' +
@@ -1797,7 +1808,7 @@ function render() {
                     '<th>التاريخ</th>' +
                     '<th>طريقة الدفع</th>' +
                     '<th>المبلغ</th>' +
-                    '<th style="text-align: left;">إجراءات</th>' +
+                    '<th class="actions-cell" style="text-align: left;">إجراءات</th>' +
                 '</tr>' +
             '</thead>' +
             '<tbody>' + rows + '</tbody>' +
