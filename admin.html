@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-<meta name="theme-color" content="#1d5b8e">
-<meta name="description" content="لوحة الأدمن - إلكترونك لصيانة الأجهزة الإلكترونية">
+<meta name="theme-color" content="#0F766E">
+<meta name="description" content="لوحة الأدمن - TopLoad لصيانة الغسالات">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>لوحة الأدمن | إلكترونك</title>
+<title>لوحة الأدمن | TopLoad</title>
 
 <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
 <link rel="icon" type="image/png" sizes="16x16" href="logo.png">
@@ -24,12 +24,12 @@
 
 <style>
 :root {
-    --tech-blue: #1d5b8e; --tech-blue-dark: #154668; --tech-blue-light: #2d7ab8;
+    --tech-blue: #0F766E; --tech-blue-dark: #115E59; --tech-blue-light: #14B8A6;
     --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
     --purple: #8b5cf6; --pink: #ec4899;
-    --bg-primary: #f6f8fb; --bg-card: #ffffff; --bg-hover: #f1f5f9;
-    --text-primary: #0a1f33; --text-secondary: #475569; --text-muted: #94a3b8;
-    --border-color: #e1e8f0;
+    --bg-primary: #E0F7FA; --bg-card: #ffffff; --bg-hover: #F0FDFA;
+    --text-primary: #0F172A; --text-secondary: #475569; --text-muted: #94A3B8;
+    --border-color: #E2E8F0;
     --shadow-sm: 0 1px 3px rgba(10,31,51,0.06);
     --shadow-md: 0 4px 12px rgba(10,31,51,0.08);
     --shadow-lg: 0 12px 32px rgba(10,31,51,0.12);
@@ -41,13 +41,14 @@
     --safe-left: env(safe-area-inset-left,0); --safe-right: env(safe-area-inset-right,0);
 }
 [data-theme="dark"] {
-    --bg-primary: #0a1628; --bg-card: #142f4a; --bg-hover: #1a3a5c;
-    --text-primary: #f1f5f9; --text-secondary: #cbd5e1; --text-muted: #64748b;
-    --border-color: #1e3a5f;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-    --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
-    --shadow-xl: 0 24px 48px rgba(0,0,0,0.6);
+    --bg-primary: #0F172A; --bg-card: #1E293B; --bg-hover: #334155;
+    --text-primary: #F1F5F9; --text-secondary: #CBD5E1; --text-muted: #64748B;
+    --border-color: #334155;
+    --tech-blue: #14B8A6; --tech-blue-dark: #0F766E; --tech-blue-light: #2DD4BF;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
+    --shadow-xl: 0 24px 48px rgba(0,0,0,0.7);
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; }
@@ -66,7 +67,7 @@ img { max-width: 100%; height: auto; display: block; }
     position: fixed; top: 0; right: 0; height: 3px;
     background: linear-gradient(90deg, var(--tech-blue), var(--tech-blue-light), var(--success));
     width: 0%; z-index: 10000; transition: width 0.1s linear;
-    box-shadow: 0 0 10px rgba(29,91,142,0.6);
+    box-shadow: 0 0 10px rgba(15,118,110,0.6);
 }
 
 .navbar {
@@ -166,7 +167,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .sidebar-link:hover { background: var(--bg-hover); color: var(--tech-blue); transform: translateX(-3px); }
 .sidebar-link.active {
-    background: linear-gradient(135deg, rgba(29,91,142,0.12), rgba(45,122,184,0.08));
+    background: linear-gradient(135deg, rgba(15,118,110,0.12), rgba(20,184,166,0.08));
     color: var(--tech-blue); font-weight: 700;
 }
 .sidebar-link.active::before {
@@ -210,9 +211,9 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .btn-primary {
     background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
-    color: white; box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+    color: white; box-shadow: 0 4px 12px rgba(15,118,110,0.25);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(29,91,142,0.4); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15,118,110,0.4); }
 .btn-secondary {
     background: var(--bg-card); color: var(--text-primary);
     border: 1px solid var(--border-color);
@@ -260,7 +261,7 @@ img { max-width: 100%; height: auto; display: block; }
     display: flex; align-items: center; justify-content: center;
     font-size: 1.25rem; color: white; flex-shrink: 0;
     background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
-    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+    box-shadow: 0 4px 12px rgba(15,118,110,0.25);
 }
 .stat-card-icon.success { background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
 .stat-card-icon.warning { background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
@@ -295,7 +296,7 @@ img { max-width: 100%; height: auto; display: block; }
 .tab-btn.active {
     background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
     color: white;
-    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+    box-shadow: 0 4px 12px rgba(15,118,110,0.25);
 }
 .tab-btn i { font-size: 0.9rem; }
 
@@ -356,7 +357,7 @@ img { max-width: 100%; height: auto; display: block; }
     background: linear-gradient(135deg, var(--tech-blue), var(--tech-blue-dark));
     color: white; display: flex; align-items: center; justify-content: center;
     font-size: 1.25rem; font-weight: 800; flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(29,91,142,0.3);
+    box-shadow: 0 4px 12px rgba(15,118,110,0.25);
 }
 .employee-avatar.admin { background: linear-gradient(135deg, var(--purple), #7c3aed); box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
 .employee-info { flex: 1; min-width: 0; }
@@ -374,7 +375,7 @@ img { max-width: 100%; height: auto; display: block; }
     font-size: 0.7rem; font-weight: 800;
 }
 .employee-role-badge.admin { background: rgba(139,92,246,0.15); color: var(--purple); }
-.employee-role-badge.employee { background: rgba(29,91,142,0.15); color: var(--tech-blue); }
+.employee-role-badge.employee { background: rgba(15,118,110,0.15); color: var(--tech-blue); }
 .employee-role-badge.inactive { background: rgba(239,68,68,0.15); color: var(--danger); }
 
 .employee-meta {
@@ -461,7 +462,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .settings-grid .full { grid-column: 1 / -1; }
 .cleanup-panel {
-    background: linear-gradient(135deg, rgba(29,91,142,0.05), rgba(16,185,129,0.04));
+    background: linear-gradient(135deg, rgba(15,118,110,0.05), rgba(20,184,166,0.04));
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     padding: 1rem;
@@ -505,7 +506,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .form-input:focus, .form-textarea:focus, .form-select:focus {
     border-color: var(--tech-blue); background: var(--bg-card);
-    box-shadow: 0 0 0 4px rgba(29,91,142,0.12);
+    box-shadow: 0 0 0 4px rgba(15,118,110,0.12);
 }
 .form-textarea { resize: vertical; min-height: 80px; max-height: 200px; line-height: 1.6; }
 .form-input.error { border-color: var(--danger); animation: shake 0.4s ease; }
@@ -677,7 +678,7 @@ img { max-width: 100%; height: auto; display: block; }
     transition: all var(--transition); z-index: 1400;
 }
 .scroll-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
-.scroll-top:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(29,91,142,0.5); }
+.scroll-top:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15,118,110,0.35); }
 
 /* Notifications + User Dropdown */
 .notifications-panel, .user-dropdown {
@@ -704,7 +705,7 @@ img { max-width: 100%; height: auto; display: block; }
     padding: 0.35rem 0.65rem; border-radius: var(--radius-sm);
     transition: all var(--transition);
 }
-.notifications-mark-read:hover { background: rgba(29,91,142,0.1); }
+.notifications-mark-read:hover { background: rgba(15,118,110,0.1); }
 .notifications-list { max-height: 400px; overflow-y: auto; }
 .notification-item {
     display: flex; gap: 0.75rem; padding: 0.85rem 1.15rem;
@@ -712,7 +713,7 @@ img { max-width: 100%; height: auto; display: block; }
     transition: all var(--transition-fast); cursor: pointer; position: relative;
 }
 .notification-item:hover { background: var(--bg-hover); }
-.notification-item.unread { background: rgba(29,91,142,0.04); }
+.notification-item.unread { background: rgba(15,118,110,0.04); }
 .notification-item.unread::before {
     content: ''; position: absolute; right: 0; top: 50%;
     transform: translateY(-50%); width: 3px; height: 60%;
@@ -817,10 +818,10 @@ img { max-width: 100%; height: auto; display: block; }
         <i class="fas fa-bars"></i>
     </button>
     <a href="dashboard.html" class="navbar-brand">
-        <img src="logo.png" alt="إلكترونك" class="navbar-logo" onerror="this.style.display='none'">
+        <img src="logo.png" alt="TopLoad" class="navbar-logo" onerror="this.style.display='none'">
         <div class="navbar-brand-text">
-            <strong>إلكترونك</strong>
-            <span>لصيانة الأجهزة الإلكترونية</span>
+            <strong>TopLoad</strong>
+            <span>لصيانة الغسالات</span>
         </div>
     </a>
     <div class="navbar-actions">
@@ -987,7 +988,7 @@ img { max-width: 100%; height: auto; display: block; }
                             <label class="form-label">
                                 <i class="fas fa-store"></i> اسم المركز <span class="required">*</span>
                             </label>
-                            <input type="text" class="form-input" id="settingName" placeholder="إلكترونك - لصيانة الأجهزة الإلكترونية" maxlength="200">
+                            <input type="text" class="form-input" id="settingName" placeholder="TopLoad - لصيانة الغسالات" maxlength="200">
                         </div>
                         <div class="form-group">
                             <label class="form-label">
@@ -1043,7 +1044,7 @@ img { max-width: 100%; height: auto; display: block; }
                                                 <i class="fas fa-file-excel"></i> تنزيل نسخة Excel كاملة
                                             </button>
                                             <button type="button" class="btn btn-danger btn-sm" id="runFullCleanupBtn">
-                                                <i class="fas fa-trash"></i> نسخ احتياطي ثم حذف الكل
+                                                <i class="fas fa-trash"></i> نسخ احتياطي ثم حذف بيانات الفترة
                                             </button>
                                             <button type="button" class="btn btn-danger btn-sm" id="runAllMovementsCleanupBtn">
                                                 <i class="fas fa-bell-slash"></i> حذف كل الحركات والإشعارات
@@ -1053,7 +1054,7 @@ img { max-width: 100%; height: auto; display: block; }
                                     <div class="form-group full">
                                         <div class="form-hint" style="margin-top: 0.25rem;">
                                             <i class="fas fa-shield-halved"></i>
-                                            اختر تاريخ البداية والنهاية؛ سيتم حفظ السجلات المطابقة في Excel قبل حذفها. السجلات بلا تاريخ، والأصناف والفئات وكميات المخزون وحسابات الدخول والإعدادات لا تتأثر.
+                                            اختر تاريخ البداية والنهاية؛ سيتم حفظ السجلات المطابقة في Excel قبل حذفها، وتشمل المصروفات حسب تاريخ المصروف. السجلات بلا تاريخ، والأصناف والفئات وكميات المخزون وحسابات الدخول والإعدادات لا تتأثر.
                                         </div>
                                     </div>
                                 </div>
@@ -2188,7 +2189,7 @@ function fillSettingsForm() {
         if (el) el.value = val || '';
     };
     
-    setVal('settingName', s.center_name || 'إلكترونك - لصيانة الأجهزة الإلكترونية');
+    setVal('settingName', s.center_name || 'TopLoad - لصيانة الغسالات');
     setVal('settingPhone', s.phone || '');
     setVal('settingEmail', s.email || '');
     setVal('settingAddress', s.address || '');
@@ -2198,7 +2199,7 @@ function fillSettingsForm() {
 }
 
 function getCleanupTableNames() {
-    return ['invoice_items', 'payments', 'repair_timeline', 'favorites', 'stock_movements',
+    return ['invoice_items', 'payments', 'expenses', 'repair_timeline', 'favorites', 'stock_movements',
         'supplier_orders', 'service_ratings', 'notifications', 'shifts', 'invoices',
         'repair_orders', 'customers', 'suppliers', 'audit_log'];
 }
@@ -2230,12 +2231,17 @@ async function downloadCleanupWorkbook(data, filePrefix) {
 
     var wb = XLSX.utils.book_new();
     var manifest = [['اسم الجدول', 'عدد السجلات']];
+    var sheetNames = {
+        invoices: 'الفواتير',
+        customers: 'العملاء',
+        suppliers: 'الموردين',
+        stock_movements: 'الوارد وحركات المخزون',
+        expenses: 'المصروفات'
+    };
     Object.keys(data).forEach(function(tableName) {
         var rows = data[tableName];
         manifest.push([tableName, rows.length]);
-        if (rows.length) {
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), tableName.slice(0, 31));
-        }
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), sheetNames[tableName] || tableName.slice(0, 31));
     });
     XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(manifest), 'ملخص النسخة');
     var timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -2259,7 +2265,11 @@ function getCleanupDateRange() {
     return { from: from, to: to, fromValue: fromValue, toValue: toValue };
 }
 
-function getCleanupRowTimestamp(row) {
+function getCleanupRowTimestamp(row, tableName) {
+    if (tableName === 'expenses' && row && row.expense_date) {
+        var expenseTimestamp = new Date(row.expense_date + 'T12:00:00').getTime();
+        if (Number.isFinite(expenseTimestamp)) return expenseTimestamp;
+    }
     var dateFields = ['created_at', 'createdAt', 'date', 'invoice_date', 'payment_date',
         'order_date', 'issue_date', 'movement_date', 'start_time', 'end_time',
         'received_at', 'delivered_at', 'event_date', 'timestamp', 'updated_at', 'deleted_at'];
@@ -2279,7 +2289,7 @@ function filterCleanupDataByDate(data, range) {
     var total = 0;
     Object.keys(data).forEach(function(tableName) {
         filtered[tableName] = data[tableName].filter(function(row) {
-            var timestamp = getCleanupRowTimestamp(row);
+            var timestamp = getCleanupRowTimestamp(row, tableName);
             var matches = timestamp !== null && timestamp >= range.from && timestamp <= range.to;
             if (matches) total += 1;
             return matches;
@@ -2358,7 +2368,7 @@ async function runFullCleanup() {
 
     var range = getCleanupDateRange();
     if (!range) return;
-    if (!confirm('سيتم تنزيل نسخة Excel للسجلات من ' + range.fromValue + ' إلى ' + range.toValue + ' ثم حذفها. السجلات بلا تاريخ والأصناف والفئات وكميات المخزون وحسابات الدخول والإعدادات ستظل كما هي. هل تريد الاستمرار؟')) {
+    if (!confirm('سيتم تنزيل نسخة Excel للسجلات من ' + range.fromValue + ' إلى ' + range.toValue + ' ثم حذفها، وتشمل المصروفات حسب تاريخ المصروف. السجلات بلا تاريخ والأصناف والفئات وكميات المخزون وحسابات الدخول والإعدادات ستظل كما هي. هل تريد الاستمرار؟')) {
         return;
     }
 
@@ -2576,6 +2586,8 @@ function exportData() {
         });
     }
     loadLib.then(function() {
+        var sb = getSupabaseClient();
+        if (!sb || !navigator.onLine) throw new Error('يلزم الاتصال بالإنترنت لتصدير المصروفات');
         var data = state.employees.map(function(e) {
             return {
                 'الاسم': e.full_name || '',
@@ -2587,14 +2599,30 @@ function exportData() {
                 'تاريخ التسجيل': formatDate(e.created_at)
             };
         });
-        var ws = XLSX.utils.json_to_sheet(data);
-        var wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'الموظفين');
-        XLSX.writeFile(wb, 'employees_' + new Date().toISOString().split('T')[0] + '.xlsx');
-        showToast('تم التصدير بنجاح', 'success');
+        return collectCleanupData(sb, ['expenses']).then(function(expenseTables) {
+            var expenseData = expenseTables.expenses.map(function(item) {
+                var paymentMethods = {
+                    cash: 'نقدي', bank_transfer: 'تحويل بنكي', card: 'بطاقة', other: 'أخرى'
+                };
+                return {
+                    'المعرّف': item.id || '',
+                    'البيان': item.title || '',
+                    'التصنيف': item.category || '',
+                    'التاريخ': item.expense_date || '',
+                    'طريقة الدفع': paymentMethods[item.payment_method] || '—',
+                    'المبلغ': parseFloat(item.amount) || 0,
+                    'ملاحظات': item.notes || ''
+                };
+            });
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'الموظفين');
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(expenseData), 'المصروفات');
+            XLSX.writeFile(wb, 'employees_and_expenses_' + new Date().toISOString().split('T')[0] + '.xlsx');
+            showToast('تم تصدير الموظفين والمصروفات بنجاح', 'success');
+        });
     }).catch(function(err) {
         console.error(err);
-        showToast('فشل التصدير', 'error');
+        showToast(err.message || 'فشل التصدير', 'error');
     });
 }
 
@@ -2823,7 +2851,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     
     startInactivityMonitor();
-    console.log('%c🛡️ لوحة الأدمن جاهزة', 'color: #1d5b8e; font-size: 16px; font-weight: bold;');
+    console.log('%c🛡️ لوحة الأدمن جاهزة', 'color: #0F766E; font-size: 16px; font-weight: bold;');
 });
 
 window.AdminApp = {
