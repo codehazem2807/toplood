@@ -2350,7 +2350,7 @@ function renderProductCard(p) {
             '<button class="product-favorite ' + (isFav ? 'active' : '') + '" data-action="favorite" data-id="' + p.id + '" title="المفضلة"><i class="' + (isFav ? 'fas' : 'far') + ' fa-star"></i></button>' +
         '</div>' +
         '<div class="product-body">' +
-            (categoryName ? '<div class="product-category">' + renderCategoryIcon(categoryIcon) + escapeHtml(categoryName) + '</div>' : '') +
+            (categoryName ? '<div class="product-category">' + escapeHtml(categoryName) + '</div>' : '') +
             '<h3 class="product-title">' + escapeHtml(p.name) + '</h3>' +
             '<div class="product-barcode"><i class="fas fa-barcode"></i> ' + escapeHtml(p.barcode || p.sku || '—') + '</div>' +
             '<div class="product-footer">' +
