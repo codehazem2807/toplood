@@ -1663,6 +1663,7 @@ var state = {
     employees: [],
     invoices: [],
     payments: [],
+    expenses: [],
     filtered: [],
     currentShift: null,
     searchQuery: '',
@@ -1691,12 +1692,14 @@ function loadData() {
         sb.from('shifts').select('*').order('start_time', { ascending: false }).limit(500),
         sb.from('accounts').select('id, full_name, username, role'),
         sb.from('invoices').select('id, total, paid_amount, paid, created_at, created_by, payment_method'),
-        sb.from('payments').select('id, amount, method, created_at, created_by, invoice_id')
+        sb.from('payments').select('id, amount, method, created_at, created_by, invoice_id'),
+        sb.from('expenses').select('id, amount, payment_method, created_at, created_by').order('created_at', { ascending: false }).limit(5000)
     ]).then(function(results) {
         state.shifts = results[0].data || [];
         state.employees = results[1].data || [];
         state.invoices = results[2].data || [];
         state.payments = results[3].data || [];
+        state.expenses = results[4].data || [];
         
         console.log('✅ Loaded:', {
             shifts: state.shifts.length,
@@ -1762,6 +1765,7 @@ function loadFromCacheInternal() {
         state.employees = cached[1] || [];
         state.invoices = cached[2] || [];
         state.payments = cached[3] || [];
+        state.expenses = [];
         
         var empMap = {};
         state.employees.forEach(function(e) { empMap[e.id] = e; });
@@ -1900,6 +1904,10 @@ function renderCurrentShiftBanner(shift) {
                 '<div class="shift-banner-stat-value">' + formatCurrencyShort(liveStats.payments_total) + '</div>' +
             '</div>' +
             '<div class="shift-banner-stat">' +
+                '<div class="shift-banner-stat-label">مصروفات نقدية</div>' +
+                '<div class="shift-banner-stat-value warning">' + formatCurrencyShort(liveStats.cash_expenses_total) + '</div>' +
+            '</div>' +
+            '<div class="shift-banner-stat">' +
                 '<div class="shift-banner-stat-label">مديونيات الوردية</div>' +
                 '<div class="shift-banner-stat-value warning">' + formatCurrencyShort(liveStats.debts_total) + '</div>' +
             '</div>' +
@@ -2004,8 +2012,17 @@ function calculateShiftStats(shift) {
         else debtsAmount = Math.max(0, totalSales - collectedAmount);
     }
     
+    var cashExpenses = state.expenses.filter(function(expense) {
+        var createdAt = Date.parse(expense.created_at);
+        return String(expense.created_by) === String(shift.employee_id) &&
+            Number.isFinite(createdAt) && createdAt >= startTime && createdAt <= endTime;
+    });
+    var cashExpensesTotal = cashExpenses.reduce(function(total, expense) {
+        return total + ((expense.payment_method || 'cash') === 'cash' ? (parseFloat(expense.amount) || 0) : 0);
+    }, 0);
+
     var openingCash = parseFloat(shift.opening_cash) || 0;
-    var expectedCash = openingCash + collectedAmount;
+    var expectedCash = openingCash + collectedAmount - cashExpensesTotal;
     
     return {
         opening_cash: openingCash,
@@ -2015,6 +2032,7 @@ function calculateShiftStats(shift) {
         debts_total: debtsAmount,
         debts_amount: debtsAmount,
         invoice_count: invoiceCount,
+        cash_expenses_total: cashExpensesTotal,
         expected_cash: expectedCash,
         shift_invoices: shiftInvoices
     };
@@ -2131,7 +2149,7 @@ function renderShiftCard(shift) {
     var debtsTotal = salesTotal - paymentsTotal;
     if (debtsTotal < 0) debtsTotal = 0;
     
-    var expectedCash = parseFloat(shift.expected_cash) || (openingCash + paymentsTotal);
+    var expectedCash = isActive ? calculateShiftStats(shift).expected_cash : (parseFloat(shift.expected_cash) || (openingCash + paymentsTotal));
     var difference = parseFloat(shift.difference) || 0;
     
     var duration = shift.end_time 
@@ -2175,6 +2193,10 @@ function renderShiftCard(shift) {
             '<div class="shift-stat">' +
                 '<div class="shift-stat-label">محصّل</div>' +
                 '<div class="shift-stat-value info">' + formatCurrencyShort(paymentsTotal) + '</div>' +
+            '</div>' +
+            '<div class="shift-stat">' +
+                '<div class="shift-stat-label">مصروفات نقدية</div>' +
+                '<div class="shift-stat-value warning">' + formatCurrencyShort(calculateShiftStats(shift).cash_expenses_total) + '</div>' +
             '</div>' +
             '<div class="shift-stat">' +
                 '<div class="shift-stat-label">مديونيات</div>' +
@@ -2417,6 +2439,10 @@ function openCloseShiftModal() {
                 '<span class="summary-row-label"><i class="fas fa-check-circle"></i> المحصّل فعلاً</span>' +
                 '<span class="summary-row-value">+ ' + formatCurrency(stats.payments_total) + '</span>' +
             '</div>' +
+            '<div class="summary-row debt">' +
+                '<span class="summary-row-label"><i class="fas fa-receipt"></i> مصروفات نقدية</span>' +
+                '<span class="summary-row-value">- ' + formatCurrency(stats.cash_expenses_total) + '</span>' +
+            '</div>' +
             (stats.debts_total > 0 ? 
                 '<div class="summary-row debt">' +
                     '<span class="summary-row-label"><i class="fas fa-hand-holding-dollar"></i> مديونيات الوردية</span>' +
@@ -2657,6 +2683,10 @@ function openDetailsModal(id) {
             '<div class="detail-card">' +
                 '<div class="detail-card-label">المحصّل فعلاً</div>' +
                 '<div class="detail-card-value success">' + formatCurrency(stats.payments_total) + '</div>' +
+            '</div>' +
+            '<div class="detail-card">' +
+                '<div class="detail-card-label">مصروفات نقدية</div>' +
+                '<div class="detail-card-value danger">' + formatCurrency(stats.cash_expenses_total) + '</div>' +
             '</div>' +
             '<div class="detail-card">' +
                 '<div class="detail-card-label">مديونيات الوردية</div>' +

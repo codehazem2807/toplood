@@ -2093,6 +2093,7 @@ var state = {
     editingProduct: null,
     deletingProduct: null,
     imageFile: null,
+    imageRemoved: false,
     scanner: null,
     notifications: [],
     notificationsRefreshTimer: null,
@@ -2640,6 +2641,7 @@ function openImageViewer(url) {
 function openAddModal() {
     state.editingProduct = null;
     state.imageFile = null;
+    state.imageRemoved = false;
     document.getElementById('productModalTitle').textContent = 'إضافة قطعة غيار جديدة';
     document.getElementById('productModalIcon').className = 'fas fa-plus';
     document.getElementById('saveProductText').textContent = 'حفظ';
@@ -2669,6 +2671,7 @@ function openEditModal(id) {
     if (!p) return;
     state.editingProduct = p;
     state.imageFile = null;
+    state.imageRemoved = false;
     document.getElementById('productModalTitle').textContent = 'تعديل القطعة';
     document.getElementById('productModalIcon').className = 'fas fa-pen';
     document.getElementById('saveProductText').textContent = 'حفظ التعديلات';
@@ -2700,6 +2703,7 @@ function closeProductModal() {
     document.getElementById('productModal').classList.remove('show');
     state.editingProduct = null;
     state.imageFile = null;
+    state.imageRemoved = false;
 }
 
 function resetImageUpload() {
@@ -2868,14 +2872,14 @@ function saveProduct(e) {
                         console.error('❌ Image upload failed:', err);
                         showToast('فشل رفع الصورة: ' + (err.message || 'خطأ غير معروف'), 'warning', 4000);
                         // ✅ الاحتفاظ بالصورة القديمة عند التعديل
-                        return isEditing && state.editingProduct ? state.editingProduct.image_url : null;
+                        return isEditing && state.editingProduct && !state.imageRemoved ? state.editingProduct.image_url : null;
                     });
-            } else if (isEditing && state.editingProduct && state.editingProduct.image_url) {
+            } else if (isEditing && state.editingProduct && state.editingProduct.image_url && !state.imageRemoved) {
                 imagePromise = Promise.resolve(state.editingProduct.image_url);
             }
             
             return imagePromise.then(function(imageUrl) {
-                if (imageUrl) productData.image_url = imageUrl;
+                if (imageUrl || (isEditing && state.imageRemoved)) productData.image_url = imageUrl;
                 text.textContent = 'جاري الحفظ...';
                 if (isEditing) return updateProduct(productData, session, sb);
                 else return insertProduct(productData, session, sb);
@@ -2899,7 +2903,7 @@ function updateProduct(productData, session, sb) {
     // ✅ لو فيه صورة جديدة، احذف القديمة
     var oldImageUrl = editing.image_url;
     var newImageUrl = productData.image_url;
-    var shouldDeleteOld = oldImageUrl && newImageUrl && oldImageUrl !== newImageUrl;
+    var shouldDeleteOld = oldImageUrl && (!newImageUrl || oldImageUrl !== newImageUrl);
     
     var savePromise;
     
@@ -3859,6 +3863,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (removeImgBtn) removeImgBtn.addEventListener('click', function(e) {
         e.preventDefault(); e.stopPropagation();
         state.imageFile = null;
+        state.imageRemoved = !!(state.editingProduct && state.editingProduct.image_url);
         resetImageUpload();
     });
     
@@ -3881,6 +3886,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return; 
         }
         state.imageFile = file;
+        state.imageRemoved = false;
         var reader = new FileReader();
         reader.onload = function(ev) {
             document.getElementById('imagePreview').src = ev.target.result;
