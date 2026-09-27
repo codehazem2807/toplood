@@ -3214,6 +3214,16 @@ function renderRepairsChart(canvas, data) {
 function loadRecentInvoices() {
     var container = document.getElementById('recentInvoices');
     if (!container) return;
+
+    var session = getSession();
+    var user = session && session.user;
+    var permissions = (user && user.permissions) || {};
+    var isAdmin = user && user.role === 'admin';
+    if (!isAdmin && !permissions.can_view_invoices) {
+        var invoiceCard = container.closest('.card');
+        if (invoiceCard) invoiceCard.style.display = 'none';
+        return;
+    }
     
     var sb = getSupabaseClient();
     if (!sb || !navigator.onLine) {
@@ -3256,7 +3266,10 @@ function loadRecentInvoices() {
                 return;
             }
             
-            container.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i><h3>لا توجد فواتير بعد</h3><p>ابدأ بإنشاء أول فاتورة</p><a href="invoices.html" class="btn btn-primary" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> إنشاء فاتورة</a></div>';
+            var createInvoiceLink = isAdmin || permissions.can_create_invoices
+                ? '<a href="invoices.html" class="btn btn-primary" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> إنشاء فاتورة</a>'
+                : '';
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-file-invoice"></i><h3>لا توجد فواتير بعد</h3>' + (createInvoiceLink ? '<p>ابدأ بإنشاء أول فاتورة</p>' + createInvoiceLink : '') + '</div>';
         })
         .catch(function() {
             container.innerHTML = '<div class="empty-state"><i class="fas fa-circle-exclamation"></i><h3>فشل التحميل</h3><p>حاول مرة أخرى</p></div>';
@@ -3269,6 +3282,16 @@ function loadRecentInvoices() {
 function loadRecentRepairs() {
     var container = document.getElementById('recentRepairs');
     if (!container) return;
+
+    var session = getSession();
+    var user = session && session.user;
+    var permissions = (user && user.permissions) || {};
+    var isAdmin = user && user.role === 'admin';
+    if (!isAdmin && !permissions.can_view_repairs) {
+        var repairCard = container.closest('.card');
+        if (repairCard) repairCard.style.display = 'none';
+        return;
+    }
     
     var sb = getSupabaseClient();
     if (!sb || !navigator.onLine) {
@@ -3309,7 +3332,10 @@ function loadRecentRepairs() {
                 return;
             }
             
-            container.innerHTML = '<div class="empty-state"><i class="fas fa-screwdriver-wrench"></i><h3>لا توجد أوامر صيانة</h3><p>ابدأ باستلام أول غسالة</p><a href="repairs.html" class="btn btn-primary" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> استلام غسالة</a></div>';
+            var receiveRepairLink = isAdmin || permissions.can_edit_repairs
+                ? '<a href="repairs.html" class="btn btn-primary" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> استلام غسالة</a>'
+                : '';
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-screwdriver-wrench"></i><h3>لا توجد أوامر صيانة</h3>' + (receiveRepairLink ? '<p>ابدأ باستلام أول غسالة</p>' + receiveRepairLink : '') + '</div>';
         })
         .catch(function(err) {
             console.error('Repairs error:', err);
