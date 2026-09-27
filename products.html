@@ -438,11 +438,13 @@ img { max-width: 100%; height: auto; display: block; }
 .product-icon-fallback {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    color: var(--primary); opacity: 0.4;
+    color: var(--primary); opacity: 0.78;
     transition: all var(--t); padding: 22%;
 }
 .product-icon-fallback i { font-size: 4rem; }
 .product-icon-fallback svg { width: 100%; height: 100%; max-width: 110px; max-height: 110px; }
+.product-category-svg-icon { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.product-category-svg-icon svg { width: 100%; height: 100%; max-width: 110px; max-height: 110px; display: block; }
 .product-card:hover .product-icon-fallback { opacity: 0.75; transform: scale(1.08); }
 
 .product-badges {
@@ -533,10 +535,11 @@ img { max-width: 100%; height: auto; display: block; }
     width: 100%; height: 100%; object-fit: cover;
 }
 .products-list-image .product-icon-fallback {
-    padding: 6px; opacity: 0.85;
+    padding: 6px; opacity: 0.95;
 }
 .products-list-image .product-icon-fallback i { font-size: 1.5rem; }
 .products-list-image .product-icon-fallback svg { max-width: 44px; max-height: 44px; }
+.products-list-image .product-category-svg-icon { max-width: 44px; max-height: 44px; }
 .products-list-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.15rem; }
 .products-list-info p { font-size: 0.72rem; color: var(--text-muted); font-family: 'Courier New', monospace; font-weight: 700; }
 .products-list-cell { font-size: 0.85rem; font-weight: 600; }
@@ -1534,6 +1537,7 @@ img { max-width: 100%; height: auto; display: block; }
 <div class="toast-container" id="toastContainer"></div>
 <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى"><i class="fas fa-arrow-up"></i></button>
 
+<script src="product-category-icons.js"></script>
 <script>
 (function() {
 'use strict';
@@ -2335,9 +2339,9 @@ function renderProductCard(p) {
     // ✅ عرض الصورة لو موجودة، وإلا الأيقونة
     var imageContent;
     if (p.image_url) {
-        imageContent = '<img src="' + escapeHtml(p.image_url) + '" alt="' + escapeHtml(p.name) + '" class="product-image" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="product-icon-fallback" style="display:none;"><i class="fas ' + escapeHtml(categoryIcon) + '"></i></div>';
+        imageContent = '<img src="' + escapeHtml(p.image_url) + '" alt="' + escapeHtml(p.name) + '" class="product-image" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="product-icon-fallback" style="display:none;">' + renderCategoryIcon(categoryIcon) + '</div>';
     } else {
-        imageContent = '<div class="product-icon-fallback"><i class="fas ' + escapeHtml(categoryIcon) + '"></i></div>';
+        imageContent = '<div class="product-icon-fallback">' + renderCategoryIcon(categoryIcon) + '</div>';
     }
     
     return '<div class="product-card" data-id="' + p.id + '" data-view-id="' + p.id + '">' +
@@ -2346,7 +2350,7 @@ function renderProductCard(p) {
             '<button class="product-favorite ' + (isFav ? 'active' : '') + '" data-action="favorite" data-id="' + p.id + '" title="المفضلة"><i class="' + (isFav ? 'fas' : 'far') + ' fa-star"></i></button>' +
         '</div>' +
         '<div class="product-body">' +
-            (categoryName ? '<div class="product-category"><i class="fas ' + escapeHtml(categoryIcon) + '"></i>' + escapeHtml(categoryName) + '</div>' : '') +
+            (categoryName ? '<div class="product-category">' + renderCategoryIcon(categoryIcon) + escapeHtml(categoryName) + '</div>' : '') +
             '<h3 class="product-title">' + escapeHtml(p.name) + '</h3>' +
             '<div class="product-barcode"><i class="fas fa-barcode"></i> ' + escapeHtml(p.barcode || p.sku || '—') + '</div>' +
             '<div class="product-footer">' +
@@ -2368,13 +2372,7 @@ function renderProductListItem(p) {
     var qtyClass = qty <= 0 ? 'out' : (qty <= minQty ? 'low' : 'ok');
     var isFav = hasFavorite(p.id);
     var categoryIcon = (p.category && p.category.icon) || 'fa-cog';
-    
-    var imageContent;
-    if (p.image_url) {
-        imageContent = '<img src="' + escapeHtml(p.image_url) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><div class="product-icon-fallback" style="display:none;"><i class="fas ' + escapeHtml(categoryIcon) + '"></i></div>';
-    } else {
-        imageContent = '<div class="product-icon-fallback"><i class="fas ' + escapeHtml(categoryIcon) + '"></i></div>';
-    }
+    var imageContent = '<div class="product-icon-fallback">' + renderCategoryIcon(categoryIcon) + '</div>';
     
     return '<div class="products-list-item" data-id="' + p.id + '" data-view-id="' + p.id + '">' +
         '<div class="products-list-image">' + imageContent + '</div>' +
@@ -2389,6 +2387,15 @@ function renderProductListItem(p) {
             '<button class="btn btn-sm btn-danger" data-action="delete" data-id="' + p.id + '" title="حذف"><i class="fas fa-trash"></i></button>' +
         '</div>' +
     '</div>';
+}
+
+function renderCategoryIcon(iconValue) {
+    if (iconValue && iconValue.indexOf('svg:') === 0) {
+        var svg = window.TOPLOAD_PRODUCT_CATEGORY_SVG_ICONS[iconValue.substring(4)];
+        if (svg) return '<span class="product-category-svg-icon">' + svg + '</span>';
+        return '<i class="fas fa-cog"></i>';
+    }
+    return '<i class="fas ' + escapeHtml(iconValue || 'fa-cog') + '"></i>';
 }
 
 function renderPagination(totalPages) {
