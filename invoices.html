@@ -2806,6 +2806,9 @@ img { max-width: 100%; height: auto; display: block; }
             <button class="btn btn-secondary" id="exportExcelBtn">
                 <i class="fas fa-file-excel"></i> تصدير
             </button>
+            <button class="btn btn-secondary" id="instantWarrantyBtn">
+                <i class="fas fa-certificate"></i> شهادة ضمان فورية
+            </button>
             <button class="btn btn-primary" id="addInvoiceBtn">
                 <i class="fas fa-plus"></i> فاتورة جديدة
             </button>
@@ -3055,6 +3058,99 @@ img { max-width: 100%; height: auto; display: block; }
                     <span class="spinner" style="display: none;"></span>
                     <i class="fas fa-check"></i>
                     <span id="saveInvoiceText">حفظ الفاتورة</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Instant Warranty Certificate Modal -->
+<div class="modal-overlay" id="instantWarrantyModal">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                <i class="fas fa-certificate"></i>
+                <span>إصدار شهادة ضمان فورية</span>
+            </h3>
+            <button class="modal-close" id="closeInstantWarrantyModal"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="instantWarrantyForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="warrantyCustomerName">اسم العميل <span class="required">*</span></label>
+                        <input class="form-input" id="warrantyCustomerName" required maxlength="120">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="warrantyCustomerPhone">رقم التليفون <span class="required">*</span></label>
+                        <input class="form-input" id="warrantyCustomerPhone" type="tel" required maxlength="30">
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label" for="warrantyCustomerAddress">العنوان <span class="required">*</span></label>
+                        <input class="form-input" id="warrantyCustomerAddress" required maxlength="250">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="warrantyDeviceType">نوع الغسالة <span class="required">*</span></label>
+                        <input class="form-input" id="warrantyDeviceType" required maxlength="100" placeholder="مثال: غسالة أوتوماتيك">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="warrantyDeviceModel">الماركة / الموديل</label>
+                        <input class="form-input" id="warrantyDeviceModel" maxlength="120">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="warrantySerialNumber">الرقم المسلسل</label>
+                        <input class="form-input" id="warrantySerialNumber" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="instantWarrantyMonths">مدة الضمان <span class="required">*</span></label>
+                        <select class="form-select" id="instantWarrantyMonths" required>
+                            <option value="6">6 شهور</option>
+                            <option value="12">سنة</option>
+                            <option value="18">سنة ونصف</option>
+                            <option value="24">سنتان</option>
+                            <option value="36">3 سنوات</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label" for="warrantyFault">العطل <span class="required">*</span></label>
+                        <textarea class="form-textarea" id="warrantyFault" required maxlength="500" placeholder="اكتب وصف العطل"></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label" for="warrantyCoverage">قطعة الغيار / الأعمال المشمولة بالضمان</label>
+                        <textarea class="form-textarea" id="warrantyCoverage" maxlength="500" placeholder="اكتب اسم قطعة الغيار أو تفاصيل الأعمال"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="warrantyPartPrice">سعر قطعة الغيار (ج.م)</label>
+                        <input class="form-input" id="warrantyPartPrice" type="number" min="0" step="0.01" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="warrantyLaborCost">سعر المصنعية (ج.م)</label>
+                        <input class="form-input" id="warrantyLaborCost" type="number" min="0" step="0.01" value="0">
+                    </div>
+                    <div class="form-group full">
+                        <div class="invoice-summary">
+                            <div class="summary-row">
+                                <span class="summary-row-label"><i class="fas fa-box"></i> سعر قطعة الغيار</span>
+                                <span class="summary-row-value" id="instantWarrantyPartsTotal">0.00 ج.م</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-row-label"><i class="fas fa-screwdriver-wrench"></i> المصنعية</span>
+                                <span class="summary-row-value" id="instantWarrantyLaborTotal">0.00 ج.م</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span class="summary-row-label"><i class="fas fa-calculator"></i> إجمالي الفاتورة</span>
+                                <span class="summary-row-value" id="instantWarrantyGrandTotal">0.00 ج.م</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelInstantWarrantyBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-print"></i> إصدار وطباعة الشهادة
                 </button>
             </div>
         </form>
@@ -4658,6 +4754,174 @@ function closeBarcodeScanner() {
 // ═══════════════════════════════════════════════════════════════
 // 🪟 Add/Edit Modal
 // ═══════════════════════════════════════════════════════════════
+function openInstantWarrantyModal() {
+    document.getElementById('instantWarrantyForm').reset();
+    document.getElementById('instantWarrantyMonths').value = '6';
+    document.getElementById('warrantyPartPrice').value = '0';
+    document.getElementById('warrantyLaborCost').value = '0';
+    updateInstantWarrantyTotal();
+    document.getElementById('instantWarrantyModal').classList.add('show');
+    document.getElementById('warrantyCustomerName').focus();
+}
+
+function updateInstantWarrantyTotal() {
+    var partsTotal = parseFloat(document.getElementById('warrantyPartPrice').value) || 0;
+    var laborCost = parseFloat(document.getElementById('warrantyLaborCost').value) || 0;
+    document.getElementById('instantWarrantyPartsTotal').textContent = formatCurrency(partsTotal);
+    document.getElementById('instantWarrantyLaborTotal').textContent = formatCurrency(laborCost);
+    document.getElementById('instantWarrantyGrandTotal').textContent = formatCurrency(partsTotal + laborCost);
+}
+
+function submitInstantWarranty(e) {
+    e.preventDefault();
+
+    var customer = {
+        name: document.getElementById('warrantyCustomerName').value.trim(),
+        phone: document.getElementById('warrantyCustomerPhone').value.trim(),
+        address: document.getElementById('warrantyCustomerAddress').value.trim()
+    };
+    var device = {
+        device_type: document.getElementById('warrantyDeviceType').value.trim(),
+        device_model: document.getElementById('warrantyDeviceModel').value.trim(),
+        serial_number: document.getElementById('warrantySerialNumber').value.trim(),
+        address: customer.address
+    };
+    var coverage = document.getElementById('warrantyCoverage').value.trim();
+    var fault = document.getElementById('warrantyFault').value.trim();
+    var partsTotal = parseFloat(document.getElementById('warrantyPartPrice').value);
+    var laborCost = parseFloat(document.getElementById('warrantyLaborCost').value);
+    var issuedAt = new Date();
+
+    if (!customer.name || !customer.phone || !customer.address || !device.device_type || !fault) {
+        showToast('أكمل بيانات العميل والجهاز والعطل المطلوبة', 'error');
+        return;
+    }
+    if (!Number.isFinite(partsTotal) || partsTotal < 0 || !Number.isFinite(laborCost) || laborCost < 0) {
+        showToast('أدخل أسعارًا صحيحة وغير سالبة لقطعة الغيار والمصنعية', 'error');
+        return;
+    }
+    if (partsTotal > 0 && !coverage) {
+        showToast('اكتب اسم قطعة الغيار عند إدخال سعر لها', 'error');
+        document.getElementById('warrantyCoverage').focus();
+        return;
+    }
+
+    var warrantyMonths = parseInt(document.getElementById('instantWarrantyMonths').value, 10) || 6;
+    var invoiceTotal = partsTotal + laborCost;
+    device.problem = fault;
+    var expiryDate = new Date(issuedAt);
+    expiryDate.setMonth(expiryDate.getMonth() + warrantyMonths);
+    var certificateNumber = 'W-' + issuedAt.getTime() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    var certificateData = {
+        certificate_number: certificateNumber,
+        invoice_number: generateInvoiceNumber(),
+        invoice_uuid_link: generateUUID(),
+        customer_name: customer.name,
+        customer_phone: customer.phone,
+        customer_address: customer.address,
+        device_type: device.device_type,
+        device_model: device.device_model || null,
+        serial_number: device.serial_number || null,
+        fault: fault,
+        warranty_months: warrantyMonths,
+        coverage: coverage || null,
+        parts_total: partsTotal,
+        labor_cost: laborCost,
+        total: invoiceTotal,
+        issued_at: issuedAt.toISOString(),
+        expires_at: expiryDate.toISOString(),
+        created_by: (getSession() && getSession().user && getSession().user.id) || null
+    };
+    var printWindow = window.open('', '_blank');
+    if (printWindow) {
+        printWindow.document.write('<!DOCTYPE html><html dir="rtl"><meta charset="UTF-8"><title>إصدار شهادة الضمان</title><body style="font-family: sans-serif; text-align: center; padding: 3rem;">جاري حفظ شهادة الضمان...</body></html>');
+        printWindow.document.close();
+    }
+
+    var submitBtn = e.submitter || document.querySelector('#instantWarrantyForm button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    saveInstantWarrantyCertificate(certificateData).then(function(result) {
+        if (result.synced) {
+            return loadData().then(function() { return result; });
+        }
+        return result;
+    }).then(function(result) {
+        var printed = printWarranty({
+            certificateNumber: certificateNumber,
+            createdAt: certificateData.issued_at,
+            warrantyMonths: warrantyMonths,
+            customer: customer,
+            device: device,
+            coverageItems: coverage ? [{
+                product_name: coverage,
+                quantity: 1,
+                unit_price: partsTotal,
+                total: partsTotal
+            }] : [],
+            partsTotal: partsTotal,
+            laborCost: laborCost,
+            total: invoiceTotal,
+            printWindow: printWindow
+        });
+        document.getElementById('instantWarrantyModal').classList.remove('show');
+        var message = result.synced
+            ? 'تم حفظ شهادة الضمان في قاعدة البيانات'
+            : 'تم حفظ الشهادة محليًا وستتم مزامنتها عند عودة الاتصال';
+        if (!printed) message += '، لكن تعذر فتح نافذة الطباعة';
+        showToast(message, result.synced ? 'success' : 'warning', 6000);
+    }).catch(function(err) {
+        console.error('Save warranty certificate error:', err);
+        if (printWindow) printWindow.close();
+        showToast('تعذر حفظ شهادة الضمان: ' + (err.message || 'حدث خطأ غير معروف'), 'error', 7000);
+    }).then(function() {
+        if (submitBtn) submitBtn.disabled = false;
+    });
+}
+
+function saveInstantWarrantyCertificate(certificateData) {
+    var sb = getSupabaseClient();
+    if (sb && navigator.onLine) {
+        return sb.rpc('issue_instant_warranty_certificate', { p_payload: certificateData })
+            .then(function(result) {
+                if (result.error) throw result.error;
+                return { row: result.data, synced: true };
+            });
+    }
+
+    return addToOutbox({
+        type: 'insert',
+        table: 'warranty_certificates',
+        data: certificateData
+    }).then(function(outboxId) {
+        if (outboxId == null) throw new Error('تعذر حفظ الشهادة محليًا للمزامنة');
+        return { synced: false };
+    });
+}
+
+function syncWarrantyCertificateOutbox() {
+    if (!navigator.onLine) return Promise.resolve();
+    var sb = getSupabaseClient();
+    if (!sb) return Promise.resolve();
+
+    return dbGetAll('outbox').then(function(items) {
+        var pending = items.filter(function(item) {
+            return item.status === 'pending' && item.type === 'insert' && item.table === 'warranty_certificates';
+        });
+        return pending.reduce(function(chain, item) {
+            return chain.then(function() {
+                return sb.rpc('issue_instant_warranty_certificate', { p_payload: item.data })
+                    .then(function(result) {
+                        if (result.error) throw result.error;
+                        return dbDelete('outbox', item.id);
+                    });
+            }).catch(function(err) {
+                console.error('Sync warranty certificate error:', err);
+                showToast('تعذرت مزامنة شهادة ضمان محفوظة محليًا: ' + (err.message || 'حدث خطأ غير معروف'), 'error', 7000);
+            });
+        }, Promise.resolve());
+    });
+}
+
 function openAddModal() {
     state.editingInvoice = null;
     state.selectedRepair = null;
@@ -5647,13 +5911,28 @@ function printA4() {
 // ═══════════════════════════════════════════════════════════════
 // 🎁 PRINT WARRANTY - شهادة ضمان احترافية
 // ═══════════════════════════════════════════════════════════════
-function printWarranty() {
-    var inv = state.viewingInvoice;
+function printWarranty(instantData) {
+    var inv = instantData ? {
+        invoice_number: instantData.certificateNumber,
+        created_at: instantData.createdAt,
+        warranty_months: instantData.warrantyMonths,
+        parts_total: instantData.partsTotal,
+        labor_cost: instantData.laborCost,
+        discount: instantData.discount,
+        total: instantData.total
+    } : state.viewingInvoice;
     if (!inv) { showToast('لا توجد فاتورة محددة', 'error'); return; }
     
-    var customer = getCustomerById(inv.customer_id) || {};
-    var repair = getRepairById(inv.repair_order_id);
-    var invoiceItems = getItemsForInvoice(inv.id);
+    var customer = instantData ? instantData.customer : (getCustomerById(inv.customer_id) || {});
+    var repair = instantData ? instantData.device : getRepairById(inv.repair_order_id);
+    var invoiceItems = instantData ? instantData.coverageItems : getItemsForInvoice(inv.id);
+    var referenceLabel = instantData ? 'رقم الشهادة' : 'رقم الفاتورة';
+    var partsTotal = parseFloat(inv.parts_total) || 0;
+    var laborCost = parseFloat(inv.labor_cost) || 0;
+    var discount = parseFloat(inv.discount) || 0;
+    var invoiceTotal = inv.total != null
+        ? (parseFloat(inv.total) || 0)
+        : (partsTotal + laborCost - discount);
     
     var warrantyMonths = parseInt(inv.warranty_months) || 6;
     
@@ -5680,6 +5959,8 @@ function printWarranty() {
                 '<td class="num-cell">' + (idx + 1) + '</td>' +
                 '<td>' + escapeHtml(item.product_name || 'قطعة غيار') + '</td>' +
                 '<td class="center">' + item.quantity + '</td>' +
+                '<td class="center">' + formatCurrency(item.unit_price) + '</td>' +
+                '<td class="center">' + formatCurrency(item.total) + '</td>' +
                 '<td class="center"><span class="warranty-cell">' + getWarrantyText(warrantyMonths) + '</span></td>' +
             '</tr>';
         }).join('');
@@ -5764,6 +6045,11 @@ function printWarranty() {
         '.parts-table td.center { text-align: center; font-family: "Courier New", monospace; }' +
         '.parts-table td.num-cell { font-family: "Courier New", monospace; font-weight: 800; color: #0F766E; }' +
         '.warranty-cell { display: inline-block; padding: 1mm 3mm; background: #6B4817; color: #fff; border-radius: 999px; font-size: 9pt; font-weight: 800; border: 1px solid #51350F; }' +
+        '.cost-summary { border: 1.5px solid #CBD5E1; border-radius: 3mm; padding: 3mm 5mm; margin: 0 0 6mm; background: #E8ECEF; }' +
+        '.cost-row { display: flex; justify-content: space-between; gap: 4mm; padding: 2mm 0; font-size: 10pt; font-weight: 700; border-bottom: 1px dashed #CBD5E1; }' +
+        '.cost-row:last-child { border-bottom: none; }' +
+        '.cost-row strong { color: #0F766E; }' +
+        '.cost-row.grand { margin-top: 1mm; padding-top: 3mm; border-top: 2px solid #0F766E; font-size: 13pt; font-weight: 900; }' +
         
         '.terms-box { background: #F0E8D8; border: 2px dashed #8A5A1F; border-radius: 4mm; padding: 5mm; margin-bottom: 6mm; }' +
         '.terms-header { display: flex; align-items: center; gap: 2mm; font-size: 11pt; font-weight: 800; color: #593B18; margin-bottom: 4mm; }' +
@@ -5826,12 +6112,13 @@ function printWarranty() {
                 '<div class="info-card-body">' +
                     '<div class="info-row"><span class="info-row-label">الاسم</span><span class="info-row-value">' + escapeHtml(customer.name || '—') + '</span></div>' +
                     '<div class="info-row"><span class="info-row-label">رقم الهاتف</span><span class="info-row-value mono">' + escapeHtml(customer.phone || '—') + '</span></div>' +
+                    ((customer.address || repair && repair.address) ? '<div class="info-row"><span class="info-row-label">العنوان</span><span class="info-row-value">' + escapeHtml(customer.address || repair.address) + '</span></div>' : '') +
                 '</div>' +
             '</div>' +
             '<div class="info-card">' +
-                '<div class="info-card-header"><i class="fas fa-file-invoice"></i><span>بيانات الفاتورة</span></div>' +
+                '<div class="info-card-header"><i class="fas fa-file-invoice"></i><span>' + (instantData ? 'بيانات الشهادة' : 'بيانات الفاتورة') + '</span></div>' +
                 '<div class="info-card-body">' +
-                    '<div class="info-row"><span class="info-row-label">رقم الفاتورة</span><span class="info-row-value mono">' + escapeHtml(inv.invoice_number || '—') + '</span></div>' +
+                    '<div class="info-row"><span class="info-row-label">' + referenceLabel + '</span><span class="info-row-value mono">' + escapeHtml(inv.invoice_number || '—') + '</span></div>' +
                     '<div class="info-row"><span class="info-row-label">تاريخ الإصدار</span><span class="info-row-value">' + issuedDateStr + '</span></div>' +
                 '</div>' +
             '</div>' +
@@ -5870,13 +6157,22 @@ function printWarranty() {
                     '<tr>' +
                         '<th style="width: 12mm;">#</th>' +
                         '<th>الصنف / القطعة</th>' +
-                        '<th class="center" style="width: 20mm;">الكمية</th>' +
-                        '<th class="center" style="width: 40mm;">مدة الضمان</th>' +
+                        '<th class="center" style="width: 15mm;">الكمية</th>' +
+                        '<th class="center" style="width: 30mm;">سعر الوحدة</th>' +
+                        '<th class="center" style="width: 30mm;">الإجمالي</th>' +
+                        '<th class="center" style="width: 32mm;">مدة الضمان</th>' +
                     '</tr>' +
                 '</thead>' +
                 '<tbody>' + itemsRows + '</tbody>' +
             '</table>' 
         : '') +
+        
+        '<div class="cost-summary">' +
+            '<div class="cost-row"><span>إجمالي قطع الغيار</span><strong>' + formatCurrency(partsTotal) + '</strong></div>' +
+            '<div class="cost-row"><span>المصنعية</span><strong>' + formatCurrency(laborCost) + '</strong></div>' +
+            (discount > 0 ? '<div class="cost-row"><span>الخصم</span><strong>- ' + formatCurrency(discount) + '</strong></div>' : '') +
+            '<div class="cost-row grand"><span>إجمالي الفاتورة</span><strong>' + formatCurrency(invoiceTotal) + '</strong></div>' +
+        '</div>' +
         
         '<div class="terms-box">' +
             '<div class="terms-header"><i class="fas fa-gavel"></i><span>شروط وأحكام الضمان</span></div>' +
@@ -5903,13 +6199,16 @@ function printWarranty() {
         '<script>window.onload = function() { setTimeout(function() { window.print(); }, 700); };<\/script>' +
         '</body></html>';
     
-    var win = window.open('', '_blank');
+    var win = instantData && Object.prototype.hasOwnProperty.call(instantData, 'printWindow')
+        ? instantData.printWindow
+        : window.open('', '_blank');
     if (!win) { showToast('يرجى السماح بالنوافذ المنبثقة لطباعة الشهادة', 'error', 5000); return; }
     win.document.open();
     win.document.write(html);
     win.document.close();
     
     showToast('🎁 جاري تحضير شهادة ضمان ' + warrantyText + '...', 'success');
+    return true;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5932,7 +6231,7 @@ function printThermal() {
     var warrantyMonths = parseInt(inv.warranty_months) || 0;
     
     var itemsRows = invoiceItems.map(function(item) {
-        return '<div class="item"><span>' + escapeHtml(item.product_name || '') + ' x' + item.quantity + '</span>' +
+        return '<div class="item"><span>' + escapeHtml(item.product_name || '') + ' (' + item.quantity + ' × ' + formatCurrency(item.unit_price) + ')</span>' +
             '<span style="font-family: monospace;">' + formatCurrency(item.total) + '</span></div>';
     }).join('');
     
@@ -6353,7 +6652,12 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('online', function() {
         updateOnlineStatus();
         showToast('تم استعادة الاتصال', 'success');
-        loadData();
+        syncWarrantyCertificateOutbox().then(function() {
+            return loadData();
+        }).catch(function(err) {
+            console.error('Warranty certificate sync error:', err);
+            showToast('حدث خطأ أثناء مزامنة شهادات الضمان', 'error');
+        });
     });
     window.addEventListener('offline', function() {
         updateOnlineStatus();
@@ -6434,6 +6738,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var addBtn = document.getElementById('addInvoiceBtn');
     if (addBtn) addBtn.addEventListener('click', openAddModal);
+    var instantWarrantyBtn = document.getElementById('instantWarrantyBtn');
+    var instantWarrantyForm = document.getElementById('instantWarrantyForm');
+    var closeInstantWarrantyBtn = document.getElementById('closeInstantWarrantyModal');
+    var cancelInstantWarrantyBtn = document.getElementById('cancelInstantWarrantyBtn');
+    var instantWarrantyModal = document.getElementById('instantWarrantyModal');
+    if (instantWarrantyBtn) instantWarrantyBtn.addEventListener('click', openInstantWarrantyModal);
+    if (instantWarrantyForm) instantWarrantyForm.addEventListener('submit', submitInstantWarranty);
+    ['warrantyPartPrice', 'warrantyLaborCost'].forEach(function(id) {
+        var priceInput = document.getElementById(id);
+        if (priceInput) priceInput.addEventListener('input', updateInstantWarrantyTotal);
+    });
+    if (closeInstantWarrantyBtn) closeInstantWarrantyBtn.addEventListener('click', function() {
+        instantWarrantyModal.classList.remove('show');
+    });
+    if (cancelInstantWarrantyBtn) cancelInstantWarrantyBtn.addEventListener('click', function() {
+        instantWarrantyModal.classList.remove('show');
+    });
     
     var closeIM = document.getElementById('closeInvoiceModal');
     var cancelIM = document.getElementById('cancelInvoiceBtn');
@@ -6590,9 +6911,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (session.user.role !== 'admin' && (!session.user.permissions || !session.user.permissions.can_create_invoices)) {
         var addBtn2 = document.getElementById('addInvoiceBtn');
         if (addBtn2) addBtn2.style.display = 'none';
+        var instantWarrantyBtn2 = document.getElementById('instantWarrantyBtn');
+        if (instantWarrantyBtn2) instantWarrantyBtn2.style.display = 'none';
     }
     
     openDB()
+        .then(function() { return syncWarrantyCertificateOutbox(); })
         .then(function() { return loadData(); })
         .then(function() {
             loadNotifications();
