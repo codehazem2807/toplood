@@ -1056,7 +1056,7 @@ img { max-width: 100%; height: auto; display: block; }
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: linear-gradient(135deg, var(--primary-dark), #0B3F3A);
     opacity: 0;
     transition: opacity var(--t);
     z-index: 0;
@@ -1709,7 +1709,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* ═══ Warranty Badge in Details ═══ */
 .warranty-badge-details {
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    background: linear-gradient(135deg, #765018, #4F3714);
     color: white;
     padding: 1rem;
     border-radius: var(--radius-md);
@@ -1719,7 +1719,7 @@ img { max-width: 100%; height: auto; display: block; }
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
-    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+    box-shadow: 0 8px 24px rgba(79, 55, 20, 0.28);
 }
 
 .warranty-badge-content {
@@ -1753,8 +1753,8 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 .warranty-badge-btn {
-    background: white;
-    color: var(--accent-dark);
+    background: #F1E6CF;
+    color: #4F3714;
     padding: 0.55rem 1rem;
     border-radius: var(--radius-sm);
     font-size: 0.8rem;
@@ -3440,6 +3440,22 @@ function getWarrantyText(months) {
     return m + ' شهر';
 }
 
+function getRepairDeviceText(repair) {
+    if (!repair) return '';
+    return [repair.device_type, repair.device_model].filter(Boolean).join(' - ') || repair.device_name || 'جهاز';
+}
+
+function getRepairStatusText(status) {
+    var labels = {
+        received: 'تم الاستلام',
+        repairing: 'قيد الإصلاح',
+        ready: 'جاهز للتسليم',
+        delivered: 'تم التسليم',
+        cancelled: 'ملغي'
+    };
+    return labels[status] || status || '';
+}
+
 // ═══════════════════════════════════════════════════════════════
 // 🎨 Theme
 // ═══════════════════════════════════════════════════════════════
@@ -3685,7 +3701,7 @@ function loadData() {
     return Promise.all([
         sb.from('invoices').select('*').order('created_at', { ascending: false }).limit(500),
         sb.from('customers').select('id, name, phone').order('name'),
-        sb.from('repair_orders').select('id, customer_id, device_name, issue, status, labor_cost, created_at, customer:customers(id, name, phone)').order('created_at', { ascending: false }).limit(500),
+        sb.from('repair_orders').select('id, customer_id, device_type, device_model, serial_number, problem, status, labor_cost, expected_repair_date, tracking_code, created_at, customer:customers(id, name, phone)').order('created_at', { ascending: false }).limit(500),
         sb.from('payments').select('*').order('created_at', { ascending: false }).limit(1000),
         sb.from('products').select('id, name, barcode, image_url, cost_price, sell_price, quantity, min_quantity').order('name'),
         sb.from('invoice_items').select('*').order('created_at', { ascending: false }).limit(2000)
@@ -4712,7 +4728,7 @@ function openEditModal(id) {
     document.getElementById('invoiceNotes').value = inv.notes || '';
     
     if (repair) {
-        document.getElementById('repairSearch').value = (repair.device_name || 'غسالة') + ' - ' + (repair.issue || '');
+        document.getElementById('repairSearch').value = getRepairDeviceText(repair) + ' - ' + (repair.problem || repair.issue || '');
         renderSelectedRepair(repair);
         if (repair.customer) {
             document.getElementById('customerInfoBox').style.display = 'block';
@@ -4785,8 +4801,8 @@ function renderRepairOptions(search) {
             if (hasInvoice) return false;
         }
         if (q) {
-            var deviceName = (r.device_name || '').toLowerCase();
-            var issue = (r.issue || '').toLowerCase();
+            var deviceName = getRepairDeviceText(r).toLowerCase();
+            var issue = (r.problem || r.issue || '').toLowerCase();
             var custName = (r.customer && r.customer.name || '').toLowerCase();
             return deviceName.indexOf(q) !== -1 || issue.indexOf(q) !== -1 || custName.indexOf(q) !== -1;
         }
@@ -4801,8 +4817,8 @@ function renderRepairOptions(search) {
     list.innerHTML = repairs.slice(0, 50).map(function(r) {
         var cust = r.customer || {};
         var initials = getInitials(cust.name || 'عميل');
-        var device = r.device_name || 'غسالة';
-        var statusText = r.status === 'received' ? 'تم الاستلام' : r.status === 'repairing' ? 'قيد الإصلاح' : r.status === 'ready' ? 'جاهز' : r.status === 'delivered' ? 'تم التسليم' : r.status;
+        var device = getRepairDeviceText(r);
+        var statusText = getRepairStatusText(r.status);
         
         return '<div class="picker-option" data-repair-id="' + r.id + '">' +
             '<div class="picker-option-avatar">' + escapeHtml(initials) + '</div>' +
@@ -4830,7 +4846,7 @@ function selectRepair(id) {
     
     state.selectedRepair = r;
     document.getElementById('repairDropdown').classList.remove('show');
-    document.getElementById('repairSearch').value = (r.device_name || 'غسالة') + ' - ' + (r.issue || '');
+    document.getElementById('repairSearch').value = getRepairDeviceText(r) + ' - ' + (r.problem || r.issue || '');
     
     var laborInput = document.getElementById('laborCost');
     if (laborInput && (parseFloat(laborInput.value) || 0) === 0) {
@@ -4854,14 +4870,14 @@ function renderSelectedRepair(r) {
     if (!container) return;
     
     var cust = r.customer || {};
-    var device = r.device_name || 'غسالة';
+    var device = getRepairDeviceText(r);
     
     container.innerHTML = '<div class="selected-chip">' +
         '<div class="selected-chip-icon"><i class="fas fa-soap"></i></div>' +
         '<div class="selected-chip-info">' +
             '<div class="selected-chip-name">' + escapeHtml(device) + '</div>' +
             '<div class="selected-chip-meta">' +
-                escapeHtml(r.issue || '') +
+                escapeHtml(r.problem || r.issue || '') +
                 (cust.name ? ' • ' + escapeHtml(cust.name) : '') +
             '</div>' +
         '</div>' +
@@ -5433,8 +5449,11 @@ function openDetailsModal(id) {
             '</div>' +
             (repair ? '<div style="padding: 1rem; background: var(--bg-primary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">' +
                 '<div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; margin-bottom: 0.35rem; text-transform: uppercase;">الجهاز</div>' +
-                '<div style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.2rem;">' + escapeHtml(repair.device_name || 'غسالة') + '</div>' +
-                '<div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 700;">' + escapeHtml(repair.issue || '') + '</div>' +
+                '<div style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.2rem;">' + escapeHtml(getRepairDeviceText(repair)) + '</div>' +
+                '<div style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 700;">' + escapeHtml(repair.problem || repair.issue || '') + '</div>' +
+                (repair.serial_number ? '<div style="font-size: 0.72rem; color: var(--text-secondary);">الرقم المسلسل: ' + escapeHtml(repair.serial_number) + '</div>' : '') +
+                (repair.tracking_code ? '<div style="font-size: 0.72rem; color: var(--text-secondary);">كود التتبع: ' + escapeHtml(repair.tracking_code) + '</div>' : '') +
+                (repair.status ? '<div style="font-size: 0.72rem; color: var(--text-secondary);">الحالة: ' + escapeHtml(getRepairStatusText(repair.status)) + '</div>' : '') +
             '</div>' : '') +
         '</div>' +
         
@@ -5556,7 +5575,7 @@ function printA4() {
     
     var warrantyInfo = '';
     if (warrantyMonths > 0) {
-        warrantyInfo = '<div style="padding: 3mm; background: #F59E0B; color: white; border-radius: 2mm; margin-bottom: 5mm; text-align: center; font-weight: 800;">' +
+        warrantyInfo = '<div style="padding: 3mm; background: #7C4A12; color: white; border-radius: 2mm; margin-bottom: 5mm; text-align: center; font-weight: 800;">' +
             '<i class="fas fa-shield-halved"></i> ضمان ' + getWarrantyText(warrantyMonths) +
         '</div>';
     }
@@ -5597,9 +5616,14 @@ function printA4() {
         '<div class="info-grid">' +
             '<div class="info-box"><h3>العميل</h3><p>' + escapeHtml(customer.name || '—') + '</p>' +
             '<p style="font-size: 10pt; font-family: monospace;">' + escapeHtml(customer.phone || '') + '</p></div>' +
-            (repair ? '<div class="info-box"><h3>الجهاز</h3><p>' + escapeHtml(repair.device_name || '') + '</p>' +
-                '<p style="font-size: 10pt;">' + escapeHtml(repair.issue || '') + '</p></div>' : '') +
+            (repair ? '<div class="info-box"><h3>بيانات أمر الصيانة</h3><p>' + escapeHtml(getRepairDeviceText(repair)) + '</p>' +
+                (repair.serial_number ? '<p style="font-size: 10pt;">الرقم المسلسل: ' + escapeHtml(repair.serial_number) + '</p>' : '') +
+                (repair.tracking_code ? '<p style="font-size: 10pt;">كود التتبع: ' + escapeHtml(repair.tracking_code) + '</p>' : '') +
+                (repair.status ? '<p style="font-size: 10pt;">الحالة: ' + escapeHtml(getRepairStatusText(repair.status)) + '</p>' : '') +
+                (repair.problem || repair.issue ? '<p style="font-size: 10pt;">العطل: ' + escapeHtml(repair.problem || repair.issue) + '</p>' : '') +
+                (repair.expected_repair_date ? '<p style="font-size: 10pt;">موعد الإصلاح المتوقع: ' + formatDate(repair.expected_repair_date) + '</p>' : '') + '</div>' : '') +
         '</div>' +
+        (inv.notes ? '<div class="info-box" style="margin-bottom: 8mm;"><h3>ملاحظات الفاتورة</h3><p style="font-size: 10pt;">' + escapeHtml(inv.notes) + '</p></div>' : '') +
         (itemsRows ? '<table><thead><tr><th>القطعة</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>' + itemsRows + '</tbody></table>' : '') +
         '<div class="totals">' +
             '<div class="total-row"><span>تكلفة القطع</span><span style="font-family: monospace;">' + formatCurrency(parts) + '</span></div>' +
@@ -5671,7 +5695,7 @@ function printWarranty() {
         'body { font-family: "Cairo", sans-serif; color: #0F172A; background: #E2E8F0; padding: 5mm; }' +
         
         '.certificate { max-width: 200mm; margin: 0 auto; background: #F1F3F5; position: relative; border-radius: 6mm; overflow: hidden; box-shadow: 0 8px 30px rgba(15, 118, 110, 0.15); }' +
-        '.top-border { height: 10mm; background: linear-gradient(90deg, #0F766E 0%, #14B8A6 30%, #F59E0B 50%, #14B8A6 70%, #0F766E 100%); }' +
+        '.top-border { height: 10mm; background: linear-gradient(90deg, #0F766E 0%, #14B8A6 30%, #765018 50%, #14B8A6 70%, #0F766E 100%); }' +
         '.inner-frame { padding: 12mm 15mm 10mm; position: relative; border: 2px solid #0F766E; border-top: none; border-radius: 0 0 6mm 6mm; }' +
         
         '.corner { position: absolute; width: 25mm; height: 25mm; pointer-events: none; opacity: 0.15; }' +
@@ -5696,7 +5720,7 @@ function printWarranty() {
         '.brand-contact span { display: inline-flex; align-items: center; gap: 1mm; }' +
         '.brand-contact i { color: #0F766E; }' +
         
-        '.header-badge { text-align: center; padding: 4mm 6mm; background: linear-gradient(135deg, #F59E0B, #D97706); color: white; border-radius: 4mm; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35); flex-shrink: 0; }' +
+        '.header-badge { text-align: center; padding: 4mm 6mm; background: linear-gradient(135deg, #765018, #4F3714); color: white; border-radius: 4mm; box-shadow: 0 6px 20px rgba(79, 55, 20, 0.28); flex-shrink: 0; }' +
         '.header-badge-icon { font-size: 20pt; margin-bottom: 1mm; }' +
         '.header-badge-text { font-size: 10pt; font-weight: 800; letter-spacing: 1px; }' +
         
@@ -5718,7 +5742,7 @@ function printWarranty() {
         '.info-row-value { font-size: 11pt; font-weight: 800; color: #0F172A; text-align: left; }' +
         '.info-row-value.mono { font-family: "Courier New", monospace; color: #0F766E; }' +
         
-        '.warranty-hero { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white; border-radius: 4mm; padding: 6mm; text-align: center; margin-bottom: 6mm; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35); }' +
+        '.warranty-hero { background: linear-gradient(135deg, #765018 0%, #4F3714 100%); color: white; border-radius: 4mm; padding: 6mm; text-align: center; margin-bottom: 6mm; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(79, 55, 20, 0.28); }' +
         '.warranty-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%); }' +
         '.warranty-hero > * { position: relative; z-index: 1; }' +
         '.warranty-label { font-size: 11pt; font-weight: 700; opacity: 0.95; margin-bottom: 2mm; letter-spacing: 2px; }' +
@@ -5739,10 +5763,10 @@ function printWarranty() {
         '.parts-table tbody tr:last-child td { border-bottom: none; }' +
         '.parts-table td.center { text-align: center; font-family: "Courier New", monospace; }' +
         '.parts-table td.num-cell { font-family: "Courier New", monospace; font-weight: 800; color: #0F766E; }' +
-        '.warranty-cell { display: inline-block; padding: 1mm 3mm; background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; border-radius: 999px; font-size: 9pt; font-weight: 800; border: 1px solid #F59E0B; }' +
+        '.warranty-cell { display: inline-block; padding: 1mm 3mm; background: #6B4817; color: #fff; border-radius: 999px; font-size: 9pt; font-weight: 800; border: 1px solid #51350F; }' +
         
-        '.terms-box { background: #FFFBEB; border: 2px dashed #F59E0B; border-radius: 4mm; padding: 5mm; margin-bottom: 6mm; }' +
-        '.terms-header { display: flex; align-items: center; gap: 2mm; font-size: 11pt; font-weight: 800; color: #92400E; margin-bottom: 4mm; }' +
+        '.terms-box { background: #F0E8D8; border: 2px dashed #8A5A1F; border-radius: 4mm; padding: 5mm; margin-bottom: 6mm; }' +
+        '.terms-header { display: flex; align-items: center; gap: 2mm; font-size: 11pt; font-weight: 800; color: #593B18; margin-bottom: 4mm; }' +
         '.terms-header i { font-size: 12pt; }' +
         '.terms-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 2.5mm; }' +
         '.terms-list li { font-size: 10pt; font-weight: 600; color: #475569; line-height: 1.6; padding-right: 7mm; position: relative; }' +
@@ -5752,7 +5776,7 @@ function printWarranty() {
         '.footer { margin-top: 8mm; padding-top: 5mm; border-top: 2px solid #CCFBF1; text-align: center; font-size: 9pt; color: #64748b; font-weight: 700; line-height: 1.7; }' +
         '.footer strong { color: #0F766E; font-weight: 900; }' +
         
-        '.bottom-border { height: 5mm; background: linear-gradient(90deg, #0F766E 0%, #14B8A6 30%, #F59E0B 50%, #14B8A6 70%, #0F766E 100%); }' +
+        '.bottom-border { height: 5mm; background: linear-gradient(90deg, #0F766E 0%, #14B8A6 30%, #765018 50%, #14B8A6 70%, #0F766E 100%); }' +
         
         '@media print { body { padding: 0; background: white; } .certificate { box-shadow: none; border-radius: 0; } .inner-frame { border-radius: 0; } }' +
         
@@ -5815,8 +5839,12 @@ function printWarranty() {
             '<div class="info-card" style="margin-bottom: 6mm;">' +
                 '<div class="info-card-header"><i class="fas fa-soap"></i><span>بيانات الجهاز والصيانة</span></div>' +
                 '<div class="info-card-body">' +
-                    '<div class="info-row"><span class="info-row-label">الجهاز</span><span class="info-row-value">' + escapeHtml(repair.device_name || 'غسالة') + '</span></div>' +
-                    '<div class="info-row"><span class="info-row-label">المشكلة / العمل المُنفذ</span><span class="info-row-value">' + escapeHtml(repair.issue || 'صيانة عامة') + '</span></div>' +
+                    '<div class="info-row"><span class="info-row-label">نوع الجهاز</span><span class="info-row-value">' + escapeHtml(repair.device_type || '—') + '</span></div>' +
+                    (repair.device_model ? '<div class="info-row"><span class="info-row-label">الماركة / الموديل</span><span class="info-row-value">' + escapeHtml(repair.device_model) + '</span></div>' : '') +
+                    (repair.serial_number ? '<div class="info-row"><span class="info-row-label">الرقم المسلسل</span><span class="info-row-value mono">' + escapeHtml(repair.serial_number) + '</span></div>' : '') +
+                    (repair.tracking_code ? '<div class="info-row"><span class="info-row-label">كود التتبع</span><span class="info-row-value mono">' + escapeHtml(repair.tracking_code) + '</span></div>' : '') +
+                    (repair.status ? '<div class="info-row"><span class="info-row-label">حالة الصيانة</span><span class="info-row-value">' + escapeHtml(getRepairStatusText(repair.status)) + '</span></div>' : '') +
+                    '<div class="info-row"><span class="info-row-label">العطل</span><span class="info-row-value">' + escapeHtml(repair.problem || repair.issue || 'صيانة عامة') + '</span></div>' +
                 '</div>' +
             '</div>' : ''
         ) +
@@ -5933,7 +5961,12 @@ function printThermal() {
         '<div class="info">' +
             '<div><span>العميل:</span><span>' + escapeHtml(customer.name || '') + '</span></div>' +
             (customer.phone ? '<div><span>الموبايل:</span><span style="font-family: monospace;">' + escapeHtml(customer.phone) + '</span></div>' : '') +
-            (repair ? '<div><span>الجهاز:</span><span>' + escapeHtml(repair.device_name || '') + '</span></div>' : '') +
+            (repair ? '<div><span>الجهاز:</span><span>' + escapeHtml(getRepairDeviceText(repair)) + '</span></div>' +
+                (repair.serial_number ? '<div><span>الرقم المسلسل:</span><span>' + escapeHtml(repair.serial_number) + '</span></div>' : '') +
+                (repair.tracking_code ? '<div><span>كود التتبع:</span><span>' + escapeHtml(repair.tracking_code) + '</span></div>' : '') +
+                (repair.problem || repair.issue ? '<div><span>العطل:</span><span>' + escapeHtml(repair.problem || repair.issue) + '</span></div>' : '') +
+                (repair.status ? '<div><span>الحالة:</span><span>' + escapeHtml(getRepairStatusText(repair.status)) + '</span></div>' : '') +
+                (repair.expected_repair_date ? '<div><span>الموعد المتوقع:</span><span>' + formatDate(repair.expected_repair_date) + '</span></div>' : '') : '') +
         '</div>' +
         (itemsRows ? '<div style="margin-bottom: 3mm;">' + itemsRows + '</div>' : '') +
         '<div class="total-section">' +

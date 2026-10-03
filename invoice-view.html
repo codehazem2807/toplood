@@ -31,22 +31,22 @@
 
 <style>
 :root {
-    --tech-blue: #1d5b8e;
-    --tech-blue-dark: #154668;
-    --tech-blue-light: #2d7ab8;
+    --tech-blue: #164b6d;
+    --tech-blue-dark: #103753;
+    --tech-blue-light: #28668e;
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
     --info: #3b82f6;
     --purple: #8b5cf6;
     --gold: #fbbf24;
-    --bg-primary: #E0F7FA;
-    --bg-card: #ffffff;
-    --bg-hover: #f1f5f9;
-    --text-primary: #0a1f33;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --border-color: #e1e8f0;
+    --bg-primary: #d7e2e4;
+    --bg-card: #fbfcfa;
+    --bg-hover: #e6edef;
+    --text-primary: #102a3b;
+    --text-secondary: #3d5360;
+    --text-muted: #657985;
+    --border-color: #c2d0d3;
     --shadow-sm: 0 1px 3px rgba(10, 31, 51, 0.06);
     --shadow-md: 0 4px 12px rgba(10, 31, 51, 0.08);
     --shadow-lg: 0 12px 32px rgba(10, 31, 51, 0.12);
@@ -64,13 +64,13 @@
 }
 
 [data-theme="dark"] {
-    --bg-primary: #0a1628;
-    --bg-card: #142f4a;
-    --bg-hover: #1a3a5c;
+    --bg-primary: #091822;
+    --bg-card: #142a36;
+    --bg-hover: #1d3947;
     --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
     --text-muted: #64748b;
-    --border-color: #1e3a5f;
+    --border-color: #2b4652;
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
@@ -384,6 +384,20 @@ img { max-width: 100%; height: auto; display: block; }
     font-family: 'Courier New', monospace;
     margin-top: 0.35rem;
 }
+
+.warranty-info {
+    background: #514018;
+    border-color: #765d24;
+    border-right-color: #b18a31;
+    color: #fff;
+}
+
+.warranty-info .info-box-label,
+.warranty-info .info-box-sub { color: #e7d8ad; }
+
+.warranty-info .info-box-label i { color: #f1cd71; }
+
+.warranty-info .info-box-value { color: #fff; }
 
 .section-title {
     font-size: 1rem;
@@ -1001,9 +1015,6 @@ img { max-width: 100%; height: auto; display: block; }
         </div>
     </div>
     <div class="top-actions">
-        <button class="icon-btn" id="debugToggle" title="معلومات التشخيص">
-            <i class="fas fa-bug"></i>
-        </button>
         <button class="icon-btn" id="themeToggle" title="تبديل الوضع">
             <i class="fas fa-moon"></i>
         </button>
@@ -1087,7 +1098,17 @@ img { max-width: 100%; height: auto; display: block; }
                     </div>
                     <div class="info-box-value" id="deviceType">—</div>
                     <div class="info-box-sub" id="deviceModel"></div>
+                    <div class="info-box-sub" id="deviceSerial"></div>
+                    <div class="info-box-sub" id="deviceProblem"></div>
+                    <div class="info-box-sub" id="repairStatus"></div>
+                    <div class="info-box-sub" id="repairExpectedDate"></div>
                     <div id="repairTrackingContainer"></div>
+                </div>
+
+                <div class="info-box warranty-info" id="warrantyInfoBox" style="display: none;">
+                    <div class="info-box-label"><i class="fas fa-shield-halved"></i> الضمان</div>
+                    <div class="info-box-value" id="warrantyDuration">—</div>
+                    <div class="info-box-sub" id="warrantyDates"></div>
                 </div>
 
                 <div class="info-box">
@@ -1330,6 +1351,11 @@ function getPaymentMethodText(method) {
     return map[method] || 'كاش';
 }
 
+function getWarrantyText(months) {
+    var labels = { 6: '6 شهور', 12: 'سنة', 18: 'سنة ونصف', 24: 'سنتين', 36: '3 سنين' };
+    return labels[months] || months + ' شهر';
+}
+
 function initTheme() {
     var saved = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', saved);
@@ -1495,7 +1521,7 @@ function loadInvoice() {
 // Strategy 1: Join Query
 // ═══════════════════════════════════════════════════════════════
 function tryLoadWithJoin(sb, identifier) {
-    var selectStr = '*, customer:customers(id, name, phone, address), repair:repair_orders(id, tracking_code, device_type, device_model, serial_number, status)';
+    var selectStr = '*, customer:customers(id, name, phone, address), repair:repair_orders(id, tracking_code, device_type, device_model, serial_number, problem, status, expected_repair_date)';
 
     // ✅ جرّب في id الأول (لو UUID صحيح)
     if (!isValidUUID(identifier)) return Promise.resolve(null);
@@ -1581,7 +1607,7 @@ function tryLoadSeparate(sb, identifier) {
             if (invoice.repair_order_id && isValidUUID(invoice.repair_order_id)) {
                 promises.push(
                     sb.from('repair_orders')
-                        .select('id, tracking_code, device_type, device_model, serial_number, status')
+                        .select('id, tracking_code, device_type, device_model, serial_number, problem, status, expected_repair_date')
                         .eq('id', invoice.repair_order_id).maybeSingle()
                         .then(function(r) { invoice.repair = r.data || null; })
                         .catch(function() { invoice.repair = null; })
@@ -1683,13 +1709,24 @@ function renderInvoice(invoice) {
         document.getElementById('customerInfoBox').style.display = 'none';
     }
 
-    var deviceType = repair.device_type || '';
+    var deviceType = repair.device_type || 'جهاز';
     var deviceModel = repair.device_model || '';
     var trackingCode = repair.tracking_code || '';
 
-    if (deviceType || deviceModel || trackingCode) {
-        document.getElementById('deviceType').textContent = deviceType || 'جهاز';
+    if (repair.id || repair.device_type || repair.device_model || repair.serial_number || repair.problem || trackingCode) {
+        document.getElementById('deviceType').textContent = deviceType;
         document.getElementById('deviceModel').textContent = deviceModel || '';
+        document.getElementById('deviceSerial').textContent = repair.serial_number ? 'الرقم المسلسل: ' + repair.serial_number : '';
+        document.getElementById('deviceProblem').textContent = repair.problem ? 'العطل: ' + repair.problem : '';
+        var repairStatuses = {
+            received: 'تم الاستلام',
+            repairing: 'قيد الإصلاح',
+            ready: 'جاهز للتسليم',
+            delivered: 'تم التسليم',
+            cancelled: 'ملغي'
+        };
+        document.getElementById('repairStatus').textContent = repair.status ? 'حالة الصيانة: ' + (repairStatuses[repair.status] || repair.status) : '';
+        document.getElementById('repairExpectedDate').textContent = repair.expected_repair_date ? 'موعد الإصلاح المتوقع: ' + formatDate(repair.expected_repair_date) : '';
 
         if (trackingCode) {
             document.getElementById('repairTrackingContainer').innerHTML =
@@ -1697,6 +1734,16 @@ function renderInvoice(invoice) {
         }
     } else {
         document.getElementById('deviceInfoBox').style.display = 'none';
+    }
+
+    var warrantyMonths = parseInt(invoice.warranty_months) || 0;
+    if (warrantyMonths > 0) {
+        var warrantyStart = new Date(invoice.created_at || Date.now());
+        var warrantyEnd = new Date(warrantyStart);
+        warrantyEnd.setMonth(warrantyEnd.getMonth() + warrantyMonths);
+        document.getElementById('warrantyDuration').textContent = 'ضمان ' + getWarrantyText(warrantyMonths);
+        document.getElementById('warrantyDates').textContent = 'من ' + formatDate(warrantyStart) + ' حتى ' + formatDate(warrantyEnd);
+        document.getElementById('warrantyInfoBox').style.display = '';
     }
 
     document.getElementById('paymentMethod').textContent = getPaymentMethodText(invoice.payment_method);
