@@ -70,51 +70,6 @@ ALTER TABLE public.warranty_certificates
 ALTER TABLE public.invoice_items
     ALTER COLUMN product_id DROP NOT NULL;
 
-DO $backfill_warranty_products$
-DECLARE
-    v_legacy_part record;
-    v_product_id uuid;
-    v_product_barcode text;
-BEGIN
-    FOR v_legacy_part IN
-        SELECT
-            wc.certificate_number,
-            wc.coverage,
-            wc.parts_total,
-            ii.id AS invoice_item_id,
-            ii.unit_price
-        FROM public.warranty_certificates wc
-        JOIN public.invoice_items ii
-            ON ii.invoice_id = wc.invoice_id
-            AND ii.product_id IS NULL
-            AND (ii.product_name = wc.coverage OR ii.description = wc.coverage)
-        WHERE wc.invoice_id IS NOT NULL
-            AND NULLIF(wc.coverage, '') IS NOT NULL
-    LOOP
-        v_product_barcode := 'WM-' || upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 12));
-
-        INSERT INTO public.products (
-            name, barcode, sku, cost_price, sell_price, quantity, min_quantity, description
-        )
-        VALUES (
-            v_legacy_part.coverage,
-            v_product_barcode,
-            v_product_barcode,
-            0,
-            COALESCE(v_legacy_part.unit_price, v_legacy_part.parts_total, 0),
-            0,
-            0,
-            'صنف أُضيف من شهادة الضمان ' || v_legacy_part.certificate_number
-        )
-        RETURNING id INTO v_product_id;
-
-        UPDATE public.invoice_items
-        SET product_id = v_product_id
-        WHERE id = v_legacy_part.invoice_item_id;
-    END LOOP;
-END;
-$backfill_warranty_products$;
-
 CREATE INDEX IF NOT EXISTS warranty_certificates_issued_at_idx
     ON public.warranty_certificates (issued_at DESC);
 
@@ -192,7 +147,7 @@ BEGIN
     VALUES (
         v_customer_id, v_repair_order_id, v_invoice_number, v_invoice_uuid_link,
         v_parts_total, v_labor_cost, v_parts_total + v_labor_cost, 0, 'fixed',
-        v_total, 0, 'cash', v_total = 0,
+        v_total, v_total, 'cash', true,
         COALESCE(NULLIF(p_payload->>'warranty_months', '')::integer, 6),
         v_created_by
     )
